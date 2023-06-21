@@ -1,6 +1,7 @@
 package calocheck.boundedContext.post.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

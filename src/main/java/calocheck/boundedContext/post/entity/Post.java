@@ -1,6 +1,7 @@
 package calocheck.boundedContext.post.entity;
 
 import calocheck.base.entity.BaseEntity;
+import calocheck.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

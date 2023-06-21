@@ -3,6 +3,7 @@ package calocheck.boundedContext.comment.service;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.repository.CommentRepository;
+import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.post.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
