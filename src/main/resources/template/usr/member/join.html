@@ -10,7 +10,7 @@
 
 <div>
     <script>
-        function JoinForm__submit(form) {
+        function joinFormSubmit(form) {
 
             form.username.value = form.username.value.trim();
 
@@ -78,7 +78,7 @@
             회원가입
         </h2>
 
-        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
+        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="joinFormSubmit(this); return false;">
             <div>
                 <input type="text" name="username" maxlength="20" placeholder="아이디" class="input input-bordered">
             </div>

@@ -33,12 +33,7 @@ public class MemberService {
                 .build();
         return memberRepository.save(member);
     }
-
-    public Member read(Long id) {
-        Optional<Member> member = memberRepository.findById(id);
-        return member.orElse(null);
-    }
-
+    
     public void delete(Member member) {
         memberRepository.delete(member);
     }
