@@ -1,22 +1,15 @@
-package calocheck.boundedContext.fooditem.entity;
+package calocheck.boundedContext.fooditem.dto;
 
-import calocheck.base.entity.BaseEntity;
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Setter;
 
-
-@SuperBuilder(toBuilder = true)
 @Getter
-@Entity
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodItem extends BaseEntity {
-    String foodName;
-    int portionSize;
-    String unit;
+public class NutritionsDTO {
     double carbohydrate;
     double fat;
     double protein;
