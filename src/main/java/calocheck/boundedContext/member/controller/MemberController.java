@@ -26,10 +26,10 @@ public class MemberController {
     @Getter
     public static class JoinForm {
         @NotBlank
-        @Size(min = 4, max = 30)
+        @Size(min = 4, max = 20)
         private final String username;
         @NotBlank
-        @Size(min = 4, max = 30)
+        @Size(min = 4, max = 20)
         private final String password;
         @NotBlank
         @Email(message = "유효하지 않은 이메일입니다.")

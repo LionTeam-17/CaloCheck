@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <title>
+        회원가입
+    </title>
+</head>
+
+<body>
+
+<div>
+    <script>
+        function JoinForm__submit(form) {
+
+            form.username.value = form.username.value.trim();
+
+            if (form.username.value.length == 0) {
+                toastWarning('아이디를 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            if (form.username.value.length < 4 || form.username.value.length > 20) {
+                toastWarning('아이디를 4글자 이상, 20글자 이내로 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            form.password.value = form.password.value.trim();
+
+            if (form.password.value.length == 0) {
+                form.password.focus();
+                toastWarning('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            if (form.password.value.length < 4 || form.password.value.length > 20) {
+                form.password.focus();
+                toastWarning('비밀번호를 4글자 이상, 20글자 이내로 입력해주세요.');
+                return;
+            }
+
+            form.email.value = form.email.value.trim();
+            if (form.email.value.length == 0) {
+                toastWarning('이메일을 입력해주세요.');
+                form.email.focus();
+                return;
+            }
+
+            // 이메일 유효성 검사
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(form.email.value)) {
+                toastWarning('유효한 이메일 형식이 아닙니다.');
+                form.email.focus();
+                return;
+            }
+
+
+            form.nickname.value = form.nickname.value.trim();
+            if (form.nickname.value.length == 0) {
+                toastWarning('닉네임을 입력해주세요.');
+                form.nickname.focus();
+                return;
+            }
+
+            if (form.nickname.value.length < 2 || form.nickname.value.length > 20) {
+                toastWarning('닉네임을 2글자 이상, 20글자 이내로 입력해주세요.');
+                form.nickname.focus();
+                return;
+            }
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+    <div class="hero-content flex-col">
+
+        <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
+            회원가입
+        </h2>
+
+        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
+            <div>
+                <input type="text" name="username" maxlength="20" placeholder="아이디" class="input input-bordered">
+            </div>
+            <div>
+                <input type="password" name="password" maxlength="20" placeholder="비밀번호" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="email" maxlength="30" placeholder="이메일" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="nickname" maxlength="20" placeholder="닉네임" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="height" placeholder="키" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="weight" placeholder="몸무게" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="muscleMass" placeholder="근육량" class="input input-bordered">
+            </div>
+            <div>
+                <input type="text" name="bodyFat" placeholder="비만도" class="input input-bordered">
+            </div>
+
+        </form>
+
+    </div>
+</div>
+</body>
+</html>
