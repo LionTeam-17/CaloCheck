@@ -18,15 +18,13 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
     private String password;
-    private String name;
-
     private String email;
 
     @Column(unique = true)
     private String nickname;
-    private int age;
-    private double height;
-    private double weight;
-    private double muscleMass;
-    private double bodyFat;
+    private Integer age;
+    private Double height;
+    private Double weight;
+    private Double muscleMass;
+    private Double bodyFat;
 }
