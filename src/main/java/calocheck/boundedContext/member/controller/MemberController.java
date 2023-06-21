@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final Rq rq;
     @AllArgsConstructor
     @Getter
     public static class JoinForm {
@@ -40,5 +42,29 @@ public class MemberController {
         private double weight;
         private double muscleMass;
         private double bodyFat;
+    }
+    @GetMapping("/join")
+    public String showJoin() {
+        return "usr/member/join";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/join")
+    public String join(@Valid JoinForm joinForm) {
+
+        RsData<Member> checkRsData = memberService.checkDuplicateValue(joinForm.getUsername(), joinForm.getEmail(), joinForm.getNickname());
+
+        if (checkRsData.isFail()) {
+            return rq.historyBack(checkRsData.getMsg());
+        }
+
+        RsData<Member> joinRs = memberService.join(
+                joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname(),
+                joinForm.getAge(), joinForm.getHeight(), joinForm.getWeight(), joinForm.getMuscleMass(), joinForm.getBodyFat()
+        );
+
+        String msg = joinRs.getMsg() + "\n로그인 후 이용해주세요.";
+
+        return rq.redirectWithMsg("/member/login", joinRs);
     }
 }
