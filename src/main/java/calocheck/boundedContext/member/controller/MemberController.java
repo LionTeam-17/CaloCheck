@@ -67,4 +67,11 @@ public class MemberController {
 
         return rq.redirectWithMsg("/member/login", joinRs);
     }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    public String showLogin() {
+
+        return "usr/member/login";
+    }
 }
