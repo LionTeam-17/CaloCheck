@@ -36,6 +36,9 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // thymeleaf
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {
