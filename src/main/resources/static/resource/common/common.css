@@ -1,13 +1,12 @@
 @font-face {
-    font-family: "GmarketSansMedium";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
-    format("woff");
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
 html > body {
-    font-family: "GmarketSansMedium";
+    font-family: 'NanumSquareNeo-Variable';
     text-underline-position: under;
     word-break: keep-all;
 }
