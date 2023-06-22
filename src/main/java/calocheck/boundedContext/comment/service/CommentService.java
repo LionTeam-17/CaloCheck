@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public RsData<Comment> saveComment(String content, Post post, final Member member){
+    public RsData<Comment> saveComment(String content, Post post, final Member member) {
         Comment comment = Comment.builder()
                 .member(member)
                 .content(content)
@@ -48,7 +49,7 @@ public class CommentService {
 
         commentRepository.save(modifyComment);
 
-        return RsData.of("S-1", "댓글을 성공적으로 수정했습니다.",modifyComment);
+        return RsData.of("S-1", "댓글을 성공적으로 수정했습니다.", modifyComment);
     }
 
     public RsData<Comment> deleteComment(final Long id, final Long memberId) {
@@ -62,5 +63,12 @@ public class CommentService {
         commentRepository.delete(oComment.get());
 
         return RsData.of("S-1", "댓글이 삭제되었습니다.");
+    }
+
+    public Optional<Comment> findById(Long id) {
+        return commentRepository.findById(id);
+    }
+    public List<Comment> findAllByPostId(Long id){
+        return commentRepository.findAllByPostId(id);
     }
 }
