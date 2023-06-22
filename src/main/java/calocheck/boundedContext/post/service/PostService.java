@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,5 +62,12 @@ public class PostService {
         postRepository.delete(oPost.get());
 
         return RsData.of("S-1", "댓글이 삭제되었습니다.");
+    }
+
+    public Optional<Post> findById(Long id){
+        return postRepository.findById(id);
+    }
+    public List<Post> findAll(){
+        return postRepository.findAll();
     }
 }
