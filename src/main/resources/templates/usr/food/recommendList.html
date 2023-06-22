@@ -1,0 +1,56 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>영양소 명세 리스트</title>
+</head>
+
+
+<body>
+<th:block layout:fragment="Content">
+
+    <div class="h-screen flex justify-center items-start">
+        <div class="w-4/6 flex flex-col justify-center">
+            <div class="mt-10 ml-10">
+                <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">영양소 목록</h3>
+            </div>
+            <div class="flex justify-center items-center mt-3 ml-10"
+                 style="background-color: #E6E6E6; height: 60px; border-radius: 10px;">
+
+                <input type="radio" name="nutrition" value="에너지" class="radio radio ml-10 checked:bg-yellow-500"
+                       checked/>
+                <label class="text-black ml-2">에너지</label>
+
+                <input type="radio" name="nutrition" value="단백질" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">단백질</label>
+
+                <input type="radio" name="nutrition" value="지방" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">지방</label>
+
+                <input type="radio" name="nutrition" value="탄수화물" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">탄수화물</label>
+
+                <input type="radio" name="nutrition" value="당" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">당</label>
+
+                <input type="radio" name="nutrition" value="칼슘" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">칼슘</label>
+
+                <input type="radio" name="nutrition" value="나트륨" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">나트륨</label>
+
+                <input type="radio" name="nutrition" value="칼륨" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">칼륨</label>
+
+                <input type="radio" name="nutrition" value="비타민A" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2">비타민A</label>
+
+                <input type="radio" name="nutrition" value="비타민C" class="radio radio ml-10 checked:bg-yellow-500"/>
+                <label class="text-black ml-2 mr-10">비타민C</label>
+
+            </div>
+        </div>
+    </div>
+
+
+</th:block>
+</body>
