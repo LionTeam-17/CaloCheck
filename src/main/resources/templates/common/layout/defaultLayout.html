@@ -2,13 +2,13 @@
 
 <!--공통 JS / CSS 영역을 관리하는 환경 영역-->
 <head>
-  <th:block th:replace="common/fragments/config :: ConfigFragment"/>
+  <th:block th:replace="~{common/fragments/config :: ConfigFragment}"/>
   <title>공통 타이틀</title>
 </head>
 
 <body class="flex flex-col min-h-screen">
 <!--Header 영역을 참조합니다.-->
-<header th:replace="common/fragments/header :: HeaderFragment"></header>
+<header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
 
 <!--Content 내용 영역을 참조합니다-->
 <div class="flex flex-1 flex-col" style="background-color: #FFFFFF">
@@ -16,6 +16,6 @@
 </div>
 
 <!--Footer 영역을 참조합니다.-->
-<footer th:replace="common/fragments/footer :: FooterFragment"></footer>
+<footer th:replace="~{common/fragments/footer :: FooterFragment}"></footer>
 </body>
 </html>
