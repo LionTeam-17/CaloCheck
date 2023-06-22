@@ -17,7 +17,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     public Member create(
-            String username, String password, String name, String email, String nickname, Integer age,
+            String username, String password, String email, String nickname, Integer age,
             Double height, Double weight, Double muscleMass,  Double bodyFat
                          ) {
         Member member = Member.builder()
