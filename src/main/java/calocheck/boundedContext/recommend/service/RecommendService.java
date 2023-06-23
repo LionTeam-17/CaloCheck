@@ -33,5 +33,9 @@ public class RecommendService {
         Recommend save = recommendRepository.save(recommend);
     }
 
+    public List<Recommend> getAllRecommendList(){
+        return recommendRepository.findAll();
+    }
+
 
 }
