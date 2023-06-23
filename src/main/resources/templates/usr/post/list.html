@@ -12,7 +12,7 @@
                 <div class="px-4 flex flex-grow">
                     <div class="form-control flex flex-grow">
                         <div><i class="fa-solid fa-magnifying-glass"></i>
-                            원하는 태그를 검색해보세요
+                            검색
                         </div>
                         <div class="mt-4 flex">
                             <label class="flex flex-col flex-grow">
@@ -21,7 +21,7 @@
                                        onkeydown="handleEnterKey(event);"
                                        onkeyup="$(this).next().children(':first-child').text('검색');"
                                        onpaste="setTimeoutZero(() => $(this).keyup());"
-                                       placeholder="원하는 태그를 입력하세요" th:value="${kw}"
+                                       placeholder="검색어를 입력하세요." th:value="${kw}"
                                        type="text">
                                 <a class="btn btn-primary btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
                                    href="#"
@@ -73,18 +73,18 @@
                 <div class="flex flex-col" th:each="post, loop: ${paging}">
                     <div class="flex flex-grow justify-between">
                         <!-- 역순 정렬 로직 시작 -->
-                        <span class="font-bold font-xl px-2 flex justify-center" style="width: 7%"
+                        <span class="font-bold px-2 flex justify-center" style="width: 7%"
                               th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
                         <!-- 역순 정렬 로직 종료 -->
-                        <a class="font-bold font-xl flex justify-start" style="width: 25%"
+                        <a class="font-bold flex justify-start" style="width: 25%"
                            th:href="|/post/${post.getId()}|">
                             <span th:text="${post.subject}"></span>
                         </a>
-                        <span class="font-bold font-xl flex justify-center" style="width: 10%"
+                        <span class="font-bold flex justify-center" style="width: 10%"
                               th:text="${post.member.nickname}"></span>
-                        <span class="font-bold font-xl flex justify-center" style="width: 18%"
+                        <span class="font-bold flex justify-center" style="width: 18%"
                               th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>
-                        <span class="font-bold font-xl flex justify-center" style="width: 6%"
+                        <span class="font-bold flex justify-center" style="width: 6%"
                               th:text="${post.popularity}"></span>
                     </div>
                     <div class="divider my-2" style="height: 1px"></div>
@@ -95,20 +95,22 @@
         <div class="flex mt-5">
             <div class="flex flex-grow" th:if="${!paging.isEmpty()}">
                 <ul class="pagination justify-content-center flex justify-center flex-grow btn-group">
-                    <li class="btn page-item" style="background: green;color: black"
+                    <li class="btn btn-primary page-item"
                         th:if="${paging.hasPrevious() == true }">
                         <a class="page-link"
                            th:href="@{|?page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
                     </li>
-                    <li class="btn page-item"
-                        style="background: green;color: black"
-                        th:classappend="${page == paging.number} ? 'active'"
-                        th:each="page: ${#numbers.sequence(1, paging.totalPages)}" th:if="${page >= paging.number - 4 and page <= paging.number+5}">
-                        <a class="page-link" th:href="@{|?page=${page -1}|}" th:text="${page}"></a>
+                    <li class="btn btn-primary page-item"
+                        th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
+                        th:if="${page >= paging.number - 4 and page <= paging.number+5}">
+                        <a class="page-link" th:href="@{|?page=${page -1}|}"
+                           th:if="${page != paging.number+1}" th:text="${page}"></a>
+                        <a class="page-link text-xl" style="color:black" th:href="@{|?page=${page -1}|}"
+                           th:if="${page == paging.number+1}" th:text="${page}"></a>
                     </li>
-                    <li class="btn page-item" style="background: green;color: black"
+                    <li class="btn btn-primary page-item"
                         th:if="${paging.hasNext() == true }">
                         <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
                             <span>다음</span>

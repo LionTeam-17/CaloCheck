@@ -1,10 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${post.subject}"></title>
 </head>
 <body>
+<main class="flex-grow flex items-center justify-center" layout:fragment="Content">
+    <script th:inline="javascript">
+        function SaveComment__submit(form) {
+            // iComment 이(가) 올바른지 체크
+            form.iComment.value = form.iComment.value.trim();
 
+            if (form.iComment.value === "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.iComment.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+
+    <div class="max-w-5xl w-full mt-4 px-4">
+        <div class="flex flex-col">
+            <h1 class="font-bold font-xl mb-4" th:text="${post.subject}"></h1>
+            <div>
+                <span class="mr-2" th:text="${post.member.nickname}"></span>
+                <span class="mx-2" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="h-[500px]" th:text="${post.content}"></div>
+        <div class="flex justify-center">
+            <div class="btn btn-primary w-20">
+                <i class="fa-regular fa-thumbs-up"></i>
+                <span>&nbsp;추천</span>
+            </div>
+        </div>
+        <span>전체 댓글</span>
+        <span style="color: red" th:text="${commentList.size()}"></span>
+        <span>개</span>
+        <div class="divider mt-0"></div>
+        <div class="flex items-center card bg-light" th:unless="${!#lists.isEmpty(commentList)}">
+            댓글이 없습니다!!
+        </div>
+        <ul class="flex flex-col max-w-5xl w-full gap-4" th:if="${!#lists.isEmpty(commentList)}">
+            <li th:each="comment: ${commentList}">
+                <div class="max-w-5xl w-full">
+                    <div class="flex">
+                        <div class="flex justify-start items-center ml-7" style="width:20%"
+                             th:text="${comment.member.nickname}"></div>
+                        <div class="flex justify-start items-center" style="width:80%">
+                            <div class="flex justify-center items-center" th:text="${comment.content}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="divider my-1" style="height: 1px;width: 95%"></div>
+                </div>
+            </li>
+        </ul>
+        <form class="flex flex-col gap-6" method="POST" onsubmit="SaveComment__submit(this); return false;"
+              th:action>
+            <div class="flex flex-grow max-w-5xl w-full justify-center">
+                <div class="flex flex-col flex-grow posts-box mt-10">
+                    <div class="flex justify-center">
+                        <div class="flex flex-grow mt-2">
+                            <input class="border flex flex-grow border-black border-opacity-10 h-8 p-4 w-96"
+                                   id="id-input" name="iComment" placeholder="댓글을 입력하세요"
+                                   type="text"/>
+                            <!-- 등록 버튼 -->
+                            <div class="submit-button flex">
+                                <div class="flex">
+                                    <button class="btn btn-primary btn-sm ml-2 w-20">
+                                        <span class="text-center">등록</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
 </body>
 </html>
