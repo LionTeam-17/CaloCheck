@@ -1,8 +1,8 @@
-package calocheck.boundedContext.fooditem.service;
+package calocheck.boundedContext.foodInfo.service;
 
-import calocheck.boundedContext.fooditem.entity.FoodInfo;
-import calocheck.boundedContext.fooditem.entity.NutritionInfo;
-import org.hibernate.boot.jaxb.internal.stax.JpaOrmXmlEventReader;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
+import calocheck.boundedContext.nutritionInfo.service.NutritionInfoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
