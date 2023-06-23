@@ -1,6 +1,7 @@
-package calocheck.boundedContext.fooditem.service;
+package calocheck.boundedContext.foodInfo.service;
 
-import calocheck.boundedContext.fooditem.entity.NutritionInfo;
+import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
+import calocheck.boundedContext.nutritionInfo.service.NutritionInfoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

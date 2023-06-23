@@ -1,8 +1,8 @@
-package calocheck.boundedContext.fooditem.service;
+package calocheck.boundedContext.foodInfo.service;
 
-import calocheck.boundedContext.fooditem.entity.NutritionInfo;
-import calocheck.boundedContext.fooditem.entity.FoodInfo;
-import calocheck.boundedContext.fooditem.repository.FoodInfoRepository;
+import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
