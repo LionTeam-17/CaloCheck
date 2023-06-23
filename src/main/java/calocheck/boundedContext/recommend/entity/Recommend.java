@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -21,8 +20,11 @@ public class Recommend {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     private String nutritionName;
     private String description;
-    @OneToMany
-    private List<FoodInfo> foodList;
+
+    @ElementCollection
+    private String[] foodList;      //FIXME 동작은 잘 되는 것 같은데, 빨간줄 그여짐
+
 }

@@ -20,3 +20,21 @@ logging:
     com.ll.gramgram_ai: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+custom:
+  recommendList:
+    #탄수화물
+    carbohydrate: 국수, 빵, 라면, 떡, 사과, 현미, 커피, 과자, 고구마, 보리
+    #단백질
+    protein: 돼지고기, 닭고기, 소고기, 달걀, 우유, 국수, 두부, 빵, 대두, 오징어
+    #지방
+    fat: 돼지고기, 소고기, 콩기름, 달걀, 우유, 라면, 마요네즈, 빵, 과자, 닭고기
+    #칼슘
+    calcium: 우유, 김치, 라면, 멸치, 요구르트, 달걀, 치즈, 두부, 커피, 미역, 미꾸라지
+    #나트륨
+    sodium: 소금, 김치, 간장, 된장, 고추장, 라면, 국수, 빵, 쌈장, 미역, 달걀
+    #칼륨
+    potassium: 돼지고기, 김치, 우유, 닭고기, 커피, 감자, 고구마, 소고기, 고춧가루, 사과
+    #비타민 A
+    vitaminA: 당근, 달걀, 시금치, 우유, 상추, 고추장, 김, 수박, 시리얼, 장어
+    #비타민 C
+    vitaminC: 귤, 딸기, 오렌지, 시금치, 무, 토마토, 고구마, 풋고추, 시리얼, 양배추
