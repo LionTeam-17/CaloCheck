@@ -24,7 +24,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public String showPostList(@RequestParam(defaultValue = "0") int page, Model model) {
         List<Post> postList = postService.findAll();
         Page<Post> paging = postService.getList(page);
@@ -75,7 +75,7 @@ public class PostController {
             return rq.historyBack(postRsData);
         }
 
-        return rq.redirectWithMsg("/post", postRsData);
+        return rq.redirectWithMsg("/post/list", postRsData);
     }
 
     // todo UI와 연결
@@ -84,7 +84,7 @@ public class PostController {
     public String deletePost(@PathVariable Long postId) {
         RsData<Post> deletePostRsData = postService.deletePost(postId, rq.getMember().getId());
 
-        return rq.redirectWithMsg("/postId/" + postId, deletePostRsData);
+        return rq.redirectWithMsg("/post/list", deletePostRsData);
     }
 
     // todo UI와 연결
