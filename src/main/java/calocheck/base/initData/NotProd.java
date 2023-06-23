@@ -5,6 +5,7 @@ import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
+import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +43,13 @@ public class NotProd {
                     .toArray(Post[]::new);
 
             recommendService.createRecommend("carbohydrate", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
-
+            recommendService.createRecommend("protein", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
+            recommendService.createRecommend("fat", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
+            recommendService.createRecommend("calcium", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("sodium", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
+            recommendService.createRecommend("potassium", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
+            recommendService.createRecommend("vitaminA", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
+            recommendService.createRecommend("vitaminC", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
 
         };
     }
