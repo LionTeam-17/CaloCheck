@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,23 +20,20 @@ public class RecommendController {
     private final RecommendService recommendService;
 
     @GetMapping("/list")
-    public String getRecommendList(Model model) {
+    public String getRecommendList(@ModelAttribute("selectedValue") String selectedValue, Model model) {
+
+        System.out.println("selectedValue222 = " + selectedValue);
 
         List<Recommend> allRecommendList = recommendService.getAllRecommendList();
-
         model.addAttribute("recommendList", allRecommendList);
-
+        model.addAttribute("selectedValue", selectedValue);
         return "/usr/food/recommendList";
     }
 
-
     @PostMapping("/list")
-    @ResponseBody
-    public String getRecommendList(@RequestBody String selectedValue){
-
-        System.out.println("selectedValue = " + selectedValue);
-
-        return "선택된 영양소 : " + selectedValue;
+    public String postRecommendList(@RequestBody String selectedValue, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("selectedValue", selectedValue);
+        return "redirect:/recommend/list";
     }
 
 }

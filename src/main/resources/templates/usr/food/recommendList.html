@@ -44,28 +44,27 @@
             <input type="radio" name="nutritionType" value="vitaminC"
                    class="radio radio ml-10 checked:bg-yellow-500"/>
             <label class="text-black ml-2 whitespace-nowrap mr-10">비타민C</label>
+
+            <input type="hidden" name="_csrf" value="${_csrf.token}" />
         </div>
     </div>
 
-    <div id="output" class="mt-5 ml-10">
+    <div th:text="${selectedValue}"></div>
 
-    </div>
-
-    <script>
+    <script th:inline="javascript">
         // 선택된 라디오 버튼의 변경 이벤트를 감지
         const radioButtons = document.getElementsByName("nutritionType");
         radioButtons.forEach(function (radioButton) {
             radioButton.addEventListener("change", function () {
                 // 선택된 값 가져오기
                 const selectedValue = document.querySelector('input[name="nutritionType"]:checked').value;
-                const headerName = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
-                const tokenValue = document.querySelector("meta[name='_csrf']").getAttribute("content");
+                const csrfToken = /*[[${_csrf.token}]]*/ ''; // CSRF 토큰 값을 가져옵니다
 
                 fetch(`http://localhost:8080/recommend/list`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        [headerName] : tokenValue
+                        "X-CSRF-TOKEN": csrfToken // CSRF 토큰을 헤더에 추가
                     },
                     body: JSON.stringify(selectedValue)
                 })
