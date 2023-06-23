@@ -1,5 +1,7 @@
 package calocheck.base.initData;
 
+import calocheck.boundedContext.comment.entity.Comment;
+import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
@@ -20,7 +22,8 @@ public class NotProd {
     @Transactional
     public CommandLineRunner initData(
             MemberService memberService,
-            PostService postService
+            PostService postService,
+            CommentService commentService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -35,6 +38,12 @@ public class NotProd {
                     .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
+
+            Comment[] comments = IntStream
+                    .rangeClosed(1, 5)
+                    .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), posts[99], members[i])
+                            .getData())
+                    .toArray(Comment[]::new);
         };
     }
 }
