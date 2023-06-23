@@ -41,7 +41,8 @@ public class NotProd {
                             .getData())
                     .toArray(Post[]::new);
 
-            recommendService.createRecommend("탄수화물", "탄수화물 입니다", RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("carbohydrate", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
+
 
         };
     }

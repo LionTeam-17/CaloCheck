@@ -72,4 +72,69 @@ public class RecommendConfig {
         RecommendConfig.vitaminCFoodList = vitaminCFoodList;
     }
 
+    @Getter
+    private static String carbohydrateDescription;
+
+    @Value("${custom.description.carbohydrate}")
+    public void setCarbohydrateDescription(String carbohydrateDescription){
+        RecommendConfig.carbohydrateDescription = carbohydrateDescription;
+    }
+
+    @Getter
+    private static String proteinDescription;
+
+    @Value("${custom.description.protein}")
+    public void setProteinDescription(String proteinDescription){
+        RecommendConfig.proteinDescription = proteinDescription;
+    }
+
+    @Getter
+    private static String fatDescription;
+
+    @Value("${custom.description.fat}")
+    public void setFatDescription(String fatDescription){
+        RecommendConfig.fatDescription = fatDescription;
+    }
+
+    @Getter
+    private static String calciumDescription;
+
+    @Value("${custom.description.calcium}")
+    public void setCalciumDescription(String calciumDescription){
+        RecommendConfig.calciumDescription = calciumDescription;
+    }
+
+    @Getter
+    private static String sodiumDescription;
+
+    @Value("${custom.description.sodium}")
+    public void setSodiumDescription(String sodiumDescription){
+        RecommendConfig.sodiumDescription = sodiumDescription;
+    }
+
+    @Getter
+    private static String potassiumDescription;
+
+    @Value("${custom.description.potassium}")
+    public void setPotassiumDescription(String potassiumDescription){
+        RecommendConfig.potassiumDescription = potassiumDescription;
+    }
+
+    @Getter
+    private static String vitaminADescription;
+
+    @Value("${custom.description.vitaminA}")
+    public void setVitaminADescription(String vitaminADescription){
+        RecommendConfig.vitaminADescription = vitaminADescription;
+    }
+
+    @Getter
+    private static String vitaminCDescription;
+
+    @Value("${custom.description.vitaminC}")
+    public void setVitaminCDescription(String vitaminCDescription){
+        RecommendConfig.vitaminCDescription = vitaminCDescription;
+    }
+
+
 }

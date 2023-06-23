@@ -32,7 +32,10 @@ public class RecommendService {
 
         Recommend save = recommendRepository.save(recommend);
 
+        System.out.println("save.getNutritionName() = " + save.getNutritionName());
+        System.out.println("save.getDescription() = " + save.getDescription());
         System.out.println("Arrays.toString(save.getFoodList()) = " + Arrays.toString(save.getFoodList()));
+        
         
         return RsData.of("S-1", "%s 에 대한 추천 내용이 생성되었습니다.".formatted(nutritionName));
     }
