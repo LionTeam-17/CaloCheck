@@ -5,9 +5,14 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +22,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public RsData<Post> savePost(String subject,String content , final Member member){
+    public RsData<Post> savePost(String subject, String content, final Member member) {
         Post post = Post.builder()
                 .member(member)
                 .subject(subject)
@@ -26,7 +31,7 @@ public class PostService {
 
         postRepository.save(post);
 
-        return RsData.of("S-1", "댓글이 등록되었습니다.", post);
+        return RsData.of("S-1", "게시물이 등록되었습니다.", post);
     }
 
     public RsData<Post> modifyPost(final Long id, String content, Member member) {
@@ -64,10 +69,23 @@ public class PostService {
         return RsData.of("S-1", "댓글이 삭제되었습니다.");
     }
 
-    public Optional<Post> findById(Long id){
+    @Transactional(readOnly = true)
+    public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
     }
-    public List<Post> findAll(){
+
+    @Transactional(readOnly = true)
+    public List<Post> findAll() {
         return postRepository.findAll();
+    }
+
+    //-- paging --//
+    @Transactional(readOnly = true)
+    public Page<Post> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findAll(pageable);
     }
 }

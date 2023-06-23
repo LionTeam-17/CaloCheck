@@ -1,6 +1,6 @@
-package calocheck.boundedContext.fooditem.repository;
+package calocheck.boundedContext.nutritionInfo.repository;
 
-import calocheck.boundedContext.fooditem.entity.NutritionInfo;
+import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NutritionInfoRepository extends JpaRepository<NutritionInfo, Long> {

@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class RecommendController {
     private final RecommendService recommendService;
 
     @GetMapping("/list")
-    public String getRecommendList(Model model){
+    public String getRecommendList(Model model) {
 
         List<Recommend> allRecommendList = recommendService.getAllRecommendList();
 
@@ -25,6 +27,7 @@ public class RecommendController {
 
         return "/usr/food/recommendList";
     }
+
 
     @PostMapping("/list")
     @ResponseBody

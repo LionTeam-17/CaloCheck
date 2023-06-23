@@ -1,16 +1,11 @@
 package calocheck.boundedContext.recommend.service;
 
-import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.fooditem.entity.FoodInfo;
-import calocheck.boundedContext.member.entity.Member;
-import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.repository.RecommendRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,7 +27,6 @@ public class RecommendService {
 
         Recommend save = recommendRepository.save(recommend);
     }
-
     public List<Recommend> getAllRecommendList(){
         return recommendRepository.findAll();
     }

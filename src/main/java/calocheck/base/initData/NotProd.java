@@ -1,5 +1,7 @@
 package calocheck.base.initData;
 
+import calocheck.boundedContext.comment.entity.Comment;
+import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
@@ -23,7 +25,8 @@ public class NotProd {
     public CommandLineRunner initData(
             MemberService memberService,
             PostService postService,
-            RecommendService recommendService
+            RecommendService recommendService,
+            CommentService commentService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -48,6 +51,12 @@ public class NotProd {
             recommendService.createRecommend("vitaminA", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
             recommendService.createRecommend("vitaminC", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
 
+
+            Comment[] comments = IntStream
+                    .rangeClosed(1, 5)
+                    .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), posts[99], members[i])
+                            .getData())
+                    .toArray(Comment[]::new);
         };
     }
 }

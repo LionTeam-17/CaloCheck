@@ -1,6 +1,7 @@
-package calocheck.boundedContext.fooditem.entity;
+package calocheck.boundedContext.foodInfo.entity;
 
 import calocheck.base.entity.BaseEntity;
+import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
