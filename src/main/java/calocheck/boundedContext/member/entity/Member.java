@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,4 +32,21 @@ public class Member extends BaseEntity {
     private Double weight;
     private Double muscleMass;
     private Double bodyFat;
+
+    public List<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        grantedAuthorities.add(new SimpleGrantedAuthority("member"));
+
+        if (isAdmin()) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
+        }
+
+        return grantedAuthorities;
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
+    }
+
 }

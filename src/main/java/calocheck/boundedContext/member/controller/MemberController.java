@@ -44,6 +44,8 @@ public class MemberController {
         private double muscleMass;
         private double bodyFat;
     }
+
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String showJoin() {
         return "usr/member/join";
