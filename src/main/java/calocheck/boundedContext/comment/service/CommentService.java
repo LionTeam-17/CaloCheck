@@ -65,10 +65,13 @@ public class CommentService {
         return RsData.of("S-1", "댓글이 삭제되었습니다.");
     }
 
+    @Transactional(readOnly = true)
     public Optional<Comment> findById(Long id) {
         return commentRepository.findById(id);
     }
-    public List<Comment> findAllByPostId(Long id){
+
+    @Transactional(readOnly = true)
+    public List<Comment> findAllByPostId(Long id) {
         return commentRepository.findAllByPostId(id);
     }
 }

@@ -1,0 +1,69 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>영양소 명세 리스트</title>
+</head>
+
+<body>
+<th:block layout:fragment="Content">
+
+    <div>
+        <div class="mt-10 ml-10 flex">
+            <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">영양소 목록</h3>
+        </div>
+        <div class="flex flex-wrap justify-center items-center mt-3 ml-10 mr-10 py-3 bg-gray-300 rounded-lg h-auto">
+
+            <input type="radio" name="nutrition" value="carbohydrate" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">탄수화물</label>
+
+            <input type="radio" name="nutrition" value="protein" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">단백질</label>
+
+            <input type="radio" name="nutrition" value="fat" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">지방</label>
+
+            <input type="radio" name="nutrition" value="calcium" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">칼슘</label>
+
+            <input type="radio" name="nutrition" value="sodium" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">나트륨</label>
+
+            <input type="radio" name="nutrition" value="potassium" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">칼륨</label>
+
+            <input type="radio" name="nutrition" value="vitaminA" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap">비타민A</label>
+
+            <input type="radio" name="nutrition" value="vitaminC" class="radio radio ml-10 checked:bg-yellow-500"/>
+            <label class="text-black ml-2 whitespace-nowrap mr-10">비타민C</label>
+
+            <button type="submit" class="btn btn-warning whitespace-nowrap mr-10">탐색하기</button>
+        </div>
+    </div>
+
+    <!-- FIXME 1.자바스크립트 OR 2.타임리프 (DB에 내용 저장 후, 2번으로 진행 예정 => Script로만 처리는 너무 노가다 프론트 영역)-->
+    <div id="output" class="mt-5 ml-10 flex bg-gray-200 w-80">
+        <!-- 선택된 라디오 버튼에 따라 출력될 내용 -->
+    </div>
+
+    <!--        <div class="mt-5 ml-10">-->
+    <!--            <p>선택된 영양소: <span th:text="${selectedNutrition}"></span></p>-->
+    <!--        </div>-->
+
+    <script>
+        // 선택된 라디오 버튼의 변경 이벤트를 감지
+        const radioButtons = document.getElementsByName("nutrition");
+        radioButtons.forEach(function (radioButton) {
+            radioButton.addEventListener("change", function () {
+                // 선택된 값 가져오기
+                const selectedValue = document.querySelector('input[name="nutrition"]:checked').value;
+
+                // 선택된 값에 따라 내용 변경
+                const output = document.getElementById("output");
+                output.textContent = "선택된 영양소: " + selectedValue;
+            });
+        });
+    </script>
+
+</th:block>
+</body>
