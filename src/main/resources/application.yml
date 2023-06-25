@@ -83,3 +83,18 @@ custom:
     potassium: 신경의 흥분이나 심근의 수축을 돕는 역할을 하는 전해질 \n 혈액 내 칼륨 수치가 너무 높거나 낮아지면 부정맥, 호흡곤란, 쇼크가 발생할 수 있어 주의 \n 칼륨 수치가 낮으면 전신 경련, 의식 저하, 근무력증 증상이 발생할 수 있음.
     vitaminA: 어두운 곳에서 눈의 적응, 피부 점막의 건강 유지, 성장촉진 골격과 치아의 구성성분혈액의 응고 촉진 \n 함유식품 \n 동물성 식품 => 간유, 난황, 버터, 연어 \n 식물성 식품 => 당근, 시금치 등의 녹황색 채소, 감, 귤 등의 과일 \n 결핍증 => 야맹증, 피부의 거칠음, 각막 건조증
     vitaminC: 피부, 뼈, 혈관 등을 건강하게 유지, 세포의 산화, 환원에 관여, 혈액응고 \n 함유식품 => 감귤류, 녹황색 채소 등 싱싱한 채소와 과일 \n 결핍증 => 괴혈병(잇몸 출혈, 빈혈)
+
+cloud:
+  aws:
+    credentials:
+      access-key: prhWvIq8wc81j6w0Msa6
+      secret-key: gL5XFH4GQbg3SOczdgaH3W8kr3N3UxKncCNp2gmn
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    s3:
+      endpoint: https://kr.object.ncloudstorage.com
+      bucket: calocheck
+  cdn:
+    url: https://mxpijmgqueja17962851.cdn.ntruss.com/

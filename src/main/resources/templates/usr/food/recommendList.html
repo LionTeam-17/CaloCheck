@@ -37,8 +37,13 @@
             <input type="radio" name="nutrition" value="vitaminC" class="radio radio ml-10 checked:bg-yellow-500"/>
             <label class="text-black ml-2 whitespace-nowrap mr-10">비타민C</label>
 
-            <button type="submit" class="btn btn-warning whitespace-nowrap mr-10">탐색하기</button>
         </div>
+
+        <form method="post" th:action="@{/recommend/img}" enctype="multipart/form-data">
+            <input id="img" name="file" type="file" class="file-input file-input-bordered file-input ml-10" />
+            <button type="submit" class="btn btn-warning">(임시) 이미지업로드</button>
+        </form>
+
     </div>
 
     <!-- FIXME 1.자바스크립트 OR 2.타임리프 (DB에 내용 저장 후, 2번으로 진행 예정 => Script로만 처리는 너무 노가다 프론트 영역)-->
