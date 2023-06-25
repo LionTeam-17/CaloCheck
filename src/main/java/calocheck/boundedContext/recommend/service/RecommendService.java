@@ -36,16 +36,9 @@ public class RecommendService {
     @Transactional
     public Recommend getRecommendByName(String selectedValue){
 
-        String nutritionName = formattingJsonToStr(selectedValue);
-
-        Optional<Recommend> byNutritionName = recommendRepository.findByNutritionName(nutritionName);
+        Optional<Recommend> byNutritionName = recommendRepository.findByNutritionName(selectedValue);
 
         return byNutritionName.orElse(null);
-    }
-
-    public String formattingJsonToStr(String selectedValue){
-
-        return selectedValue.substring(1, selectedValue.length() - 1);
     }
 
 
