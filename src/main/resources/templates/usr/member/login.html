@@ -1,4 +1,4 @@
-<html>
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 
 <head>
     <title>
@@ -9,7 +9,7 @@
 
 <body>
 
-<div>
+<div class="flex-grow flex items-center justify-center" layout:fragment="Content">
     <script>
         function loginFormSubmmit(form) {
 
