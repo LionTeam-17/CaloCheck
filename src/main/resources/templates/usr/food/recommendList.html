@@ -45,11 +45,15 @@
                    class="radio radio ml-10 checked:bg-yellow-500"/>
             <label class="text-black ml-2 whitespace-nowrap mr-10">비타민C</label>
 
-            <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        </div>
+
+        <div class="w-full h-full bg-gray-300 rounded-lg" th:if="${nutrition}">
+            <h1 class="font-black" th:text="${nutrition.description}"></h1>
+            <h1 class="font-black" th:text="${nutrition.nutritionName}"></h1>
         </div>
     </div>
 
-    <div th:text="${selectedValue}"></div>
+
 
     <script th:inline="javascript">
         // 선택된 라디오 버튼의 변경 이벤트를 감지
