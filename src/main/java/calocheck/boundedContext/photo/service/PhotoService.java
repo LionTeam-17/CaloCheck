@@ -57,7 +57,7 @@ public class PhotoService {
         String ext = originalFilename.substring(index + 1);
 
         String storeFileName = UUID.randomUUID() + "." + ext;
-        String key = "devchall_img/" + storeFileName;
+        String key = "foodImage/" + storeFileName;
 
         InputStream inputStream = file.getInputStream();
 
