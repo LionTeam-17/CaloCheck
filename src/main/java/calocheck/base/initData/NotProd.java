@@ -28,7 +28,7 @@ public class NotProd {
     public CommandLineRunner initData(
             MemberService memberService,
             PostService postService,
-            RecommendService recommendService
+            RecommendService recommendService,
             CommentService commentService
     ) {
         return args -> {

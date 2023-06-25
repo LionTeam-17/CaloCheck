@@ -1,6 +1,5 @@
 package calocheck.boundedContext.recommend.entity;
 
-import calocheck.boundedContext.fooditem.entity.FoodInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
