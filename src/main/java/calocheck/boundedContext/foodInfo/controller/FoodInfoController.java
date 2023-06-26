@@ -23,18 +23,23 @@ import java.util.List;
 public class FoodInfoController {
     private final Rq rq;
     private final FoodInfoService foodInfoService;
-    private final NutritionInfoService nutritionInfoService;
     private final FoodDataExtractor foodDataExtractor;
 
 
     @GetMapping("/search")
-    public String foodSearch(Model model,
+    public String searchFoodInfo(Model model,
                              @RequestParam(value = "keyword", defaultValue = "") String keyword,
                              @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<FoodInfo> paging = foodInfoService.findAll(pageable);
+        Page<FoodInfo> paging = null;
+
+        switch (keyword) {
+            case "": paging = foodInfoService.findAll(pageable); break;
+            default: paging = foodInfoService.findByFoodNameContains(pageable, keyword); break;
+        }
+
         List<FoodInfo> foodList = paging.getContent();
 
         model.addAttribute("paging", paging);
@@ -45,7 +50,7 @@ public class FoodInfoController {
     }
 
     @GetMapping("/details/{id}")
-    public String foodDetails(Model model, @PathVariable("id") Long id) {
+    public String showDetails(Model model, @PathVariable("id") Long id) {
         FoodInfo foodInfo = foodInfoService.findById(id);
 
         if (foodInfo == null) {
@@ -62,7 +67,7 @@ public class FoodInfoController {
 
     @GetMapping("/excel-data-save")
     @ResponseBody
-    public String test() {
+    public String excelDataSave() {
         try {
             foodDataExtractor.readFile();
             return "success";

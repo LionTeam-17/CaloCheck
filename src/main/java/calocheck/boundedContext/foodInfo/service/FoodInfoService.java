@@ -60,4 +60,7 @@ public class FoodInfoService {
         return foodInfoRepository.findAll(pageable);
     }
 
+    public Page<FoodInfo> findByFoodNameContains(Pageable pageable, String foodName) {
+        return foodInfoRepository.findByFoodNameContains(foodName, pageable);
+    }
 }
