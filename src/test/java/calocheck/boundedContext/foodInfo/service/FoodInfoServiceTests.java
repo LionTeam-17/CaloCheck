@@ -19,7 +19,7 @@ public class FoodInfoServiceTests {
     @Autowired
     private FoodInfoService foodInfoService;
 
-    private final int SIZE = 18;
+    private final int SIZE = 14;
     private String foodName = "음식 이름1";
     private String manufacturer = "제조사1";
     private String category = "분류1";
@@ -38,8 +38,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
@@ -59,8 +58,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
@@ -84,8 +82,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
