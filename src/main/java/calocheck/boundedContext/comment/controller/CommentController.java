@@ -8,7 +8,6 @@ import calocheck.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,7 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
 
-    //    @PreAuthorize("isAuthenticated()")
-    // todo login 구현 시 해제
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{postId}")
     public String saveComment(@PathVariable Long postId, String iComment) {
         if (iComment == null || iComment.length() == 0) {
@@ -43,26 +41,14 @@ public class CommentController {
         return rq.redirectWithMsg("/post/" + postId, commentRsData);
     }
 
-    // todo UI와 연결
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{postId}/comment/{commentId}")
+    @PostMapping("/{postId}/{commentId}/delete")
     public String deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
         RsData<Comment> deleteCmtRsData = commentService.deleteComment(commentId, rq.getMember().getId());
 
+        if (deleteCmtRsData.isFail()) {
+            return rq.historyBack(deleteCmtRsData);
+        }
         return rq.redirectWithMsg("/post/" + postId, deleteCmtRsData);
-    }
-
-    // todo UI와 연결
-    @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{postId}/comment/{commentId}/modify")
-    public String modifyComment(
-            @PathVariable Long postId,
-            @PathVariable Long commentId,
-            String modifyComment
-    ) {
-        RsData<Comment> modifyCommentRsData =
-                commentService.modifyComment(commentId, modifyComment, rq.getMember());
-
-        return rq.redirectWithMsg("/post/" + postId, modifyCommentRsData);
     }
 }
