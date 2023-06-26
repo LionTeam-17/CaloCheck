@@ -13,12 +13,15 @@
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Log</a></li>
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Community</a></li>
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">My Page</a></li>
-                <li><a href="/member/login" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Login</a></li>
-                <li><a href="/member/join" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Sign Up</a></li>
+                <li><a class="text-gray-600 hover:text-gray-800" href="/member/login" sec:authorize="isAnonymous()">Login</a>
+                </li>
+                <li><a class="text-gray-600 hover:text-gray-800" href="/member/join" sec:authorize="isAnonymous()">Sign
+                    Up</a></li>
 
-                <a href="javascript:;" sec:authorize="isAuthenticated()"
-                   onclick="$(this).next().submit();" class="text-gray-600 hover:text-gray-800">Logout</a>
-                <form th:action="|/member/logout|" method="POST"></form>
+                <li><a class="text-gray-600 hover:text-gray-800" href="javascript:;"
+                       onclick="$(this).next().submit();" sec:authorize="isAuthenticated()">Logout</a>
+                    <form method="POST" th:action="|/member/logout|"></form>
+                </li>
             </ul>
         </nav>
     </div>
