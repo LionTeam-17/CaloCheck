@@ -1,26 +1,37 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="HeaderFragment"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="stylesheet" href="/resource/common/common.css">
 </head>
 <body>
-<header class="bg-white py-4">
-    <div class="container mx-auto px-4">
-        <nav class="flex items-center justify-between">
-            <a href="#" class="text-lg font-bold text-gray-800">Calo Check</a>
-            <ul class="flex space-x-4">
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Home</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Search</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Log</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Community</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">My Page</a></li>
-                <li><a href="/member/login" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Login</a></li>
-                <li><a href="/member/join" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Sign Up</a></li>
-
-                <a href="javascript:;" sec:authorize="isAuthenticated()"
-                   onclick="$(this).next().submit();" class="text-gray-600 hover:text-gray-800">Logout</a>
+<header class="site-header sticky z-50 top-0">
+    <div class="navbar max-w-3xl mx-auto" style="display: flex; align-items: center;">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <label tabindex="0" class="btn btn-square btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </label>
+                <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow rounded-box w-52">
+                    <li><a href="#" class="text-gray-600 hover:text-gray-800">Home</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-800">Search</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-800">Log</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-800">Community</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-gray-800">My Page</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <a th:href="@{/}" class="text-lg font-bold text-white">Calo Check</a>
+        </div>
+        <div class="navbar-end px-4" style="margin-top: 10px;">
+            <div>
+                <a th:href="@{/member/login}" sec:authorize="isAnonymous()" class="text-white hover:text-gray-800">Login</a>
+                <a href="javascript:;" sec:authorize="isAuthenticated()" onclick="$(this).next().submit();" class="text-white hover:text-gray-800">Logout</a>
                 <form th:action="|/member/logout|" method="POST"></form>
-            </ul>
-        </nav>
+            </div>
+        </div>
     </div>
 </header>
 </body>
