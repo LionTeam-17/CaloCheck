@@ -6,6 +6,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
@@ -23,7 +26,19 @@ public class RecommendService {
                 .foodList(foodList)
                 .build();
 
-        Recommend save = recommendRepository.save(recommend);
+       recommendRepository.save(recommend);
+    }
+
+    public List<Recommend> getAllRecommendList(){
+        return recommendRepository.findAll();
+    }
+
+    @Transactional
+    public Recommend getRecommendByName(String selectedValue){
+
+        Optional<Recommend> byNutritionName = recommendRepository.findByNutritionName(selectedValue);
+
+        return byNutritionName.orElse(null);
     }
 
 
