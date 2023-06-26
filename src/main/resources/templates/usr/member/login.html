@@ -9,7 +9,10 @@
 
 <body>
 
-<div class="flex-grow flex items-center justify-center" layout:fragment="Content">
+<th:block layout:fragment="Content">
+
+<div class="flex-grow flex items-center justify-center" >
+
     <script>
         function loginFormSubmmit(form) {
 
@@ -33,11 +36,6 @@
             form.submit(); // 폼 발송
         }
     </script>
-
-    <!-- 데이지 UI 불러오기 -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
-    <!-- 테일윈드 불러오기 -->
-    <script src="https://cdn.tailwindcss.com"></script>
 
         <div class="hero-content flex-col">
 
@@ -81,7 +79,6 @@
 
     </div>
 </div>
+</th:block>
 </body>
-
-
 </html>

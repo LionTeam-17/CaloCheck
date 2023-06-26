@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/member")
@@ -38,11 +39,11 @@ public class MemberController {
         @NotBlank
         @Size(min = 2, max = 20)
         private final String nickname;
-        private int age;
-        private double height;
-        private double weight;
-        private double muscleMass;
-        private double bodyFat;
+        private Integer age;
+        private Double height;
+        private Double weight;
+        private Double muscleMass;
+        private Double bodyFat;
     }
 
     @PreAuthorize("isAnonymous()")
