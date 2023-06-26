@@ -16,7 +16,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/member/login")
+                )
+                .oauth2Login(
+                        oauth2Login -> oauth2Login
+                                .loginPage("/member/login")
+                )
+                .logout(
+                        logout -> logout
+                                .logoutUrl("/member/logout")
+                );
+
         return http.build();
     }
 

@@ -47,6 +47,13 @@
 
         </div>
 
+        <form method="post" th:action="@{/recommend/img}" enctype="multipart/form-data">
+            <input id="img" name="img" type="file" class="file-input file-input-bordered file-input ml-10" />
+            <button type="submit" class="btn btn-warning">(임시) 이미지업로드</button>
+        </form>
+
+    </div>
+
         <div class="w-full h-full bg-gray-300 rounded-lg" th:if="${nutrition}">
             <h1 class="font-black" th:text="${nutrition.nutritionName}"></h1>
             <h1 class="font-black" th:text="${nutrition.description}"></h1>

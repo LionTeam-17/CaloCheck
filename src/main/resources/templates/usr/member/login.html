@@ -1,0 +1,87 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+
+<head>
+    <title>
+        로그인
+    </title>
+
+</head>
+
+<body>
+
+<div class="flex-grow flex items-center justify-center" layout:fragment="Content">
+    <script>
+        function loginFormSubmmit(form) {
+
+            form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.username.value.length == 0) {
+                toastWarning('아이디를 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            form.password.value = form.password.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.password.value.length == 0) {
+                form.password.focus();
+                toastWarning('비밀번호를 입력해주세요.');
+                return;
+            }
+
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+
+    <!-- 데이지 UI 불러오기 -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
+    <!-- 테일윈드 불러오기 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+        <div class="hero-content flex-col">
+
+            <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
+                로그인
+            </h2>
+
+            <form th:action method="POST" class="p-10 flex flex-col gap-4"
+                  onsubmit="loginFormSubmmit(this); return false;">
+
+                <div class="form-control">
+                    <input type="text" name="username" maxlength="20" placeholder="아이디" class="input input-bordered">
+                </div>
+                <div class="form-control">
+                    <input type="password" name="password" maxlength="20" placeholder="비밀번호" class="input input-bordered">
+                </div>
+
+                <div class="form-control">
+                    <input type="submit" value="로그인" class="btn btn-accent">
+                </div>
+
+                <div class="divider"></div>
+                <a class="btn btn-outline btn-warning flex gap-2" href="/oauth2/authorization/kakao">
+                    <i class="fa-solid fa-comment"></i>
+                    카카오로 시작하기
+                </a>
+
+                <a class="btn btn-outline btn-success flex gap-2" href="/oauth2/authorization/naver">
+                    <i class="fa-solid fa-n"></i>
+                    네이버로 시작하기
+                </a>
+
+                <a class="btn btn-outline btn-error flex gap-2" href="/oauth2/authorization/google">
+                    <i class="fa-brands fa-google"></i>
+                    구글로 시작하기
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+</html>
