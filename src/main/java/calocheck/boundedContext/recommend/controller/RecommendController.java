@@ -38,6 +38,8 @@ public class RecommendController {
             System.out.println(isImg.getMsg());
         }
 
+        photoService.vision(photoUrl);
+
         return "redirect:/recommend/list";
     }
 
