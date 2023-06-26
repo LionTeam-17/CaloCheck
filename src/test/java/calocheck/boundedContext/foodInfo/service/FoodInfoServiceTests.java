@@ -7,7 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -91,5 +96,37 @@ public class FoodInfoServiceTests {
         foodInfoService.delete(foodInfo);
 
         assertThat(foodInfoService.findById(foodInfo.getId())).isNull();
+    }
+
+    @Test
+    @DisplayName("음식정보 findAll")
+    void findAllFoodInfo() {
+        List<FoodInfo> foodInfoList = foodInfoService.findAll();
+
+        assertThat(foodInfoList.size()).isEqualTo(99);
+    }
+
+    @Test
+    @DisplayName("FoodInfo findAll 페이징")
+    void findAllFoodInfoWithPaging() {
+        int page = 0, size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<FoodInfo> paging = foodInfoService.findAll(pageable);
+        List<FoodInfo> foodInfoList = paging.getContent();
+
+        assertThat(foodInfoList.size()).isEqualTo(size);
+    }
+
+    @Test
+    @DisplayName("FoodName 키워드 검색")
+    void findByFoodNameContains() {
+        int page = 0, size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<FoodInfo> paging = foodInfoService.findByFoodNameContains(pageable, "강정");
+        List<FoodInfo> foodInfoList = paging.getContent();
+
+        assertThat(foodInfoList.size()).isEqualTo(2);
     }
 }
