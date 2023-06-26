@@ -1,23 +1,23 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
-    <title>글쓰기 - CaloCheck</title>
+    <title>글수정 - CaloCheck</title>
 </head>
 <body>
 <main class="flex-grow flex items-center justify-center" layout:fragment="Content">
     <script th:inline="javascript">
-        function SavePost__submit(form) {
+        function ModifyPost__submit(form) {
             // iComment 이(가) 올바른지 체크
-            form.iSubject.value = form.iSubject.value.trim();
-            form.iContent.value = form.iContent.value.trim();// 입력란의 입력값에 있을지 모르는 좌우공백제거
+            form.iModifySubject.value = form.iModifySubject.value.trim();
+            form.iModifyContent.value = form.iModifyContent.value.trim();// 입력란의 입력값에 있을지 모르는 좌우공백제거
 
-            if (form.iSubject.value === "") {
+            if (form.iModifySubject.value === "") {
                 toastWarning('제목을 입력해주세요.');
-                form.iSubject.focus();
+                form.iModifySubject.focus();
                 return;
             }
-            if (form.iContent.value === "") {
+            if (form.iModifyContent.value === "") {
                 toastWarning('내용을 입력해주세요.');
-                form.iContent.focus();
+                form.iModifyContent.focus();
                 return;
             }
 
@@ -27,13 +27,13 @@
 
     <div class="flex flex-col max-w-5xl w-full justify-center">
         <section class="mb-5 max-w-5xl w-full">
-            <form class="flex flex-col gap-6" method="POST" onsubmit="SavePost__submit(this); return false;"
+            <form class="flex flex-col gap-6" method="POST" onsubmit="ModifyPost__submit(this); return false;"
                   th:action>
                 <div class="flex flex-grow max-w-5xl w-full justify-center">
                     <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
                         <div class="flex justify-center">
                             <div class="text-center font-bold text-4xl text-black">
-                                게시물 작성
+                                게시물 수정
                             </div>
                         </div>
                         <div class="mt-10 flex justify-center">
@@ -46,7 +46,7 @@
                                 <!-- 제목 입력 -->
                                 <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
                                     <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
-                                           id="id-input" name="iSubject" placeholder="제목을 입력하세요."
+                                           id="id-input" name="iModifySubject" placeholder="제목을 입력하세요."
                                            type="text"/>
                                 </div>
                                 <!-- 내용 -->
@@ -57,7 +57,7 @@
                                 <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
                             <textarea
                                     class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
-                                    cols="45" name="iContent" placeholder="내용을 입력하세요."
+                                    cols="45" name="iModifyContent" placeholder="내용을 입력하세요."
                                     rows="15"></textarea>
                                 </div>
                             </div>
@@ -67,14 +67,14 @@
                             <div class="flex max-w-5xl w-full justify-end">
                                 <div class="flex mt-6">
                                     <button class="btn btn-sm w-20 mr-2" style="background: gray;border: gray">
-                                        <a href="/post">취소</a>
+                                        <a th:href="@{|/post/${postId}}">취소</a>
                                     </button>
                                 </div>
                             </div>
                             <div class="submit-button flex justify-end">
                                 <div class="flex mt-6 mr-2">
                                     <button class="btn btn-primary btn-sm w-20">
-                                        <span class="text-center">등록</span>
+                                        <span class="text-center">수정</span>
                                     </button>
                                 </div>
                             </div>

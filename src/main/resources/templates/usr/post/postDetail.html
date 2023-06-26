@@ -1,6 +1,6 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
-    <title th:text="${post.subject}"></title>
+    <title th:text="${post.subject} + ' - CaloCheck'"></title>
 </head>
 <body>
 <main class="flex-grow flex items-center justify-center" layout:fragment="Content">
@@ -22,12 +22,31 @@
     <div class="max-w-5xl w-full mt-4 px-4">
         <div class="flex flex-col">
             <h1 class="font-bold font-xl mb-4" th:text="${post.subject}"></h1>
-            <div>
-                <span class="mr-2" th:text="${post.member.nickname}"></span>
-                <span class="mx-2" th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            <div class="flex justify-between">
+                <div>
+                    <span class="mr-2" th:text="${post.member.nickname}"></span>
+                    <span class="mx-2 text-[12px]"
+                          th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </div>
+                <div>
+                    <a class="btn btn-primary btn-sm w-[40px]" th:href="@{|/post/${postId}/modify|}"
+                       th:if="${post.member.id == @rq.member.id}">수정</a>
+                    <button class="btn btn-primary btn-sm mx-1 w-[40px]"
+                            onclick="$(this).next().submit();"
+                            th:attr="data-post-id=${postId}"
+                            th:id="dBtn_+${postId}"
+                            th:if="${post.member.id == @rq.member.id}">
+                        <span>삭제</span>
+                    </button>
+                    <form hidden method="POST"
+                          th:action="@{|/post/${postId}/delete|}">
+                        <input name="_method" type="hidden" value="PATCH">
+                    </form>
+                    <a class="btn btn-primary btn-sm" href="/post/list">글 목록</a>
+                </div>
             </div>
         </div>
-        <div class="divider"></div>
+        <div class="divider my-1"></div>
         <div class="h-[500px]" th:text="${post.content}"></div>
         <div class="flex justify-center">
             <div class="btn btn-primary w-20">
@@ -46,16 +65,25 @@
             <li th:each="comment: ${commentList}">
                 <div class="max-w-5xl w-full">
                     <div class="flex">
-                        <div class="flex justify-start items-center ml-7" style="width:20%"
+                        <div class="flex justify-start items-center" style="width:20%;word-break: break-all"
                              th:text="${comment.member.nickname}"></div>
-                        <div class="flex justify-start items-center" style="width:80%">
-                            <div class="flex justify-center items-center" th:text="${comment.content}">
-                            </div>
+                        <div class="flex justify-start items-center" style="width:65%;word-break: break-all">
+                            <div class="flex justify-center items-center" th:text="${comment.content}"></div>
+                            <a class="ml-2 text-[12px]" onclick="$(this).next().submit();"
+                               style="cursor:pointer;"
+                               th:if="${comment.member.id == @rq.member.id}"><i class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
+                            <form method="POST"
+                                  th:action="@{|/post/${postId}/${comment.id}/delete|}">
+                                <input name="_method" type="hidden" value="PATCH">
+                            </form>
+                        </div>
+                        <div class="flex justify-end items-center text-[8px]" style="width:15%"
+                             th:text="${#temporals.format(post.createDate, 'yy-MM-dd HH:mm')}">
                         </div>
                     </div>
                 </div>
                 <div class="flex justify-center">
-                    <div class="divider my-1" style="height: 1px;width: 95%"></div>
+                    <div class="divider my-1" style="height: 1px;width: 100%"></div>
                 </div>
             </li>
         </ul>
@@ -65,7 +93,7 @@
                 <div class="flex flex-col flex-grow posts-box mt-10">
                     <div class="flex justify-center">
                         <div class="flex flex-grow mt-2">
-                            <input class="border flex flex-grow border-black border-opacity-10 h-8 p-4 w-96"
+                            <input class="border flex flex-grow border-black border-opacity-10 h-8 p-4"
                                    id="id-input" name="iComment" placeholder="댓글을 입력하세요"
                                    type="text"/>
                             <!-- 등록 버튼 -->

@@ -43,18 +43,16 @@ public class PostController {
         List<Comment> commentList = commentService.findAllByPostId(postId);
         model.addAttribute("commentList", commentList);
 
-        return "usr/post/post";
+        return "usr/post/postDetail";
     }
 
-    // @PreAuthorize("isAuthenticated()")
-    // todo 로그인 연결 시 주석 해제
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/createForm")
     public String savePost() {
         return "usr/post/createForm";
     }
 
-    // @PreAuthorize("isAuthenticated()")
-    // todo 로그인 연결 시 주석 해제
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/createForm")
     public String savePost(String iSubject, String iContent) {
         if (iSubject == null || iSubject.length() == 0) {
@@ -78,20 +76,32 @@ public class PostController {
         return rq.redirectWithMsg("/post/list", postRsData);
     }
 
-    // todo UI와 연결
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{postId}")
+    @PostMapping("/{postId}/delete")
     public String deletePost(@PathVariable Long postId) {
         RsData<Post> deletePostRsData = postService.deletePost(postId, rq.getMember().getId());
+
+        if (deletePostRsData.isFail()) {
+            return rq.historyBack(deletePostRsData);
+        }
 
         return rq.redirectWithMsg("/post/list", deletePostRsData);
     }
 
-    // todo UI와 연결
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{postId}/modify")
-    public String modifyPost(@PathVariable Long postId, String modifyPost) {
-        RsData<Post> modifyPostRsData = postService.modifyPost(postId, modifyPost, rq.getMember());
+    @GetMapping("/{postId}/modify")
+    public String modifyPost(@PathVariable Long postId) {
+        return "usr/post/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{postId}/modify")
+    public String modifyPost(@PathVariable Long postId, String iModifySubject, String iModifyContent) {
+        RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, rq.getMember());
+
+        if (modifyPostRsData.isFail()) {
+            return rq.historyBack(modifyPostRsData);
+        }
 
         return rq.redirectWithMsg("/post/" + postId, modifyPostRsData);
     }
