@@ -30,12 +30,12 @@
                 </div>
                 <div>
                     <a class="btn btn-primary btn-sm w-[40px]" th:href="@{|/post/${postId}/modify|}"
-                       th:if="${post.member.id == @rq.member.id}">수정</a>
+                       th:if="${@rq.login && post.member.id == @rq.member.id}">수정</a>
                     <button class="btn btn-primary btn-sm mx-1 w-[40px]"
                             onclick="$(this).next().submit();"
                             th:attr="data-post-id=${postId}"
                             th:id="dBtn_+${postId}"
-                            th:if="${post.member.id == @rq.member.id}">
+                            th:if="${@rq.login && post.member.id == @rq.member.id}">
                         <span>삭제</span>
                     </button>
                     <form hidden method="POST"
@@ -71,7 +71,8 @@
                             <div class="flex justify-center items-center" th:text="${comment.content}"></div>
                             <a class="ml-2 text-[12px]" onclick="$(this).next().submit();"
                                style="cursor:pointer;"
-                               th:if="${comment.member.id == @rq.member.id}"><i class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
+                               th:if="${@rq.login && post.member.id == @rq.member.id}"><i
+                                    class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
                             <form method="POST"
                                   th:action="@{|/post/${postId}/${comment.id}/delete|}">
                                 <input name="_method" type="hidden" value="PATCH">
