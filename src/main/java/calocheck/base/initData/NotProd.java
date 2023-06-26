@@ -1,5 +1,6 @@
 package calocheck.base.initData;
 
+import calocheck.base.util.FoodDataExtractor;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.member.entity.Member;
@@ -29,7 +30,8 @@ public class NotProd {
             MemberService memberService,
             PostService postService,
             RecommendService recommendService,
-            CommentService commentService
+            CommentService commentService,
+            FoodDataExtractor foodDataExtractor
     ) {
         return args -> {
             Member[] members = IntStream
@@ -59,6 +61,8 @@ public class NotProd {
                     .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), posts[99], members[i])
                             .getData())
                     .toArray(Comment[]::new);
+
+            foodDataExtractor.readFile();
         };
     }
 }

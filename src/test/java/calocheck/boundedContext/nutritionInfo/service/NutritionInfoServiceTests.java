@@ -1,4 +1,4 @@
-package calocheck.boundedContext.foodInfo.service;
+package calocheck.boundedContext.nutritionInfo.service;
 
 import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
 import calocheck.boundedContext.nutritionInfo.service.NutritionInfoService;
@@ -29,8 +29,7 @@ public class NutritionInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         assertThat(nutritionInfoService.findById(nutritionInfo.getId())).isEqualTo(nutritionInfo);
     }
@@ -47,17 +46,15 @@ public class NutritionInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         NutritionInfo updated = nutritionInfoService.update(nutritionInfo, 10,
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10] + 1, data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10] + 1, data[11], data[12], data[13]);
 
-        assertThat(nutritionInfoService.findById(updated.getId()).getVitaminA()).isEqualTo(data[10] + 1);
+        assertThat(nutritionInfoService.findById(updated.getId()).getCholesterol()).isEqualTo(data[10] + 1);
     }
 
     @Test
@@ -72,8 +69,7 @@ public class NutritionInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         nutritionInfoService.delete(nutritionInfo);
 

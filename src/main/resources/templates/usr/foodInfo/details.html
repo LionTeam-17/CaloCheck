@@ -1,0 +1,135 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+    <title>음식 영양정보</title>
+</head>
+
+<body>
+<main layout:fragment="Content">
+    <div class="flex flex-col m-10">
+        <div th:text="${foodInfo.foodName}"></div>
+        <div class="max-w-5xl w-full">
+            <div class="divider"></div>
+            <div class="flex flex-col">
+                <!-- FoodInfo 정보 출력 시작-->
+                <div class="flex">
+                    <div class="flex m-2">
+                        <div class="font-bold m-3">제조사/유통사</div>
+                        <div class="text-black m-3" th:text="${foodInfo.manufacturer}"></div>
+                    </div>
+                    <div class="flex m-2">
+                        <div class="font-bold m-3">식품 대분류</div>
+                        <div class="text-black m-3" th:text="${foodInfo.category}"></div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex m-2">
+                        <div class="font-bold m-5">1회 제공량</div>
+                        <div class="text-black m-5"
+                             th:text="${foodInfo.portionSize} + '(' + ${foodInfo.unit} + ')'"></div>
+                    </div>
+                    <div class="flex m-2">
+                        <div class="font-bold m-5">총 내용량</div>
+                        <div class="text-black m-5"
+                             th:text="${foodInfo.totalSize} + '(' + ${foodInfo.unit} + ')'"></div>
+                    </div>
+                </div>
+                <!-- FoodInfo 정보 출력 끝-->
+                <div class="divider my-2" style="height: 1px"></div>
+
+                <!-- NutritionInfo 정보 출력 시작-->
+                <div class="flex">
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">에너지(kcal)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.kcal}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">단백질(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.protein}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">지방(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.fat}"></div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">탄수화물(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.carbohydrate}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">당류(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.sugar}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">식이섬유(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.fiber}"></div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">칼슘(mg)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.calcium}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">철(mg)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.iron}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">마그네슘(mg)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.magnesium}"></div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">칼륨(mg)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.potassium}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">나트륨(mg)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.sodium}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">콜레스테롤(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.cholesterol}"></div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">포화 지방산(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.saturated}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">트랜스 지방산(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.transFattyAcid}"></div>
+                    </div>
+                    <div class="flex m-2" style="width: 25%">
+                        <div class="font-bold m-5">불포화 지방산(g)</div>
+                        <div class="text-black m-5"
+                             th:text="${nutritions.unSaturated}"></div>
+                    </div>
+                </div>
+
+                <!-- NutritionInfo 정보 출력 끝-->
+            </div>
+            <div class="divider my-2" style="height: 1px"></div>
+        </div>
+
+    </div>
+</main>
+</body>
+
+</html>
