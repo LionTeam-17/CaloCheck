@@ -30,28 +30,6 @@ public class CommentService {
         return RsData.of("S-1", "댓글이 등록되었습니다.", comment);
     }
 
-    public RsData<Comment> modifyComment(final Long id, String content, Member member) {
-        Optional<Comment> oComment = commentRepository.findById(id);
-
-        if (oComment.isEmpty()) {
-            return RsData.of("F-1", "수정할 수 있는 댓글이 없습니다.");
-        }
-
-        if (!oComment.get().getMember().equals(member)) {
-            return RsData.of("F-2", "수정 권한이 없습니다.");
-        }
-
-        Comment comment = oComment.get();
-
-        Comment modifyComment = comment.toBuilder()
-                .content(content)
-                .build();
-
-        commentRepository.save(modifyComment);
-
-        return RsData.of("S-1", "댓글을 성공적으로 수정했습니다.", modifyComment);
-    }
-
     public RsData<Comment> deleteComment(final Long id, final Long memberId) {
         Optional<Comment> oComment = commentRepository.findById(id);
         if (oComment.isEmpty())
