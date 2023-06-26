@@ -2,8 +2,8 @@
 
 <!--공통 JS / CSS 영역을 관리하는 환경 영역-->
 <head>
-  <th:block th:replace="~{common/fragments/config :: ConfigFragment}"/>
-  <title>공통 타이틀</title>
+    <th:block th:replace="~{common/fragments/config :: ConfigFragment}"/>
+    <title>공통 타이틀</title>
 </head>
 
 <body class="flex flex-col min-h-screen">
@@ -12,10 +12,46 @@
 
 <!--Content 내용 영역을 참조합니다-->
 <div class="flex flex-1 flex-col" style="background-color: #FFFFFF">
-  <section layout:fragment="Content"></section>
+    <section layout:fragment="Content"></section>
 </div>
 
 <!--Footer 영역을 참조합니다.-->
 <footer th:replace="~{common/fragments/footer :: FooterFragment}"></footer>
+
+<script th:inline="javascript">
+    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+    const params = /*[[ ${param} ]]*/ null;
+
+    if (params.msg) {
+        toastNotice(params.msg[0]);
+    }
+
+    if (params.errorMsg) {
+        toastWarning(params.errorMsg[0]);
+    }
+
+    // history.back 에 의해서 돌아온 경우에 실행됨
+    // 평소에도 실행됨
+    $(window).bind("pageshow", function (event) {
+        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
+
+        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+        } else {
+            const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
+
+            if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+                toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+                localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+            }
+        }
+    });
+</script>
+
+<script async crossorigin="anonymous"
+        integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M"
+        src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js">
+</script>
 </body>
 </html>

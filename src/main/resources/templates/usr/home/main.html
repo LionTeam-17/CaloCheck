@@ -1,14 +1,18 @@
-<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+
 
 <head>
     <title>메인</title>
 </head>
 
 <body>
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <span>메인입니다.</span>
 
-<div class="flex-grow flex items-center justify-center" layout:fragment="Content">
-
-
-
-</div>
+        </div>
+    </main>
+</th:block>>
 </body>

@@ -92,7 +92,7 @@ public class MemberService {
 
         if (opMember.isPresent()) return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
 
-        return join(providerTypeCode, username, "", email,  "",
+        return join(providerTypeCode, username, "", email,  nickname,
                 0, 0.0, 0.0,0.0, 0.0); // 최초 로그인시 실행
         //TODO : 닉네임 설정
 

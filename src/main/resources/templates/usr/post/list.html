@@ -1,6 +1,6 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
-    <title>커뮤니티</title>
+    <title>커뮤니티 - CaloCheck</title>
 </head>
 
 <body>
@@ -76,14 +76,14 @@
                         <span class="font-bold px-2 flex justify-center" style="width: 7%"
                               th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
                         <!-- 역순 정렬 로직 종료 -->
-                        <a class="font-bold flex justify-start" style="width: 25%"
+                        <a class="font-bold flex justify-start" style="width: 25%;word-break: break-all"
                            th:href="|/post/${post.getId()}|">
                             <span th:text="${post.subject}"></span>
                         </a>
                         <span class="font-bold flex justify-center" style="width: 10%"
                               th:text="${post.member.nickname}"></span>
                         <span class="font-bold flex justify-center" style="width: 18%"
-                              th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                              th:text="${#temporals.format(post.createDate, 'HH:mm')}"></span>
                         <span class="font-bold flex justify-center" style="width: 6%"
                               th:text="${post.popularity}"></span>
                     </div>
@@ -92,7 +92,7 @@
             </div>
         </div>
         <!--    페이징 처리 시작 -->
-        <div class="flex mt-5">
+        <div class="flex my-5">
             <div class="flex flex-grow" th:if="${!paging.isEmpty()}">
                 <ul class="pagination justify-content-center flex justify-center flex-grow btn-group">
                     <li class="btn btn-primary page-item"

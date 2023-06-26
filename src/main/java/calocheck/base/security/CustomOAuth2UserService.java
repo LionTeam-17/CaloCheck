@@ -54,6 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oauthId = userInfo.get("id");
             email = userInfo.get("email");
 
+
         }
 
         if (providerTypeCode.equals("GOOGLE")) {
@@ -62,6 +63,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
         String nickname = providerTypeCode + "__%s".formatted(oauthId);
+
 
         if (nickname.length() > 20) nickname = nickname.substring(0, 20);
 

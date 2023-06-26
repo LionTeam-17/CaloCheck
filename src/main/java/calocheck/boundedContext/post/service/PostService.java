@@ -34,7 +34,7 @@ public class PostService {
         return RsData.of("S-1", "게시물이 등록되었습니다.", post);
     }
 
-    public RsData<Post> modifyPost(final Long id, String content, Member member) {
+    public RsData<Post> modifyPost(final Long id, String subject, String content, Member member) {
         Optional<Post> oPost = postRepository.findById(id);
 
         if (oPost.isEmpty()) {
@@ -48,6 +48,7 @@ public class PostService {
         Post post = oPost.get();
 
         Post modifyPost = post.toBuilder()
+                .subject(subject)
                 .content(content)
                 .build();
 
@@ -59,14 +60,14 @@ public class PostService {
     public RsData<Post> deletePost(final Long id, final Long memberId) {
         Optional<Post> oPost = postRepository.findById(id);
         if (oPost.isEmpty())
-            return RsData.of("F-1", "삭제할 수 있는 댓글이 없습니다.");
+            return RsData.of("F-1", "삭제할 수 있는 게시물이 없습니다.");
 
         if (!oPost.get().getMember().getId().equals(memberId))
             return RsData.of("F-2", "삭제 권한이 없습니다.");
 
         postRepository.delete(oPost.get());
 
-        return RsData.of("S-1", "댓글이 삭제되었습니다.");
+        return RsData.of("S-1", "게시물이 삭제되었습니다.");
     }
 
     @Transactional(readOnly = true)
