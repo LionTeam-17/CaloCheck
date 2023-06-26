@@ -12,5 +12,9 @@ html > body {
 }
 
 .site-header,.site-footer,.navbar{
-    background-color: #879387;
+    background-color: #112D4E;
+}
+
+.menu{
+    background-color: #F9F7F7;
 }
