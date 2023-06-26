@@ -34,7 +34,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         String email = "";
-        String name = "";
 
 
         if (providerTypeCode.equals("KAKAO")) {
@@ -47,21 +46,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             // 사용자 이름 - 개발 단계에선 권한 없음으로 불러오기 불가 - 임시로 닉네임과 동일하게 설정
             // TODO : 카카오 비즈앱 전환 후 이름 가져오기 권한 받고 수정해야함
             // name = extractValue(userInfo, "name");
-            name = extractValue(profile, "nickname");
         }
 
         if(providerTypeCode.equals("NAVER")){
 
             Map<String, String> userInfo = (Map<String, String>) oAuth2User.getAttributes().get("response");
             oauthId = userInfo.get("id");
-            name = userInfo.get("name");
             email = userInfo.get("email");
 
         }
 
         if (providerTypeCode.equals("GOOGLE")) {
             email = oAuth2User.getAttribute("email");
-            name = oAuth2User.getAttribute("name");
         }
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
@@ -69,7 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (nickname.length() > 20) nickname = nickname.substring(0, 20);
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, "", nickname, 0, 0.0,0.0, 0.0, 0.0).getData();
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, email, nickname, 0, 0.0,0.0, 0.0, 0.0).getData();
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }

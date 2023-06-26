@@ -1,4 +1,4 @@
-<html>
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 
 <head>
     <title>
@@ -9,7 +9,7 @@
 
 <body>
 
-<div>
+<div class="flex-grow flex items-center justify-center" layout:fragment="Content">
     <script>
         function loginFormSubmmit(form) {
 
@@ -34,8 +34,10 @@
         }
     </script>
 
-
-    <div layout:fragment="content" class="flex-grow flex items-center justify-center">
+    <!-- 데이지 UI 불러오기 -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
+    <!-- 테일윈드 불러오기 -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
         <div class="hero-content flex-col">
 
@@ -54,7 +56,7 @@
                 </div>
 
                 <div class="form-control">
-                    <input type="submit" value="로그인" class="btn btn-primary">
+                    <input type="submit" value="로그인" class="btn btn-accent">
                 </div>
 
                 <div class="divider"></div>
