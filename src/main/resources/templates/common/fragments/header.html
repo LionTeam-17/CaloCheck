@@ -13,8 +13,12 @@
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Log</a></li>
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">Community</a></li>
                 <li><a href="#" class="text-gray-600 hover:text-gray-800">My Page</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Login</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-gray-800">Sign Up</a></li>
+                <li><a href="/member/login" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Login</a></li>
+                <li><a href="/member/join" sec:authorize="isAnonymous()" class="text-gray-600 hover:text-gray-800">Sign Up</a></li>
+
+                <a href="javascript:;" sec:authorize="isAuthenticated()"
+                   onclick="$(this).next().submit();" class="text-gray-600 hover:text-gray-800">Logout</a>
+                <form th:action="|/member/logout|" method="POST"></form>
             </ul>
         </nav>
     </div>
