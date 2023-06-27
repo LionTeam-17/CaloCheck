@@ -1,0 +1,57 @@
+.tablink {
+    background-color: #f1f1f1;
+    color: black;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    margin-right: 5px;
+    border-radius: 10px;
+}
+
+.tablink:hover {
+    background-color: #ddd;
+}
+
+.tablink.active {
+    background-color: #ccc;
+}
+.form-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input[type="date"],
+.form-container input[type="number"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 80%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.form-container button[type="submit"] {
+    padding: 8px 16px;
+    background-color: #112D4E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #3F72AF;
+}

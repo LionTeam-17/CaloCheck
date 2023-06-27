@@ -5,68 +5,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Body Tracking</title>
+    <link rel="stylesheet" href="/resource/common/bodyTracking.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="_csrf" th:content="${_csrf.token}">
+
+
 </head>
 
 <body>
 <th:block layout:fragment="Content">
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
-            <canvas id="trackingChart"></canvas>
+            <!-- Create tabs for Weight, Body Fat and Muscle Mass -->
+            <div>
+                <button class="tablink active" onclick="openData('Weight')">체중</button>
+                <button class="tablink" onclick="openData('Body Fat')">체지방량</button>
+                <button class="tablink" onclick="openData('Muscle Mass')">근육량</button>
+            </div>
+
+            <!-- Create canvas for each data type -->
+            <canvas id="Weight" class="chart"></canvas>
+            <canvas id="Body Fat" class="chart"></canvas>
+            <canvas id="Muscle Mass" class="chart"></canvas>
 
             <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
-                <div>
-                    <label for="date">Date:</label>
+                <div class="form-container">
+                    <label for="date">날짜:</label>
                     <input type="date" id="date" th:field="*{dateTime}">
                 </div>
-                <div>
-                    <label for="weight">Weight:</label>
-                    <input type="number" id="weight" th:field="*{weight}">
+                <div class="form-container">
+                    <label for="myWeight">체중:</label>
+                    <input type="number" id="myWeight" th:field="*{weight}">
                 </div>
-                <div>
-                    <label for="bodyFat">Body Fat:</label>
+                <div class="form-container">
+                    <label for="bodyFat">체지방량:</label>
                     <input type="number" id="bodyFat" th:field="*{bodyFat}">
                 </div>
-                <div>
-                    <label for="muscleMass">Muscle Mass:</label>
+                <div class="form-container">
+                    <label for="muscleMass">근육량:</label>
                     <input type="number" id="muscleMass" th:field="*{muscleMass}">
                 </div>
-                <div>
-                    <button type="submit">Submit</button>
+                <div class="form-container">
+                    <button type="submit">기록하기</button>
                 </div>
             </form>
 
             <script th:inline="javascript">
-                const ctx = document.getElementById('trackingChart').getContext('2d');
-
-                const data = [[${trackingData}]];
+                const data = /*[[${trackingData}]]*/ [];
 
                 const dates = data.map(tracking => new Date(tracking.dateTime));
                 const weights = data.map(tracking => tracking.weight);
                 const bodyFats = data.map(tracking => tracking.bodyFat);
                 const muscleMasses = data.map(tracking => tracking.muscleMass);
 
-                const chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: dates,
-                        datasets: [{
-                            label: 'Weight',
-                            data: weights,
-                            borderColor: 'blue'
-                        }, {
-                            label: 'Body Fat',
-                            data: bodyFats,
-                            borderColor: 'red'
-                        }, {
-                            label: 'Muscle Mass',
-                            data: muscleMasses,
-                            borderColor: 'green'
-                        }]
+                const datasets = {
+                    'Weight': weights,
+                    'Body Fat': bodyFats,
+                    'Muscle Mass': muscleMasses
+                };
+
+                const colors = {
+                    'Weight': 'blue',
+                    'Body Fat': 'red',
+                    'Muscle Mass': 'green'
+                };
+
+                for (let type in datasets) {
+                    const ctx = document.getElementById(type).getContext('2d');
+
+                    const chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dates,
+                            datasets: [{
+                                label: type,
+                                data: datasets[type],
+                                borderColor: colors[type]
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day',
+                                        displayFormats: {
+                                            day: 'MM/DD'
+                                        }
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+                function openData(type) {
+                    let i, chart;
+                    let charts = document.getElementsByClassName("chart");
+                    for (i = 0; i < charts.length; i++) {
+                        charts[i].style.display = "none";
                     }
-                });
+                    document.getElementById(type).style.display = "block";
+                }
+
+                // Default to showing the Weight chart
+                openData('Weight');
             </script>
         </div>
     </main>
