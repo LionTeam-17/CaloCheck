@@ -72,9 +72,13 @@ public class RecommendController {
             System.out.println(isImg.getMsg());
         }
 
-        System.out.println("RecommendConfig.getVisionTest() = " + RecommendConfig.getVisionTest());
+        boolean isFoodImg = photoService.detectLabelsRemote(photoUrl);
 
-        photoService.vision(photoUrl);
+        //FIXME
+        if(isFoodImg){
+            //음식 이미지임이 확인 되었으므로, 이미지를 db에 추가
+            System.out.println("음식 이미지일 확률이 높습니다!");
+        }
 
         return "redirect:/recommend/list";
     }

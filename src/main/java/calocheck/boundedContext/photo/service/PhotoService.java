@@ -15,6 +15,7 @@ import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,7 +56,7 @@ public class PhotoService {
 
     // upload local file
     @Transactional
-    public String photoUpload (MultipartFile file) throws IOException {
+    public String photoUpload(MultipartFile file) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
@@ -79,55 +82,60 @@ public class PhotoService {
         //확장자 추출
         String fileExtension = StringUtils.getFilenameExtension(fileName);
 
-        if(fileExtension == null){
+        if (fileExtension == null) {
             return RsData.of("S-7", "없어도 생성이 가능합니다.");
         } else if (fileExtension.equals("jpg") || fileExtension.equals("jpeg")
                 || fileExtension.equals("png") || fileExtension.equals("JPG")
-                || fileExtension.equals("JPEG") || fileExtension.equals("PNG")){
+                || fileExtension.equals("JPEG") || fileExtension.equals("PNG")) {
             return RsData.of("S-6", "이미지 파일이 맞습니다.");
-        } else{
+        } else {
             return RsData.of("F-6", "이미지만 업로드가 가능합니다.");
         }
 
     }
 
-    public void vision (String imgUrl) throws IOException {
-
+    //이미지의 라벨 검출0
+    public boolean detectLabelsRemote(String imageUrl) throws IOException {
         try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
 
-            // The path to the image file to annotate
-            String fileName = imgUrl;
+            // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
+            URL url = new URL(imageUrl);
+            try (InputStream in = url.openStream()) {
+                byte[] data = IOUtils.toByteArray(in);
 
-            // Reads the image file into memory
-            Path path = Paths.get(fileName);
-            byte[] data = Files.readAllBytes(path);
-            ByteString imgBytes = ByteString.copyFrom(data);
+                //URL 을 통해 이미지를 빌드
+                ByteString imgBytes = ByteString.copyFrom(data);
+                Image img = Image.newBuilder().setContent(imgBytes).build();
+                Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
+                AnnotateImageRequest request =
+                        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
 
-            // Builds the image annotation request
-            List<AnnotateImageRequest> requests = new ArrayList<>();
-            Image img = Image.newBuilder().setContent(imgBytes).build();
-            Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
-            AnnotateImageRequest request =
-                    AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
-            requests.add(request);
+                // Label 검출
+                BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
+                        Collections.singletonList(request));
+                List<AnnotateImageResponse> responses = response.getResponsesList();
 
-            // Performs label detection on the image file
-            BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
-            List<AnnotateImageResponse> responses = response.getResponsesList();
+                for (AnnotateImageResponse res : responses) {
+                    if (res.hasError()) {
+                        System.out.format("Error: %s%n", res.getError().getMessage());
+                        return false;
+                    }
 
-            for (AnnotateImageResponse res : responses) {
-                if (res.hasError()) {
-                    System.out.format("Error: %s%n", res.getError().getMessage());
-                    return;
-                }
+                    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
+                        annotation.getAllFields().forEach((k, v) ->
+                                System.out.format("%s : %s%n", k, v.toString()));
 
-                for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-                    annotation
-                            .getAllFields()
-                            .forEach((k, v) -> System.out.format("%s : %s%n", k, v.toString()));
+                        //검출 결과 중에서 음식일 확률이 70% 이상이라면 바로 리턴 후 종료 -> true 반환
+                        if(annotation.getDescription().contains("Food") && annotation.getScore() >= 0.7){
+                            System.out.println(" this is Food!! ");
+                            return true;
+                        }
+                    }
                 }
             }
         }
-
+        return false;
     }
+
+
 }
