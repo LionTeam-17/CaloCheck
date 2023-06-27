@@ -11,12 +11,10 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/member")
@@ -84,6 +82,20 @@ public class MemberController {
     public String showMe() {
 
         return "usr/member/me";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/nickname/{id}")
+    public ResponseEntity<String> updateNickname(@PathVariable Long id, @RequestParam("nickname") String nickname) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateNickname(member, id, nickname);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"닉네임이 %s(으)로 수정되었습니다.\"}".formatted(nickname));
     }
 
     @PreAuthorize("isAuthenticated()")

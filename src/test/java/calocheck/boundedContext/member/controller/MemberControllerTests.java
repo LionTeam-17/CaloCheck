@@ -1,14 +1,22 @@
 package calocheck.boundedContext.member.controller;
 
+import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -17,11 +25,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 
+@SpringBootTest // 스프링부트 관련 컴포넌트 테스트할 때 붙여야 함, Ioc 컨테이너 작동시킴
+@AutoConfigureMockMvc // http 요청, 응답 테스트
+@Transactional // 실제로 테스트에서 발생한 DB 작업이 영구적으로 적용되지 않도록, test + 트랜잭션 => 자동롤백
+@ActiveProfiles("test") // application-test.yml 을 활성화 시킨다.
 public class MemberControllerTests {
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private MemberService memberService;
 
     @Test
     @DisplayName("회원가입 폼")
@@ -56,13 +70,13 @@ public class MemberControllerTests {
                         .with(csrf()) // CSRF 키 생성
                         .param("username", "user10")
                         .param("password", "1234")
-                        .param("email", "aaa1@naver.com")
-                        .param("nickname", "도적")
-                        .param("age","15")
-                        .param("height","175")
-                        .param("weight","70")
-                        .param("muscleMass","20")
-                        .param("bodyFat","20")
+                        .param("email","aaa1@naver.com")
+                        .param("nickname","도적")
+                        .param("age",null)
+                        .param("height",null)
+                        .param("weight",null)
+                        .param("muscleMass",null)
+                        .param("bodyFat",null)
                 )
                 .andDo(print());
 
@@ -175,8 +189,8 @@ public class MemberControllerTests {
         // 세션에 접근해서 user 객체를 가져온다.
         MvcResult mvcResult = resultActions.andReturn();
         HttpSession session = mvcResult.getRequest().getSession(false);// 원래 getSession 을 하면, 만약에 없을 경우에 만들어서라도 준다., false 는 없으면 만들지 말라는 뜻
-        SecurityContext securityContext = (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
-        User user = (User) securityContext.getAuthentication().getPrincipal();
+        SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+        User user = (User)securityContext.getAuthentication().getPrincipal();
 
         assertThat(user.getUsername()).isEqualTo("user1");
 
@@ -184,5 +198,44 @@ public class MemberControllerTests {
         resultActions
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/**"));
+    }
+
+
+    @Test
+    @DisplayName("닉네임 수정")
+    @WithUserDetails("user1")
+    void t006() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/member/update/nickname/1")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("nickname", "닉네임수정")
+                )
+                .andDo(print());
+        // THEN
+        resultActions
+                .andExpect(status().is2xxSuccessful());
+
+        Member member = memberService.findById(1L).orElse(null);
+        assertThat(member.getNickname()).isEqualTo("닉네임수정");
+    }
+
+    @Test
+    @DisplayName("닉네임 수정 - 권한 없음")
+    @WithUserDetails("user2")
+    void t007() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/member/update/nickname/1")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("nickname", "닉네임수정")
+                )
+                .andDo(print());
+        // THEN
+        resultActions
+                .andExpect(status().is4xxClientError());
+
+        Member member = memberService.findById(1L).orElse(null);
+        assertThat(member.getNickname()).isEqualTo("닉네임1");
     }
 }
