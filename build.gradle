@@ -48,6 +48,8 @@ dependencies {
     //Amazon s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+    //Google Vision Api
+    implementation 'com.google.cloud:google-cloud-vision:3.17.0'
     implementation 'com.google.code.gson:gson:2.8.7'
 }
 
