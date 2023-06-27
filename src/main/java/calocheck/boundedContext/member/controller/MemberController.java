@@ -78,4 +78,18 @@ public class MemberController {
 
         return "usr/member/login";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
+    public String showMe() {
+
+        return "usr/member/me";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/mypage")
+    public String showMyPage() {
+
+        return "usr/member/mypage";
+    }
 }
