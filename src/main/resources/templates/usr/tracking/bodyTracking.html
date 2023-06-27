@@ -1,0 +1,75 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Tracking</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+</head>
+
+<body>
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <canvas id="trackingChart"></canvas>
+
+            <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
+                <div>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" th:field="*{dateTime}">
+                </div>
+                <div>
+                    <label for="weight">Weight:</label>
+                    <input type="number" id="weight" th:field="*{weight}">
+                </div>
+                <div>
+                    <label for="bodyFat">Body Fat:</label>
+                    <input type="number" id="bodyFat" th:field="*{bodyFat}">
+                </div>
+                <div>
+                    <label for="muscleMass">Muscle Mass:</label>
+                    <input type="number" id="muscleMass" th:field="*{muscleMass}">
+                </div>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+
+            <script th:inline="javascript">
+                const ctx = document.getElementById('trackingChart').getContext('2d');
+
+                const data = [[${trackingData}]];
+
+                const dates = data.map(tracking => new Date(tracking.dateTime));
+                const weights = data.map(tracking => tracking.weight);
+                const bodyFats = data.map(tracking => tracking.bodyFat);
+                const muscleMasses = data.map(tracking => tracking.muscleMass);
+
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Weight',
+                            data: weights,
+                            borderColor: 'blue'
+                        }, {
+                            label: 'Body Fat',
+                            data: bodyFats,
+                            borderColor: 'red'
+                        }, {
+                            label: 'Muscle Mass',
+                            data: muscleMasses,
+                            borderColor: 'green'
+                        }]
+                    }
+                });
+            </script>
+        </div>
+    </main>
+</th:block>
+</body>
+</html>

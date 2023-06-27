@@ -34,7 +34,7 @@ public class NotProd {
             Member[] members = IntStream
                     .rangeClosed(1, 10)
                     .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", null,
-                                    "닉네임%d".formatted(i), null, null, null, null, null)
+                                    "닉네임%d".formatted(i), 20, 178.4, 67.5, 24.5, 10.0)
                             .getData())
                     .toArray(Member[]::new);
 
