@@ -98,7 +98,7 @@ public class MemberService {
 
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public RsData<Member> updateNickname(Member actor, Long memberId, String nickname) {
 
         if (actor.getId() != memberId) {
