@@ -8,6 +8,8 @@ spring:
     username: root
     password:
   security:
+    csrf:
+      enabled: true
     oauth2:
       client:
         registration:
