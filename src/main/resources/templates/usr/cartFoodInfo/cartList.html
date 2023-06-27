@@ -1,0 +1,103 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+    <title>장바구니</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
+
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+</head>
+
+<body>
+<main layout:fragment="Content">
+    <div class="flex flex-col m-10">
+        <div class="max-w-5xl w-full">
+            <div class="flex justify-between">
+                <h1 class="font-bold font-xl mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    장바구니 음식 목록
+                </h1>
+            </div>
+            <div class="m-5 flex flex-col">
+                <div class="flex flex-grow justify-between">
+                    <span class="font-bold font-xl px-2 flex justify-center" style="width: 7%">번호</span>
+                    <span class="font-bold font-xl flex justify-center" style="width: 25%">식품명</span>
+                    <span class="font-bold font-xl flex justify-center" style="width: 25%">제조사/유통사</span>
+                    <span class="font-bold font-xl flex justify-center" style="width: 10%">1회 제공량</span>
+                    <span class="font-bold font-xl flex justify-center" style="width: 10%">총 내용량</span>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="flex flex-wrap justify-center max-w-5xl w-full" th:if="${cartList.isEmpty()}">
+                장바구니 항목이 없습니다.
+            </div>
+            <div class="flex flex-col max-w-5xl w-full" th:if="${!cartList.isEmpty()}">
+                <div class="flex flex-col" th:each="foodInfo, loop: ${cartList}">
+                    <div class="flex flex-grow justify-between">
+
+<!--                        &lt;!&ndash; 역순 정렬 로직 시작 &ndash;&gt;-->
+<!--                        <span class="font-bold px-2 flex justify-center" style="width: 7%"-->
+<!--                              th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>-->
+<!--                        &lt;!&ndash; 역순 정렬 로직 종료 &ndash;&gt;-->
+<!--                        -->
+
+                        <a class="font-bold flex justify-start" style="width: 25%"
+                           th:href="|/foodInfo/details/${foodInfo.id}|">
+                            <span th:text="${foodInfo.foodName}"></span>
+                        </a>
+                        <span class="font-bold flex justify-center" style="width: 10%"
+                              th:text="${foodInfo.manufacturer}"></span>
+                        <span class="font-bold flex justify-center" style="width: 18%"
+                              th:text="${foodInfo.portionSize}"></span>
+                        <span class="font-bold flex justify-center" style="width: 6%"
+                              th:text="${foodInfo.totalSize}"></span>
+                        <a class="m-1 btn"
+                           th:onclick="removeCart(/*[[${foodInfo.id}]]*/, this)">
+                            <span>장바구니 삭제</span>
+                        </a>
+                    </div>
+                    <div class="divider my-2" style="height: 1px"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script th:inline="javascript">
+        function removeCart(foodId, button) {
+            const header = $("meta[name='_csrf_header']").attr("content");
+            const token = $("meta[name='_csrf']").attr("content");
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+            if (foodId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/cartFoodInfo/removeFoodInfo", // 좋아요 요청을 보낼 URL
+                    data: {
+                        foodId: foodId
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.result === "success") { // 좋아요 데이터가 없음 -> 좋아요 표시
+                            console.log("success");
+                            button.parentNode.remove();
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        }
+
+    </script>
+</main>
+</body>
+
+</html>

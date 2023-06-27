@@ -1,6 +1,16 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
     <title>음식 영양정보</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
+
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
 </head>
 
 <body>
@@ -126,9 +136,45 @@
                 <!-- NutritionInfo 정보 출력 끝-->
             </div>
             <div class="divider my-2" style="height: 1px"></div>
+            <a class="m-1 btn"
+               th:onclick="addCart(/*[[${foodInfo.id}]]*/)">
+                <span>장바구니 등록</span>
+            </a>
+            <a class="m-1 btn"
+               th:href="@{/cartFoodInfo/list}">
+                <span>장바구니 항목</span>
+            </a>
         </div>
 
     </div>
+    <script th:inline="javascript">
+        function addCart(foodId) {
+            const header = $("meta[name='_csrf_header']").attr("content");
+            const token = $("meta[name='_csrf']").attr("content");
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+            if (foodId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/cartFoodInfo/addFoodInfo", // 좋아요 요청을 보낼 URL
+                    data: {
+                        foodId: foodId
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.result === "success") { // 좋아요 데이터가 없음 -> 좋아요 표시
+                            console.log("success");
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        }
+
+    </script>
 </main>
 </body>
 
