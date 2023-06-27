@@ -1,8 +1,9 @@
 package calocheck.boundedContext.cartFoodInfo.entity;
 
 import calocheck.base.entity.BaseEntity;
-import calocheck.boundedContext.foodCart.entity.FoodCart;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.member.entity.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -18,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class CartFoodInfo extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    private FoodCart foodCart;
+    private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     private FoodInfo foodInfo;
+    private long quantity;
 }

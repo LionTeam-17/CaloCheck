@@ -21,4 +21,5 @@ public class DailyFoodInfo extends BaseEntity {
     private DailyMenu dailyMenu;
     @ManyToOne(fetch = FetchType.LAZY)
     private FoodInfo foodInfo;
+    private long quantity;
 }
