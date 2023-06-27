@@ -7,17 +7,21 @@ import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,7 +39,8 @@ public class RecommendController {
 
     @PostMapping("/list")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> postRecommendList(@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> postRecommendList
+            (@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
 
         Object selectedValue = params.get("selectedValue");
         String s = selectedValue.toString();
@@ -60,10 +65,10 @@ public class RecommendController {
 
         String photoUrl = "not image file";
 
-        if(isImg.isSuccess()){
+        if (isImg.isSuccess()) {
             //DB에 이미지 경로 저장 가능
             photoUrl = photoService.photoUpload(img);
-        }else{
+        } else {
             System.out.println(isImg.getMsg());
         }
 
@@ -73,6 +78,4 @@ public class RecommendController {
 
         return "redirect:/recommend/list";
     }
-
-
 }

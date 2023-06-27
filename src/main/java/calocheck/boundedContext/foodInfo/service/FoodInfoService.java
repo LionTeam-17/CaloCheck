@@ -4,8 +4,11 @@ import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,5 +50,17 @@ public class FoodInfoService {
         Optional<FoodInfo> foodInfo = foodInfoRepository.findById(id);
 
         return foodInfo.orElse(null);
+    }
+
+    public List<FoodInfo> findAll() {
+        return foodInfoRepository.findAll();
+    }
+
+    public Page<FoodInfo> findAll(Pageable pageable) {
+        return foodInfoRepository.findAll(pageable);
+    }
+
+    public Page<FoodInfo> findByFoodNameContains(Pageable pageable, String foodName) {
+        return foodInfoRepository.findByFoodNameContains(foodName, pageable);
     }
 }

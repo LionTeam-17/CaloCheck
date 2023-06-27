@@ -7,7 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +24,7 @@ public class FoodInfoServiceTests {
     @Autowired
     private FoodInfoService foodInfoService;
 
-    private final int SIZE = 18;
+    private final int SIZE = 14;
     private String foodName = "음식 이름1";
     private String manufacturer = "제조사1";
     private String category = "분류1";
@@ -38,8 +43,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
@@ -59,8 +63,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
@@ -84,8 +87,7 @@ public class FoodInfoServiceTests {
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
-                data[10], data[11], data[12], data[13],
-                data[14], data[15], data[16], data[17]);
+                data[10], data[11], data[12], data[13]);
 
         FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
                 foodName, manufacturer, category,
@@ -94,5 +96,37 @@ public class FoodInfoServiceTests {
         foodInfoService.delete(foodInfo);
 
         assertThat(foodInfoService.findById(foodInfo.getId())).isNull();
+    }
+
+    @Test
+    @DisplayName("음식정보 findAll")
+    void findAllFoodInfo() {
+        List<FoodInfo> foodInfoList = foodInfoService.findAll();
+
+        assertThat(foodInfoList.size()).isEqualTo(99);
+    }
+
+    @Test
+    @DisplayName("FoodInfo findAll 페이징")
+    void findAllFoodInfoWithPaging() {
+        int page = 0, size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<FoodInfo> paging = foodInfoService.findAll(pageable);
+        List<FoodInfo> foodInfoList = paging.getContent();
+
+        assertThat(foodInfoList.size()).isEqualTo(size);
+    }
+
+    @Test
+    @DisplayName("FoodName 키워드 검색")
+    void findByFoodNameContains() {
+        int page = 0, size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<FoodInfo> paging = foodInfoService.findByFoodNameContains(pageable, "강정");
+        List<FoodInfo> foodInfoList = paging.getContent();
+
+        assertThat(foodInfoList.size()).isEqualTo(2);
     }
 }

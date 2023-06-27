@@ -10,3 +10,11 @@ html > body {
     text-underline-position: under;
     word-break: keep-all;
 }
+
+.site-header,.site-footer,.navbar{
+    background-color: #112D4E;
+}
+
+.menu{
+    background-color: #F9F7F7;
+}
