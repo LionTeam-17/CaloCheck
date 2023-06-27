@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/resource/common/bodyTracking.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="_csrf" th:content="${_csrf.token}">
 
@@ -19,7 +21,7 @@
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
             <!-- Create tabs for Weight, Body Fat and Muscle Mass -->
-            <div>
+            <div class = "tab_button">
                 <button class="tablink active" onclick="openData('Weight')">체중</button>
                 <button class="tablink" onclick="openData('Body Fat')">체지방량</button>
                 <button class="tablink" onclick="openData('Muscle Mass')">근육량</button>
@@ -87,16 +89,13 @@
                         },
                         options: {
                             scales: {
-                                xAxes: [{
+                                x: {
                                     type: 'time',
                                     time: {
-                                        unit: 'day',
-                                        displayFormats: {
-                                            day: 'MM/DD'
-                                        }
+                                        unit: 'day'
                                     }
-                                }]
-                            }
+                                }
+                            },
                         }
                     });
                 }
@@ -108,6 +107,7 @@
                     }
                     document.getElementById(type).style.display = "block";
                 }
+
 
                 // Default to showing the Weight chart
                 openData('Weight');

@@ -1,6 +1,6 @@
 .tablink {
-    background-color: #f1f1f1;
-    color: black;
+    background-color: #112D4E;
+    color: white;
     float: left;
     border: none;
     outline: none;
@@ -13,11 +13,12 @@
 }
 
 .tablink:hover {
-    background-color: #ddd;
+    background-color: #3F72AF;
 }
 
 .tablink.active {
-    background-color: #ccc;
+    background-color: #3F72AF;
+    color: white;
 }
 .form-container {
     margin-bottom: 20px;
@@ -55,3 +56,4 @@
 .form-container button[type="submit"]:hover {
     background-color: #3F72AF;
 }
+
