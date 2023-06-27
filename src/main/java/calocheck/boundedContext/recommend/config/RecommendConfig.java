@@ -136,13 +136,4 @@ public class RecommendConfig {
         RecommendConfig.vitaminCDescription = vitaminCDescription;
     }
 
-    @Getter
-    private static String visionTest;
-
-    @Value("${spring.cloud.gcp.credentials.location}")
-    public void setVisionTest(String visionTest){
-        RecommendConfig.visionTest = visionTest;
-    }
-
-
 }
