@@ -49,10 +49,20 @@
         <div class="divider my-1"></div>
         <div class="h-[500px]" th:text="${post.content}"></div>
         <div class="flex justify-center">
-            <div class="btn btn-primary w-20">
-                <i class="fa-regular fa-thumbs-up"></i>
-                <span>&nbsp;추천</span>
-            </div>
+            <form class="btn btn-primary w-20"
+                  method="POST" th:action="@{|/post/${postId}/postLike|}"
+                  th:if="${@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
+                <button class="link-button" name="submit" type="submit" value="value">
+                    <i class="fa-regular fa-thumbs-up"></i>&nbsp;추천
+                </button>
+            </form>
+            <form class="btn btn-primary w-20"
+                  method="POST" th:action="@{|/post/${postId}/postLike/delete|}"
+                  th:if="${!@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
+                <button class="link-button" name="submit" type="submit" value="value">
+                    <i class="fa-solid fa-thumbs-up"></i>&nbsp;추천
+                </button>
+            </form>
         </div>
         <span>전체 댓글</span>
         <span style="color: red" th:text="${commentList.size()}"></span>
@@ -71,7 +81,7 @@
                             <div class="flex justify-center items-center" th:text="${comment.content}"></div>
                             <a class="ml-2 text-[12px]" onclick="$(this).next().submit();"
                                style="cursor:pointer;"
-                               th:if="${@rq.login && post.member.id == @rq.member.id}"><i
+                               th:if="${@rq.login && comment.member.id == @rq.member.id}"><i
                                     class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
                             <form method="POST"
                                   th:action="@{|/post/${postId}/${comment.id}/delete|}">
