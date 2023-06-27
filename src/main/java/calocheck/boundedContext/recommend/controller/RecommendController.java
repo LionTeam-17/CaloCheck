@@ -72,12 +72,20 @@ public class RecommendController {
             System.out.println(isImg.getMsg());
         }
 
-        boolean isFoodImg = photoService.detectLabelsRemote(photoUrl);
+        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
+        RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
 
-        //FIXME
-        if(isFoodImg){
-            //음식 이미지임이 확인 되었으므로, 이미지를 db에 추가
-            System.out.println("음식 이미지일 확률이 높습니다!");
+        if(isFoodImg.isSuccess() && isSafeImg.isSuccess()){
+            //TODO 음식 이미지이며, 안전한 것이 확인되었으므로 db에 추가
+            System.out.println("-".repeat(10));
+            System.out.println("수집이 가능한 이미지 입니다");
+            System.out.println(isSafeImg.getMsg());
+            System.out.println(isFoodImg.getMsg());
+        } else if(isFoodImg.isFail() || isSafeImg.isFail()){
+            System.out.println("-".repeat(10));
+            System.out.println("수집이 불가능한 이미지 입니다");
+            System.out.println(isSafeImg.getMsg());
+            System.out.println(isFoodImg.getMsg());
         }
 
         return "redirect:/recommend/list";
