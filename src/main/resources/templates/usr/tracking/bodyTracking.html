@@ -116,6 +116,9 @@
                 const dateField = document.getElementById('date');
                 dateField.max = currentDate.toISOString().split('T')[0];
 
+                // 입력 필드의 기본값으로 현재 날짜 설정
+                dateField.value = currentDate.toISOString().split('T')[0];
+
                 // Default to showing the Weight chart
                 openData('Weight');
             </script>
