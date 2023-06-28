@@ -47,14 +47,17 @@ public class NotProd {
                             .getData())
                     .toArray(Post[]::new);
 
-            recommendService.createRecommend("carbohydrate", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("protein", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
-            recommendService.createRecommend("fat", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
-            recommendService.createRecommend("calcium", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("sodium", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
-            recommendService.createRecommend("potassium", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
-            recommendService.createRecommend("vitaminA", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
-            recommendService.createRecommend("vitaminC", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("탄수화물", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("단백질", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
+            recommendService.createRecommend("지방", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
+            recommendService.createRecommend("칼슘", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("나트륨", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
+            recommendService.createRecommend("칼륨", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
+            recommendService.createRecommend("비타민A", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
+            recommendService.createRecommend("비타민C", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("고단백&저지방 육류", RecommendConfig.getMeatDescription(), RecommendConfig.getMeatFoodList());
+            recommendService.createRecommend("GI지수 높은 음식", RecommendConfig.getHighGIDescription(), RecommendConfig.getHighGIFoodList());
+            recommendService.createRecommend("GI지수 낮은 음식", RecommendConfig.getLowGIDescription(), RecommendConfig.getLowGIFoodList());
 
 
             Comment[] comments = IntStream
