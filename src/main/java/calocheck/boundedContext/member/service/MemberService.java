@@ -117,6 +117,26 @@ public class MemberService {
         return RsData.of("S-1", "닉네임이 수정되었습니다.");
     }
 
+    @Transactional
+    public RsData<Member> updateInfo(Member actor, Long memberId2, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+
+        if (actor.getId() != memberId2) {
+            return RsData.of("F-1", "사용자 정보가 일치하지 않습니다.");
+        }
+
+
+        actor = actor.toBuilder()
+                .age(age)
+                .height(height)
+                .weight(weight)
+                .muscleMass(muscleMass)
+                .bodyFat(bodyFat)
+                .build();
+        memberRepository.save(actor);
+
+        return RsData.of("S-1", "정보가 수정되었습니다.");
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }

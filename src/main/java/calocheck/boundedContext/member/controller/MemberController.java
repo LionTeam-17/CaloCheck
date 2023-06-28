@@ -99,6 +99,22 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/information/{id}")
+    public ResponseEntity<String> updateInfo(
+            @PathVariable Long id, @RequestParam("age") Integer age, @RequestParam("height") Double height,
+        @RequestParam("weight") Double weight, @RequestParam("muscleMass") Double muscleMass, @RequestParam("bodyFat") Double bodyFat) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateInfo(member, id, age, height, weight, muscleMass, bodyFat);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"정보가 수정되었습니다.\"}");
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String showMyPage() {
 
