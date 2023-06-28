@@ -136,5 +136,4 @@ public class RecommendConfig {
         RecommendConfig.vitaminCDescription = vitaminCDescription;
     }
 
-
 }

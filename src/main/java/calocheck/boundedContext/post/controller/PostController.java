@@ -25,12 +25,27 @@ public class PostController {
     private final CommentService commentService;
 
     @GetMapping("/list")
-    public String showPostList(@RequestParam(defaultValue = "0") int page, Model model) {
-        List<Post> postList = postService.findAll();
-        Page<Post> paging = postService.getList(page);
+    public String showPostList(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(value = "kw", defaultValue = "") String kw,
+                               Model model) {
 
-        model.addAttribute("postList", postList);
-        model.addAttribute("paging", paging);
+
+        if (!kw.equals("")) {
+            List<Post> filteringPostList = postService.findBySubjectLike("%" + kw + "%");
+            Page<Post> filteringPaging = postService.findBySubjectLike("%" + kw + "%", page);
+
+            model.addAttribute("postList", filteringPostList);
+            model.addAttribute("paging", filteringPaging);
+        } else {
+            List<Post> postList = postService.findAll();
+            Page<Post> paging = postService.getList(page);
+            List<Post> top3PostList = postService.findTop3ByOrderByPopularityDesc();
+
+            model.addAttribute("top3PostList", top3PostList);
+            model.addAttribute("postList", postList);
+            model.addAttribute("paging", paging);
+        }
+        model.addAttribute("kw", kw);
 
         return "usr/post/list";
     }

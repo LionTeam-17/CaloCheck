@@ -7,6 +7,8 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
+import calocheck.boundedContext.postLike.entity.PostLike;
+import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import org.springframework.boot.CommandLineRunner;
@@ -28,7 +30,8 @@ public class NotProd {
             PostService postService,
             RecommendService recommendService,
             CommentService commentService,
-            FoodDataExtractor foodDataExtractor
+            FoodDataExtractor foodDataExtractor,
+            PostLikeService postLikeService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -59,6 +62,22 @@ public class NotProd {
                     .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), posts[99], members[i])
                             .getData())
                     .toArray(Comment[]::new);
+
+            PostLike[] postLikes100 = IntStream
+                    .rangeClosed(0, 4)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[97].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
+            PostLike[] postLikes99 = IntStream
+                    .rangeClosed(0, 3)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[98].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
+            PostLike[] postLikes98 = IntStream
+                    .rangeClosed(0, 2)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[99].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
 
             foodDataExtractor.readFile();
         };

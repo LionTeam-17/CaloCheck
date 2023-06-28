@@ -89,4 +89,23 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postRepository.findAll(pageable);
     }
+
+    @Transactional(readOnly = true)
+    public List<Post> findTop3ByOrderByPopularityDesc() {
+        return postRepository.findTop3ByOrderByPopularityDesc();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findBySubjectLike(String kw) {
+        return postRepository.findBySubjectLike(kw);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> findBySubjectLike(String kw, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findBySubjectLike(kw, pageable);
+    }
 }

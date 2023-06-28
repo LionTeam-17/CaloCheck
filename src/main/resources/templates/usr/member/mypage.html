@@ -14,6 +14,8 @@
     <div class="flex-grow flex items-center justify-center">
 
         <div class="hero-content flex-col gap-20">
+        <div class="hero-content flex-col">
+
             <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
             마이페이지
             </h2>
@@ -54,6 +56,24 @@
 
 
         </div>
+            <div class="flex flex-col">
+                <div class="flex justify-center my-10 " style="width: 900px">
+                    <div class="flex gap-5">
+                        <div class="avatar flex justify-center">
+                            <div class="w-48 rounded-full">
+                                <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between gap-4">
+                <span class="text-3xl font-bold" th:text="${@rq.member.nickname}"></span>
+
+            </div>
+        </div>
+
     </div>
 </th:block>
 </body>
