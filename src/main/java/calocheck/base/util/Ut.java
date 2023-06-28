@@ -12,7 +12,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -32,7 +31,6 @@ public class Ut {
     }
 
     public static class json {
-
         public static String toStr(Map map) {
             try {
                 return new ObjectMapper().writeValueAsString(map);
@@ -44,28 +42,12 @@ public class Ut {
 
 
     public static class time {
-
-        public static String diffFormat1Human(LocalDateTime time1, LocalDateTime time2) {
-            String suffix = time1.isAfter(time2) ? "전" : "후";
-
+        public static Boolean diffTime(LocalDateTime time1, LocalDateTime time2) {
             // 두개의 시간의 차이를 초로 환산
             long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
-
-            long diffSeconds = diff % 60;
-            long diffMinutes = diff / (60) % 60;
-            long diffHours = diff / (60 * 60) % 24;
             long diffDays = diff / (60 * 60 * 24);
 
-            StringBuilder sb = new StringBuilder();
-
-            if (diffDays > 0) sb.append(diffDays).append("일 ");
-            if (diffHours > 0) sb.append(diffHours).append("시간 ");
-            if (diffMinutes > 0) sb.append(diffMinutes).append("분 ");
-            if (diffSeconds > 0) sb.append(diffSeconds).append("초 ");
-
-            if (sb.isEmpty()) sb.append("1초 ");
-
-            return sb.append(suffix).toString();
+            return diffDays < 1;
         }
     }
 

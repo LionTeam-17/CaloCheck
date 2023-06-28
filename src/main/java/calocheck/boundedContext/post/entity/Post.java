@@ -1,6 +1,7 @@
 package calocheck.boundedContext.post.entity;
 
 import calocheck.base.entity.BaseEntity;
+import calocheck.base.util.Ut;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +34,9 @@ public class Post extends BaseEntity {
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ToString.Exclude
     @Builder.Default
-    private List<Comment> answerList = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
+
+    public Boolean isToday() {
+        return Ut.time.diffTime(LocalDateTime.now(), getCreateDate());
+    }
 }
