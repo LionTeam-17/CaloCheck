@@ -15,6 +15,13 @@
                 form.iSubject.focus();
                 return;
             }
+
+            if (form.iSubject.value.length >= 30) {
+                toastWarning('제목은 30자 이하로 제한됩니다.');
+                form.iSubject.focus();
+                return;
+            }
+
             if (form.iContent.value === "") {
                 toastWarning('내용을 입력해주세요.');
                 form.iContent.focus();
@@ -73,7 +80,7 @@
                             </div>
                             <div class="submit-button flex justify-end">
                                 <div class="flex mt-6 mr-2">
-                                    <button class="btn btn-primary btn-sm w-20">
+                                    <button class="btn btn-sm w-20" style="background:#112D4E">
                                         <span class="text-center">등록</span>
                                     </button>
                                 </div>
