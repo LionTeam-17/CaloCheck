@@ -1,0 +1,139 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+    <title>장바구니</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
+
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #nutrientChart {
+            width: 350px;
+            height: 350px;
+        }
+    </style>
+</head>
+
+<body>
+<main layout:fragment="Content">
+    <div class="flex flex-col m-4">
+        <div class="w-full">
+            <div class="flex justify-center">
+                <h1 class="font-bold text-black text-sm mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    총 합계
+                </h1>
+            </div>
+            <canvas id="nutrientChart"></canvas>
+            <div class="divider"></div>
+            <div class="flex justify-between">
+                <h1 class="font-bold text-black text-sm mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    영양성분
+                </h1>
+                <div class="flex m-2">
+                    <div class="text-xs font-bold m-1">에너지(kcal)</div>
+                    <div class="text-xs text-black m-1"
+                         th:text="1000"></div>
+                </div>
+            </div>
+
+            <div th:each="nutrient, loop: ${nutrientTotal}"
+                 class="flex justify-between">
+                <div class="flex">
+                    <i class="fa-solid fa-list"></i>
+                    <div class="text-xs font-bold m-1"
+                         th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
+                </div>
+                <div class="text-xs text-black m-1"
+                     th:text="${nutrient.value}"></div>
+                <div class="divider"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script th:inline="javascript">
+        const background = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#FF8C00",
+            "#9966FF",
+            "#C0C0C0",
+            "#FFD700",
+            "#3CB371",
+            "#FF4500",
+            "#00BFFF",
+            "#BA55D3",
+            "#008080",
+            "#F08080"
+        ];
+
+        let hoverBackground = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#FF8C00",
+            "#9966FF",
+            "#C0C0C0",
+            "#FFD700",
+            "#3CB371",
+            "#FF4500",
+            "#00BFFF",
+            "#BA55D3",
+            "#008080",
+            "#F08080"
+        ];
+
+
+        const data = {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [],
+                hoverBackgroundColor: []
+            }]
+        };
+        // 원형 그래프를 그릴 데이터
+        /*[# th:each="nutrient, loop : ${nutrientTotal}"]*/
+        let label = /*[[${nutrient.name}]]*/null;
+        let value = /*[[${nutrient.value}]]*/null;
+        let back = background[loop.index];
+        let hover = hoverBackground[loop.index];
+
+        data.labels.push(label);
+        data.datasets[0].data.push(value);
+        data.datasets[0].backgroundColor.push(back);
+        data.datasets[0].hoverBackgroundColor.push(hover);
+        /*[/]*/
+
+        // 원형 그래프의 옵션
+        const options = {
+            responsive: false,
+            maintainAspectRatio: false
+        };
+
+        // 캔버스 요소 선택
+        const ctx = document.getElementById("nutrientChart").getContext("2d");
+
+        // 원형 그래프 생성
+        new Chart(ctx, {
+            type: "doughnut",
+            data: data,
+            options: options
+        });
+    </script>
+</main>
+</body>
+
+</html>

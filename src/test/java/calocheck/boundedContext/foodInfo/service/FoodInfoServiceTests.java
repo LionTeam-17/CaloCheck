@@ -1,8 +1,8 @@
 package calocheck.boundedContext.foodInfo.service;
 
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
-import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
-import calocheck.boundedContext.nutritionInfo.service.NutritionInfoService;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
+import calocheck.boundedContext.nutrientInfo.service.NutrientInfoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class FoodInfoServiceTests {
     @Autowired
-    private NutritionInfoService nutritionInfoService;
+    private NutrientInfoService nutrientInfoService;
     @Autowired
     private FoodInfoService foodInfoService;
 
@@ -39,13 +39,13 @@ public class FoodInfoServiceTests {
         for (int i = 1; i <= SIZE; i++) {
             data[i - 1] = i * 0.1;
         }
-        NutritionInfo nutritionInfo = nutritionInfoService.create(10,
+        NutrientInfo nutrientInfo = nutrientInfoService.create(10,
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
                 data[10], data[11], data[12], data[13]);
 
-        FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
+        FoodInfo foodInfo = foodInfoService.create(nutrientInfo,
                 foodName, manufacturer, category,
                 portionSize, unit, totalSize);
 
@@ -59,17 +59,17 @@ public class FoodInfoServiceTests {
         for (int i = 1; i <= SIZE; i++) {
             data[i - 1] = i * 0.1;
         }
-        NutritionInfo nutritionInfo = nutritionInfoService.create(10,
+        NutrientInfo nutrientInfo = nutrientInfoService.create(10,
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
                 data[10], data[11], data[12], data[13]);
 
-        FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
+        FoodInfo foodInfo = foodInfoService.create(nutrientInfo,
                 foodName, manufacturer, category,
                 portionSize, unit, totalSize);
 
-        FoodInfo updated = foodInfoService.update(foodInfo, nutritionInfo,
+        FoodInfo updated = foodInfoService.update(foodInfo, nutrientInfo,
                 foodName, manufacturer, category,
                 portionSize, unit, totalSize + 100);
 
@@ -83,13 +83,13 @@ public class FoodInfoServiceTests {
         for (int i = 1; i <= SIZE; i++) {
             data[i - 1] = i * 0.1;
         }
-        NutritionInfo nutritionInfo = nutritionInfoService.create(10,
+        NutrientInfo nutrientInfo = nutrientInfoService.create(10,
                 data[0], data[1], data[2],
                 data[3], data[4], data[5],
                 data[6], data[7], data[8], data[9],
                 data[10], data[11], data[12], data[13]);
 
-        FoodInfo foodInfo = foodInfoService.create(nutritionInfo,
+        FoodInfo foodInfo = foodInfoService.create(nutrientInfo,
                 foodName, manufacturer, category,
                 portionSize, unit, totalSize);
 

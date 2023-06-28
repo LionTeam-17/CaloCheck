@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,10 +32,10 @@ public class CartFoodInfoController {
 
         model.addAttribute("cartList", cartList);
 
-        return "usr/cartFoodInfo/cartList";
+        return "usr/cartFoodInfo/list";
     }
 
-    @PostMapping("/addFoodInfo")
+    @PostMapping("/add")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public CartDTO addCartFoodInfo(@RequestParam("foodId") Long foodId) {
@@ -47,7 +46,7 @@ public class CartFoodInfoController {
         return new CartDTO("success");
     }
 
-    @PostMapping("/removeFoodInfo")
+    @PostMapping("/remove")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public CartDTO removeCartFoodInfo(@RequestParam("foodId") Long foodId) {
@@ -58,7 +57,7 @@ public class CartFoodInfoController {
         return new CartDTO("success");
     }
 
-    @PostMapping("/updateFoodInfo")
+    @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public CartDTO updateCartFoodInfo(@RequestParam("foodId") Long foodId, @RequestParam("quantity") Long quantity) {
@@ -73,4 +72,21 @@ public class CartFoodInfoController {
         cartFoodInfoService.updateFoodInfo(member, foodInfo, quantity);
         return new CartDTO("success");
     }
+
+    @GetMapping("/total")
+    @PreAuthorize("isAuthenticated()")
+    public String showCartTotal(Model model) {
+        Member member = rq.getMember();
+
+        return "usr/cartFoodInfo/total";
+    }
+
+    @GetMapping("/addMenu")
+    @PreAuthorize("isAuthenticated()")
+    public String showaAddMenu(Model model) {
+        Member member = rq.getMember();
+
+        return "usr/cartFoodInfo/addMenu";
+    }
+
 }

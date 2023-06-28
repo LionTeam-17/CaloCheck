@@ -59,94 +59,94 @@
                     <!-- FoodInfo 정보 출력 끝-->
                     <div class="divider my-2" style="height: 1px"></div>
 
-                    <!-- NutritionInfo 정보 출력 시작-->
+                    <!-- nutrientInfo 정보 출력 시작-->
                     <div class="flex">
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">에너지(kcal)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.kcal}"></div>
+                                 th:text="${nutrients.kcal}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">단백질(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.protein}"></div>
+                                 th:text="${nutrients.protein}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">지방(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.fat}"></div>
+                                 th:text="${nutrients.fat}"></div>
                         </div>
                     </div>
                     <div class="flex">
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">탄수화물(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.carbohydrate}"></div>
+                                 th:text="${nutrients.carbohydrate}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">당류(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.sugar}"></div>
+                                 th:text="${nutrients.sugar}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">식이섬유(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.fiber}"></div>
+                                 th:text="${nutrients.fiber}"></div>
                         </div>
                     </div>
                     <div class="flex">
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">칼슘(mg)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.calcium}"></div>
+                                 th:text="${nutrients.calcium}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">철(mg)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.iron}"></div>
+                                 th:text="${nutrients.iron}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">마그네슘(mg)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.magnesium}"></div>
+                                 th:text="${nutrients.magnesium}"></div>
                         </div>
                     </div>
                     <div class="flex">
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">칼륨(mg)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.potassium}"></div>
+                                 th:text="${nutrients.potassium}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">나트륨(mg)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.sodium}"></div>
+                                 th:text="${nutrients.sodium}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">콜레스테롤(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.cholesterol}"></div>
+                                 th:text="${nutrients.cholesterol}"></div>
                         </div>
                     </div>
                     <div class="flex">
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">포화 지방산(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.saturated}"></div>
+                                 th:text="${nutrients.saturated}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">트랜스 지방산(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.transFattyAcid}"></div>
+                                 th:text="${nutrients.transFattyAcid}"></div>
                         </div>
                         <div class="flex m-2" style="width: 25%">
                             <div class="text-xs font-bold m-1">불포화 지방산(g)</div>
                             <div class="text-xs text-black m-1"
-                                 th:text="${nutritions.unSaturated}"></div>
+                                 th:text="${nutrients.unSaturated}"></div>
                         </div>
                     </div>
 
-                    <!-- NutritionInfo 정보 출력 끝-->
+                    <!-- nutrientInfo 정보 출력 끝-->
                 </div>
                 <div class="divider my-2" style="height: 1px"></div>
             </div>
@@ -163,7 +163,7 @@
             if (foodId) {
                 $.ajax({
                     type: "POST",
-                    url: "/cartFoodInfo/addFoodInfo", // 좋아요 요청을 보낼 URL
+                    url: "/cartFoodInfo/add", // 좋아요 요청을 보낼 URL
                     data: {
                         foodId: foodId
                     },

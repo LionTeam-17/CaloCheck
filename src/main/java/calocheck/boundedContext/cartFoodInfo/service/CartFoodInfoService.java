@@ -88,6 +88,10 @@ public class CartFoodInfoService {
         return cartFoodInfo.orElse(null);
     }
 
+    public List<CartFoodInfo> findByMember(Long id) {
+        return cartFoodInfoRepository.findAllByMemberId(id);
+    }
+
     public List<CartFoodInfo> findByMember(Member member) {
         return cartFoodInfoRepository.findAllByMemberId(member.getId());
     }

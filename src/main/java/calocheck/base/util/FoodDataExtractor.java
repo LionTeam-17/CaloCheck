@@ -3,8 +3,8 @@ package calocheck.base.util;
 
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
-import calocheck.boundedContext.nutritionInfo.service.NutritionInfoService;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
+import calocheck.boundedContext.nutrientInfo.service.NutrientInfoService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +19,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FoodDataExtractor {
     private final FoodInfoService foodInfoService;
-    private final NutritionInfoService nutritionInfoService;
+    private final NutrientInfoService nutrientInfoService;
 
     Map<String, Integer> indexMap = new HashMap<>() {{
         put("식품명", 5);
@@ -113,7 +113,7 @@ public class FoodDataExtractor {
                 String unSaturatedStr = row.getCell(indexMap.get("불포화지방산(g)")).getStringCellValue();
                 double unSaturated = !Ut.check.isDouble(unSaturatedStr) ? 0 : Double.parseDouble(unSaturatedStr);
 
-                NutritionInfo nutritionInfo = nutritionInfoService.create(
+                NutrientInfo nutrientInfo = nutrientInfoService.create(
                         kcal,
                         protein,
                         fat,
@@ -132,7 +132,7 @@ public class FoodDataExtractor {
                 );
 
                 FoodInfo foodInfo = foodInfoService.create(
-                        nutritionInfo,
+                        nutrientInfo,
                         foodName,
                         manufacturer,
                         category,

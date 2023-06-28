@@ -1,4 +1,4 @@
-package calocheck.boundedContext.nutritionInfo.entity;
+package calocheck.boundedContext.nutrientInfo.entity;
 
 import calocheck.base.entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class NutritionInfo extends BaseEntity {
+public class NutrientInfo extends BaseEntity {
     private double kcal; // 에너지(kcal)
     private double protein; // 단백질
     private double fat; // 지방

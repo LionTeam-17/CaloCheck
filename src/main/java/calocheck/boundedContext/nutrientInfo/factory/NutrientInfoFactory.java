@@ -1,9 +1,9 @@
-package calocheck.boundedContext.nutritionInfo.factory;
+package calocheck.boundedContext.nutrientInfo.factory;
 
-import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;;
 
-public class NutritionInfoFactory {
-    public static NutritionInfo createNutritionInfo(
+public class NutrientInfoFactory {
+    public static NutrientInfo createNutrientInfo(
             double kcal,
             double protein,
             double fat,
@@ -20,7 +20,7 @@ public class NutritionInfoFactory {
             double transFattyAcid,
             double unSaturated) {
 
-        return NutritionInfo.builder()
+        return NutrientInfo.builder()
                 .kcal(kcal)
                 .protein(protein)
                 .fat(fat)

@@ -14,36 +14,36 @@
         <div class="flex flex-wrap justify-center items-center mt-3 ml-10 mr-10 py-3 bg-gray-300 rounded-lg h-auto">
             <div class="flex flex-col">
                 <div class="flex flex-wrap">
-                    <input type="radio" name="nutritionType" value="carbohydrate"
+                    <input type="radio" name="nutrientType" value="carbohydrate"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16">탄수화물</label>
 
-                    <input type="radio" name="nutritionType" value="protein"
+                    <input type="radio" name="nutrientType" value="protein"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16">단백질</label>
 
-                    <input type="radio" name="nutritionType" value="fat"
+                    <input type="radio" name="nutrientType" value="fat"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16 mb-2">지방</label>
 
-                    <input type="radio" name="nutritionType" value="calcium"
+                    <input type="radio" name="nutrientType" value="calcium"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16 mb-2">칼슘</label>
                 </div>
                 <div class="flex flex-wrap mt-2">
-                    <input type="radio" name="nutritionType" value="sodium"
+                    <input type="radio" name="nutrientType" value="sodium"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16">나트륨</label>
 
-                    <input type="radio" name="nutritionType" value="potassium"
+                    <input type="radio" name="nutrientType" value="potassium"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16">칼륨</label>
 
-                    <input type="radio" name="nutritionType" value="vitaminA"
+                    <input type="radio" name="nutrientType" value="vitaminA"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap inline-block w-16">비타민A</label>
 
-                    <input type="radio" name="nutritionType" value="vitaminC"
+                    <input type="radio" name="nutrientType" value="vitaminC"
                            class="radio radio ml-10 checked:bg-yellow-500"/>
                     <label class="text-black ml-2 whitespace-nowrap mr-10 inline-block w-16">비타민C</label>
                 </div>
@@ -96,11 +96,11 @@
 
     <script th:inline="javascript">
         // 선택된 라디오 버튼의 변경 이벤트를 감지
-        const radioButtons = document.getElementsByName("nutritionType");
+        const radioButtons = document.getElementsByName("nutrientType");
         radioButtons.forEach(function (radioButton) {
             radioButton.addEventListener("change", function () {
                 // 선택된 값 가져오기
-                const selectedValue = document.querySelector('input[name="nutritionType"]:checked').value;
+                const selectedValue = document.querySelector('input[name="nutrientType"]:checked').value;
                 const csrfToken = /*[[${_csrf.token}]]*/ ''; // CSRF 토큰 값을 가져옵니다
 
                 // AJAX 요청 데이터 구성
@@ -120,10 +120,10 @@
                         const resultDiv = document.getElementById("resultDiv");
                         resultDiv.innerHTML = `
                     <div>
-                        <h1 class="font-black badge badge-warning mt-3 mb-3">${response.nutritionName}</h1>
-                        <h1 class="font-black">${response.nutritionDescription}</h1>
+                        <h1 class="font-black badge badge-warning mt-3 mb-3">${response.nutrientName}</h1>
+                        <h1 class="font-black">${response.nutrientDescription}</h1>
                         <ul class="font-black mt-3">
-                            ${response.nutritionFoodList.map(food => `<li>${food}</li>`).join('')}
+                            ${response.nutrientFoodList.map(food => `<li>${food}</li>`).join('')}
                         </ul>
                     </div>
                 `;
