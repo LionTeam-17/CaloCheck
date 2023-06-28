@@ -21,7 +21,7 @@
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
             <!-- Create tabs for Weight, Body Fat and Muscle Mass -->
-            <div class = "tab_button">
+            <div class="tab_button">
                 <button class="tablink active" onclick="openData('Weight')">체중</button>
                 <button class="tablink" onclick="openData('Body Fat')">체지방량</button>
                 <button class="tablink" onclick="openData('Muscle Mass')">근육량</button>
@@ -99,6 +99,7 @@
                         }
                     });
                 }
+
                 function openData(type) {
                     let i, chart;
                     let charts = document.getElementsByClassName("chart");
@@ -108,6 +109,12 @@
                     document.getElementById(type).style.display = "block";
                 }
 
+                // 현재 날짜 가져오기
+                const currentDate = new Date();
+
+                // date 입력 필드의 최대값 설정
+                const dateField = document.getElementById('date');
+                dateField.max = currentDate.toISOString().split('T')[0];
 
                 // Default to showing the Weight chart
                 openData('Weight');

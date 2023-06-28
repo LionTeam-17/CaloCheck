@@ -32,12 +32,20 @@ public class TrackingController {
     }
 
     @GetMapping("/tracking/{memberId}")
-    public String showTracking(@PathVariable("memberId") Long memberId, Model model) {
+    public String showTracking(@PathVariable("memberId") Long memberId, Model model, Principal principal) {
         Optional<Member> memberOptional = memberService.findById(memberId);
+        String currentPrincipalName = principal.getName();
+        Member currentMember = memberService.findByUsername(currentPrincipalName)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + currentPrincipalName));
 
         if (!memberOptional.isPresent()) {
-            // Handle error. For example, you can return a error message or error page.
+            //로그인을 했을 때만 접근 가능
             return "error/memberNotFound";
+        }
+
+        if (!currentMember.getId().equals(memberId)) {
+            //본인의 아이디로 본인의 페이지만 접근가능
+            return "error/unauthorized";
         }
 
         Member member = memberOptional.get();
@@ -71,5 +79,7 @@ public class TrackingController {
         // Redirect to tracking page
         return "redirect:/tracking/" + createdTracking.getMember().getId();
     }
+
+
 
 }
