@@ -1,8 +1,11 @@
 package calocheck.base.initData;
 
 import calocheck.base.util.FoodDataExtractor;
+import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
+import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
+import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
@@ -31,7 +34,9 @@ public class NotProd {
             RecommendService recommendService,
             CommentService commentService,
             FoodDataExtractor foodDataExtractor,
-            PostLikeService postLikeService
+            PostLikeService postLikeService,
+            FoodInfoService foodInfoService,
+            CartFoodInfoService cartFoodInfoService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -83,6 +88,10 @@ public class NotProd {
                     .toArray(PostLike[]::new);
 
             foodDataExtractor.readFile();
+
+            IntStream.rangeClosed(1, 4)
+                    .mapToObj(i -> foodInfoService.findById((long)i))
+                    .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };
     }
 }

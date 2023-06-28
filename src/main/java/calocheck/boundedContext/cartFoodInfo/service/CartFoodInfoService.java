@@ -19,7 +19,8 @@ public class CartFoodInfoService {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo != null) {
-            return update(cartFoodInfo, member, foodInfo);
+            long quantity = cartFoodInfo.getQuantity() + 1;
+            return update(cartFoodInfo, member, foodInfo, quantity);
         }
 
         cartFoodInfo = create(member, foodInfo);
@@ -38,6 +39,25 @@ public class CartFoodInfoService {
         return false;
     }
 
+    public boolean updateFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
+        CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
+
+        if (quantity == 0) {
+
+        }
+
+        if (cartFoodInfo != null) {
+            CartFoodInfo updated = cartFoodInfo.toBuilder()
+                    .quantity(quantity)
+                    .build();
+
+            cartFoodInfoRepository.save(updated);
+            return true;
+        }
+
+        return false;
+    }
+
     public CartFoodInfo create(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = CartFoodInfo.builder()
                 .member(member)
@@ -48,17 +68,17 @@ public class CartFoodInfoService {
         return cartFoodInfoRepository.save(cartFoodInfo);
     }
 
-    public CartFoodInfo update(CartFoodInfo cartFoodInfo, Member member, FoodInfo foodInfo) {
+    private CartFoodInfo update(CartFoodInfo cartFoodInfo, Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo updated = cartFoodInfo.toBuilder()
                 .member(member)
                 .foodInfo(foodInfo)
-                .quantity(cartFoodInfo.getQuantity() + 1)
+                .quantity(quantity)
                 .build();
 
         return cartFoodInfoRepository.save(updated);
     }
 
-    public void delete(CartFoodInfo cartFoodInfo) {
+    private void delete(CartFoodInfo cartFoodInfo) {
         cartFoodInfoRepository.delete(cartFoodInfo);
     }
 

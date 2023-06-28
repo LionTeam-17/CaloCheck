@@ -30,11 +30,8 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findByMember(member);
-        List<FoodInfo> foodInfoList = cartList.stream()
-                        .map(element -> element.getFoodInfo())
-                        .collect(Collectors.toList());
 
-        model.addAttribute("cartList", foodInfoList);
+        model.addAttribute("cartList", cartList);
 
         return "usr/cartFoodInfo/cartList";
     }
@@ -58,6 +55,22 @@ public class CartFoodInfoController {
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
         cartFoodInfoService.removeFoodInfo(member, foodInfo);
+        return new CartDTO("success");
+    }
+
+    @PostMapping("/updateFoodInfo")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public CartDTO updateCartFoodInfo(@RequestParam("foodId") Long foodId, @RequestParam("quantity") Long quantity) {
+        Member member = rq.getMember();
+        FoodInfo foodInfo = foodInfoService.findById(foodId);
+
+        if (quantity == 0) {
+            cartFoodInfoService.removeFoodInfo(member, foodInfo);
+            return new CartDTO("success");
+        }
+
+        cartFoodInfoService.updateFoodInfo(member, foodInfo, quantity);
         return new CartDTO("success");
     }
 }
