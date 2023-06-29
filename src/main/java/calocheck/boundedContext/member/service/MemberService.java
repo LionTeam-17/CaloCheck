@@ -141,27 +141,24 @@ public class MemberService {
         return RsData.of("S-1", "닉네임이 수정되었습니다.");
     }
 
-
-
-    /*@Transactional
-    public RsData<Member> modifyInfo(Member actor, Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    @Transactional
+    public RsData<Member> updateEmail(Member actor, Long memberId, String email) {
 
         if (actor.getId() != memberId) {
             return RsData.of("F-1", "사용자 정보가 일치하지 않습니다.");
         }
 
+        Member checkMember = findByEmail(email).orElse(null);
 
-        actor = actor.toBuilder()
-                .age(age)
-                .height(height)
-                .weight(weight)
-                .muscleMass(muscleMass)
-                .bodyFat(bodyFat)
-                .build();
+        if (checkMember != null) {
+            return RsData.of("F-S", "이미 사용 중인 이메일입니다.");
+        }
+
+        actor = actor.toBuilder().email(email).build();
         memberRepository.save(actor);
 
-        return RsData.of("S-1", "정보가 수정되었습니다.");
-    } */
+        return RsData.of("S-1", "이메일이 수정되었습니다.");
+    }
 
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);

@@ -120,6 +120,20 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/email/{id}")
+    public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestParam("email") String email) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateEmail(member, id, email);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"이메일이 %s(으)로 수정되었습니다.\"}".formatted(email));
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String showMyPage() {
 

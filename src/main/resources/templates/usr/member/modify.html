@@ -21,27 +21,27 @@
                 form.muscleMass.value = form.muscleMass.value.trim();
                 form.bodyFat.value = form.bodyFat.value.trim();
 
-                if (form.age.value === null) {
+                if (form.age.value.length == 0) {
                     toastWarning('나이를 입력해주세요.');
                     form.age.focus();
                     return;
                 }
-                if (form.height.value === null) {
+                if (form.height.value.length == 0) {
                     toastWarning('키를 입력해주세요.');
                     form.height.focus();
                     return;
                 }
-                if (form.weight.value === null) {
+                if (form.weight.length == 0) {
                     toastWarning('몸무게를 입력해주세요.');
                     form.weight.focus();
                     return;
                 }
-                if (form.muscleMass.value === null) {
+                if (form.muscleMass.value.length == 0) {
                     toastWarning('근육량을 입력해주세요.');
                     form.muscleMass.focus();
                     return;
                 }
-                if (form.bodyFat.value === null) {
+                if (form.bodyFat.value.length == 0) {
                     toastWarning('체지방량을 입력해주세요.');
                     form.bodyFat.focus();
                     return;
