@@ -12,22 +12,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="_csrf" th:content="${_csrf.token}">
-
-
 </head>
 
 <body>
 <th:block layout:fragment="Content">
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
-            <!-- Create tabs for Weight, Body Fat and Muscle Mass -->
             <div class="tab_button">
                 <button class="tablink" id="WeightTab" data-tab="Weight" onclick="openData('Weight')">체중</button>
                 <button class="tablink" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
                 <button class="tablink" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">근육량</button>
             </div>
-
-            <!-- Create canvas for each data type -->
 
             <canvas id="Weight" class="chart"></canvas>
             <canvas id="Body Fat" class="chart"></canvas>
@@ -36,8 +31,8 @@
             <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
                 <div class="form-container">
                     <label for="date">날짜:</label>
-                    <input type="date" id="date" th:field="*{dateTime}">
-                    <!-- <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted"> -->
+                    <!-- <input type="date" id="date" th:field="*{dateTime}">-->
+                     <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">
                 </div>
                 <div class="form-container">
                     <label for="myWeight">체중:</label>
@@ -58,36 +53,8 @@
             <canvas id="myChart" class="chart"></canvas>
 
             <script th:inline="javascript">
-                // <block:setup:1>
-                const months = [];
-                for (let i = 1; i <= 7; i++) {
-                    months.push(i);
-                }
-
-                const ctx = document.getElementById('myChart');
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                        datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-
                 const data = /*[[${trackingData}]]*/ [];
 
-                // Filter data for the past three months
                 const currentDate = new Date();
                 const threeMonthsAgo = new Date();
                 threeMonthsAgo.setMonth(currentDate.getMonth() - 2); // Subtract 2 because months are zero-based
@@ -99,7 +66,6 @@
                 const bodyFats = filteredData.map(tracking => tracking.bodyFat);
                 const muscleMasses = filteredData.map(tracking => tracking.muscleMass);
 
-
                 const datasets = {
                     'Weight': weights,
                     'Body Fat': bodyFats,
@@ -108,7 +74,7 @@
 
                 const colors = {
                     'Weight': 'blue',
-                    'Body Fat': 'red',
+                    'Body Fat': 'yellow',
                     'Muscle Mass': 'green'
                 };
 
@@ -128,11 +94,6 @@
                         options: {
                             scales: {
                                 x: {
-                                    // type: 'time',
-                                    // time: {
-                                    //     unit: 'day',
-                                    //     tooltipFormat: 'MM-dd'
-                                    // },
                                     ticks: {
                                         maxTicksLimit: dates.length
                                     }
@@ -159,25 +120,22 @@
                         }
                     }
 
-                    // Show the selected chart
                     document.getElementById(type).style.display = "block";
                 }
 
-                // Set up date field
                 const dateField = document.getElementById('date');
                 const currentDateFormatted = new Date().toISOString().split('T')[0];
                 dateField.max = currentDateFormatted;
-                //dateField.min = currentDateFormatted;//
+                dateField.min = currentDateFormatted;
                 dateField.value = currentDateFormatted;
 
-                /* 과거날짜까지 선택 가능
+                /* 테스트용 과거날짜까지 선택 가능
                 // Set up date field
                 const dateField = document.getElementById('date');
                 dateField.max = currentDate.toISOString().split('T')[0];
                 dateField.value = currentDate.toISOString().split('T')[0];
                 */
 
-                // Default to showing the Weight chart
                 openData('Weight');
             </script>
         </div>
