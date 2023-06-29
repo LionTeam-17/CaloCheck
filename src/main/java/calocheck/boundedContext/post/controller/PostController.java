@@ -103,12 +103,12 @@ public class PostController {
             RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
 
             if(isSafeImg.isFail()){
-                return rq.redirectWithMsg("/post/createForm", isSafeImg);
+                return rq.historyBack(isSafeImg);
             }
 
         } else if (isImgRsData.isFail()){
             //첨부파일이 올바르지 않습니다.
-            return rq.redirectWithMsg("/post/createForm", isImgRsData);
+            return rq.historyBack(isImgRsData);
         }
 
         RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
