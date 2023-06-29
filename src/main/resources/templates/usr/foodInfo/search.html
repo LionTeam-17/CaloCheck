@@ -34,10 +34,9 @@
             <div class="flex flex-col justify-center">
                 <div class="flex flex-grow justify-between">
                     <span class="font-bold text-xs flex justify-center" style="width:8%">번호</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:30%">식품명</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:30%">제조사/유통사</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:16%">1회제공량</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:16%">총내용량</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:20%">1회/총제공량</span>
                 </div>
             </div>
             <div class="divider"></div>
@@ -53,21 +52,16 @@
                               th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
                         <!-- 역순 정렬 로직 종료 -->
                         <a class="font-bold text-xs text-start text-black flex"
-                           style="width:30%"
+                           style="width:36%"
                            th:href="|/foodInfo/details/${foodInfo.id}|">
                             <span th:text="${foodInfo.foodName}"></span>
                         </a>
                         <span class="font-bold text-xs text-black flex justify-center"
-                              style="width:30%"
+                              style="width:36%"
                               th:text="${foodInfo.manufacturer}"></span>
                         <span class="font-bold text-xs text-black flex justify-center"
-                              style="width:16%"
-                              th:text="${foodInfo.portionSize} + '(' + ${foodInfo.unit} + ')'"></span>
-                        <span class="font-bold text-xs text-black flex justify-center"
-                              style="width:16%"
-                              th:text="${foodInfo.totalSize} + '(' + ${foodInfo.unit} + ')'"></span>
-
-
+                              style="width:20%"
+                              th:text="${foodInfo.portionSize} + '/' + ${foodInfo.totalSize} + '(' + ${foodInfo.unit} + ')'"></span>
                     </div>
                     <div class="divider my-2" style="height: 1px"></div>
                 </div>
@@ -79,22 +73,22 @@
             <div th:if="${!paging.isEmpty()}" class="flex justify-center my-5">
                 <ul class="pagination justify-content-center flex">
                     <li th:if="${paging.hasPrevious()}" class="page-item">
-                        <a class="page-link m-1 btn"
+                        <a class="page-link m-1 btn btn-sm text-xs"
                            th:href="@{|?keyword=${keyword}&page=${paging.number - 1}|}"
                            th:data-page="${paging.number - 1}">
                             <span>이전</span>
                         </a>
                     </li>
                     <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                        th:if="${page >= paging.number - 5 and page <= paging.number + 5}">
+                        th:if="${page >= paging.number - 2 and page <= paging.number + 2}">
                         <a th:disabled="${page == paging.number}"
                            th:text="${page}"
-                           class="page-link m-1 btn btn-outline"
+                           class="page-link m-1 btn btn-sm btn-outline text-xs text-black"
                            th:href="@{|?keyword=${keyword}&page=${page}}"
                            th:data-page="${page}"></a>
                     </li>
                     <li th:if="${paging.hasNext()}" class="page-item">
-                        <a class="page-link m-1 btn"
+                        <a class="page-link m-1 btn btn-sm text-xs"
                            th:href="@{|?keyword=${keyword}&page=${paging.number + 1}|}"
                            th:data-page="${paging.number + 1}">
                             <span>다음</span>
