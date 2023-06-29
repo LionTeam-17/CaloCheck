@@ -45,16 +45,6 @@ public class MemberController {
         private Double bodyFat;
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class ModifyForm {
-        private Integer age;
-        private Double height;
-        private Double weight;
-        private Double muscleMass;
-        private Double bodyFat;
-    }
-
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String showJoin() {

@@ -51,77 +51,6 @@
                                             'yy-MM-dd')}"></span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>나이</td>
-                                <td class="flex flex-col gap-2">
-                                    <div id="ageContainer" class="flex gap-5">
-                                        <span id="ageValue" th:text="${@rq.member.age}"></span>
-                                    </div>
-                                    <div id="ageUpdateContainer" class="flex mt-1" style="display: none">
-                                        <input type="text" id="ageInput" placeholder="수정나이"
-                                               class="p-2 max-w-xs rounded-md border border-gray-200">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>키</td>
-                                <td class="flex flex-col gap-2">
-                                    <div id="heightContainer" class="flex gap-5">
-                                        <span id="heightValue" th:text="${@rq.member.height}"></span>
-                                    </div>
-                                    <div id="heightUpdateContainer" class="flex mt-1" style="display: none">
-                                        <input type="text" id="heightInput" placeholder="수정 키"
-                                               class="p-2 max-w-xs rounded-md border border-gray-200">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>몸무게</td>
-                                <td class="flex flex-col gap-2">
-                                    <div id="weightContainer" class="flex gap-5">
-                                        <span id="weightValue" th:text="${@rq.member.weight}"></span>
-                                    </div>
-                                    <div id="weightUpdateContainer" class="flex mt-1" style="display: none">
-                                        <input type="text" id="weightInput" placeholder="수정 몸무게"
-                                               class="p-2 max-w-xs rounded-md border border-gray-200">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>근육량</td>
-                                <td class="flex flex-col gap-2">
-                                    <div id="muscleMassContainer" class="flex gap-5">
-                                        <span id="muscleMassValue" th:text="${@rq.member.muscleMass}"></span>
-                                    </div>
-                                    <div id="muscleMassUpdateContainer" class="flex mt-1" style="display: none">
-                                        <input type="text" id="muscleMassInput" placeholder="수정 근육량"
-                                               class="p-2 max-w-xs rounded-md border border-gray-200">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>체지방량</td>
-                                <td class="flex flex-col gap-2">
-                                    <div id="bodyFatContainer" class="flex gap-5">
-                                        <span id="bodyFatValue" th:text="${@rq.member.bodyFat}"></span>
-                                    </div>
-                                    <div id="bodyFatUpdateContainer" class="flex mt-1" style="display: none">
-                                        <input type="text" id="bodyFatInput" placeholder="수정 체지방량"
-                                               class="p-2 max-w-xs rounded-md border border-gray-200">
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <div class="flex justify-end">
-                            <button id="editInfoBtn" class="btn btn-xs btn-outline btn-lg"
-                                    th:attr="data-member-id=${@rq.member.id}"> 정보수정
-                            </button>
-                        </div>
-                        <div id="infoUpdateContainer" class="flex mt-1" style="display: none;">
-                            <button id="updateInfoBtn" class="btn btn-xs btn-outline mx-1">수정완료</button>
-                        </div>
-
                         </table>
                     </div>
                 </div>
@@ -138,28 +67,6 @@
         const memberId = editNicknameBtn.getAttribute("data-member-id");
         const updateNicknameResult = document.getElementById("updateNicknameResult");
 
-        const editInfoBtn = document.getElementById("editInfoBtn");
-        const updateInfoBtn = document.getElementById("updateInfoBtn");
-        const ageUpdateContainer = document.getElementById("ageUpdateContainer");
-        const heightUpdateContainer = document.getElementById("heightUpDateContainer");
-        const weightUpdateContainer = document.getElementById("weightUpdateContainer");
-        const muscleMassUpdateContainer = document.getElementById("muscleMassUpdateContainer");
-        const bodyFatUpdateContainer = document.getElementById("bodyFatUpdateContainer");
-
-        const ageValue = document.getElementById("ageValue");
-        const heightValue = document.getElementById("heightValue");
-        const weightValue = document.getElementById("weightValue");
-        const muscleMassValue = document.getElementById("muscleMassValue");
-        const bodyFatValue = document.getElementById("bodyFatValue");
-
-        const ageInput = document.getElementById("ageInput");
-        const heightInput = document.getElementById("heightInput");
-        const weightInput = document.getElementById("weightInput");
-        const muscleMassInput = document.getElementById("muscleMassInput");
-        const bodyFatInput = document.getElementById("bodyFatInput");
-
-        const memberId2 = editInfoBtn.getAttribute("data-member-id");
-
         // csrf 토큰
         var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -172,44 +79,10 @@
             nicknameInput.value = nicknameValue.textContent;
         });
 
-        // 정보수정 버튼 클릭 시
-        editInfoBtn.addEventListener("click", () => {
-            ageUpdateContainer.style.display = "block";
-            heightUpdateContainer.style.display = "block";
-            weightUpdateContainer.style.display = "block";
-            muscleMassUpdateContainer.style.display = "block";
-            bodyFatUpdateContainer.style.display = "block";
-            editNicknameBtn.style.display = "none";
-            ageInput.value = ageValue.textContent;
-            heightInput.value = heightValue.textContent;
-            weightInput.value = weightValue.textContent;
-            muscleMassInput.value = muscleMassValue.textContent;
-            bodyFatInput.value = bodyFatValue.textContent;
-        });
-
         // 수정된 닉네임을 페이지에 반영
         function updateNicknameDisplay(newNickname) {
             const nicknameValue = document.getElementById("nicknameValue");
             nicknameValue.textContent = newNickname;
-        }
-
-        // 수정된 정보를 페이지에 반영
-        function updateInfoDisplay(newAge, newHeight, newWeight, newMuscleMass, newBodyFat) {
-
-            const ageValue = document.getElementById("ageValue");
-            ageValue.textContent = newAge;
-
-            const heightValue = document.getElementById("heightValue");
-            heightValue.textContent = newHeight;
-
-            const weightValue = document.getElementById("weightValue");
-            weightValue.textContent = newHeight;
-
-            const muscleMassValue = document.getElementById("muscleMassValue");
-            muscleMassValue.textContent = newMuscleMass;
-
-            const bodyFatValue = document.getElementById("bodyFatValue");
-            bodyFatValue.textContent = newBodyFat;
         }
 
         // 수정 완료 버튼 클릭 시
@@ -260,47 +133,6 @@
             nicknameUpdateContainer.style.display = "none";
             updateNicknameResult.style.display = "none";
             editNicknameBtn.style.display = "block";
-        });
-
-        // 정보수정 완료 버튼 클릭 시
-        updateInfoBtn.addEventListener("click", () => {
-            const newAge = ageInput.value;
-            const newHeight = heightInput.value;
-            const newWeight = weightInput.value;
-            const newMuscleMass = muscleMassInput.value;
-            const newBodyFat = bodyFatInput.value;
-
-            const endpoint = `/member/update/information/${memberId2}`;
-
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", endpoint);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    const response = JSON.parse(xhr.responseText);
-                    const returnMessage = response.message;
-
-                    if (xhr.status === 200) {
-                        toastNotice(returnMessage);
-                        updateInfoDisplay(newAge, newHeight, newWeight, newMuscleMass, newBodyFat); // 수정된 정보 반영
-                    } else {
-                        toastWarning(returnMessage);
-                    }
-                }
-            };
-            xhr.send("age=" + encodeURIComponent(newAge));
-            xhr.send("height=" + encodeURIComponent(newHeight));
-            xhr.send("weight=" + encodeURIComponent(newWeight));
-            xhr.send("muscleMass=" + encodeURIComponent(newMuscleMass));
-            xhr.send("bodyFat=" + encodeURIComponent(newBodyFat));
-            ageUpdateContainer.style.display = "none";
-            heightUpdateContainer.style.display = "none";
-            weightUpdateContainer.style.display = "none";
-            muscleMassUpdateContainer.style.display = "none";
-            bodyFatUpdateContainer.style.display = "none";
-            //pdateNicknameResult.style.display = "none";
-            editInfoBtn.style.display = "block";
         });
     </script>
 
