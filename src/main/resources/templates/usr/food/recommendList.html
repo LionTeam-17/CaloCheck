@@ -2,93 +2,144 @@
 <head>
     <meta charset="UTF-8">
     <title>영양소 명세 리스트</title>
+
+    <style>
+        .daisy-divider {
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>
 <div layout:fragment="Content">
 
-    <div>
-        <div class="mt-10 ml-10 flex">
-            <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">영양소 목록</h3>
-        </div>
-        <div class="flex flex-wrap justify-center items-center mt-3 ml-10 mr-10 py-3 bg-gray-300 rounded-lg h-auto">
-            <div class="flex flex-col">
-                <div class="flex flex-wrap">
-                    <input type="radio" name="nutrientType" value="carbohydrate"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16">탄수화물</label>
+    <div class="pb-10">
+        <div class="flex flex-col justify-center items-center">
+            <div class="mt-10">
+                <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">영양 정보</h3>
+            </div>
 
-                    <input type="radio" name="nutrientType" value="protein"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16">단백질</label>
+            <div class="dropdown dropdown-hover">
+                <div tabindex="0" class="m-1 btn">필요한 정보를 선택해 보세요!</div>
+                <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="탄수화물"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">탄수화물</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="단백질"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">단백질</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="지방"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">지방</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="칼슘"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">칼슘</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="나트륨"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">나트륨</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="칼륨"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">칼륨</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="비타민A"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">비타민A</span>
+                        </label>
 
-                    <input type="radio" name="nutrientType" value="fat"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16 mb-2">지방</label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="비타민C"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">비타민C</span>
+                        </label>
 
-                    <input type="radio" name="nutrientType" value="calcium"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16 mb-2">칼슘</label>
-                </div>
-                <div class="flex flex-wrap mt-2">
-                    <input type="radio" name="nutrientType" value="sodium"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16">나트륨</label>
-
-                    <input type="radio" name="nutrientType" value="potassium"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16">칼륨</label>
-
-                    <input type="radio" name="nutrientType" value="vitaminA"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap inline-block w-16">비타민A</label>
-
-                    <input type="radio" name="nutrientType" value="vitaminC"
-                           class="radio radio ml-10 checked:bg-yellow-500"/>
-                    <label class="text-black ml-2 whitespace-nowrap mr-10 inline-block w-16">비타민C</label>
-                </div>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="GI지수 높은 음식"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">GI지수 높은 음식</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="GI지수 낮은 음식"
+                                   class="radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">GI지수 낮은 음식</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="nutritionType" value="고단백&저지방 육류"
+                                   class="radio radio checked:bg-yellow-500"/>
+                            <span class="text-sm ml-2 whitespace-nowrap inline-block">고단백&저지방 육류</span>
+                        </label>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <form method="post" th:action="@{/recommend/img}" enctype="multipart/form-data"
-              class="flex justify-center items-center">
-
-            <label for="my_modal_6" class="btn">이미지 수집 안내</label>
-
-            <!-- Put this part before </body> tag -->
-            <input type="checkbox" id="my_modal_6" class="modal-toggle" />
-            <div class="modal">
-                <div class="modal-box">
-                    <h3 class="font-bold text-lg">이미지 수집 동의 안내</h3>
-                    <p class="py-4">유해하지 않은 음식 이미지에 한해 저희 사이트의 대표 음식 이미지가 될 수 있습니다.</p>
-                    <p class="py-4">여러분이 제공해주시는 이미지가 저희 사이트에 큰 힘이 됩니다.</p>
-                    <p class="py-4">뭐 약간... 이런 느낌</p>
-                    <p class="py-4 text-red">단, 저작권에 위배되거나 유해한 사진을 업로드 하시는 경우 이용에 제약이 있을 수 있습니다.</p>
-                    <div class="modal-action">
-                        <label for="my_modal_6" class="btn">닫기</label>
-                    </div>
-                </div>
-            </div>
-
-            <input id="img" name="img" type="file"
-                   class="file-input file-input-bordered file-input mt-5 ml-10 justify-center"/>
-
-            <label class="cursor-pointer label">
-                <span class="label-text">이미지 수집 동의</span>
-                <input name="agree" type="checkbox" class="checkbox checkbox-info" />
-            </label>
-
-            <button type="submit" class="btn btn-warning mt-5 ml-5">(임시) 이미지업로드</button>
-        </form>
-
-        <div class="flex flex-col">
-            <div class="flex ml-10 justify-start">
+        <div id="nut" class="flex flex-col justify-center items-center">
+            <div class="flex">
                 <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">영양소 정보</h3>
             </div>
-            <div class="w-2/3 h-full bg-gray-300 rounded-lg justify-center ml-10">
+            <div class="py-3 w-2/3 h-auto bg-gray-300 rounded-lg">
                 <!-- 선택된 영양소에 따라 다른 내용 출력 -->
-                <div id="resultDiv" class="ml-10">
-                    <h1 class="text-black mt-5 justify-center">내용이 비어있습니다. 영양소를 클릭하여 정보를 확인해 보세요!</h1>
+                <div id="descriptionDiv">
+                    <h1 class="text-black ml-5 my-5 justify-center">영양소를 클릭하여 정보를 확인해 보세요!</h1>
+                </div>
+            </div>
+
+            <div class="flex">
+                <h3 class="text-gray-400 font-bold bolder-none my-2 mb-0.5">주로 많이 먹는 음식</h3>
+            </div>
+
+            <div class="py-3 w-2/3 h-auto bg-gray-300 rounded-lg">
+                <div id="foodListDiv" class="">
+                    <h1 class="text-black ml-5 my-5 justify-center">영양별 추천 음식이 나열됩니다</h1>
+
+                    <div class="flex flex-row">
+                        <div class="mx-14 my-14 bg-yellow-500">
+                            <h1>이미지</h1>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <div class="mb-10">
+                                <h1 class="text-black">음식 이름</h1>
+                            </div>
+
+                            <div>
+                                <h1 class="text-sm">중요 정보</h1>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -96,11 +147,11 @@
 
     <script th:inline="javascript">
         // 선택된 라디오 버튼의 변경 이벤트를 감지
-        const radioButtons = document.getElementsByName("nutrientType");
+        const radioButtons = document.getElementsByName("nutritionType");
         radioButtons.forEach(function (radioButton) {
             radioButton.addEventListener("change", function () {
                 // 선택된 값 가져오기
-                const selectedValue = document.querySelector('input[name="nutrientType"]:checked').value;
+                const selectedValue = document.querySelector('input[name="nutritionType"]:checked').value;
                 const csrfToken = /*[[${_csrf.token}]]*/ ''; // CSRF 토큰 값을 가져옵니다
 
                 // AJAX 요청 데이터 구성
@@ -117,16 +168,40 @@
                         // JSON 형식의 응답 데이터를 객체로 파싱
                         const response = data;
                         // 결과를 HTML로 구성하여 출력
-                        const resultDiv = document.getElementById("resultDiv");
-                        resultDiv.innerHTML = `
+                        const descriptionDiv = document.getElementById("descriptionDiv");
+                        descriptionDiv.innerHTML = `
                     <div>
-                        <h1 class="font-black badge badge-warning mt-3 mb-3">${response.nutrientName}</h1>
-                        <h1 class="font-black">${response.nutrientDescription}</h1>
-                        <ul class="font-black mt-3">
-                            ${response.nutrientFoodList.map(food => `<li>${food}</li>`).join('')}
-                        </ul>
+                        <h1 class="font-black badge badge-warning mx-5 my-3">${response.nutritionName}</h1>
+                        <h1 class="font-black mx-5 my-3">${response.nutritionDescription}</h1>
                     </div>
+
+
                 `;
+                        const foodListDiv = document.getElementById("foodListDiv");
+                        foodListDiv.innerHTML = `
+                        <div class="mt-5 mb-5">
+                            <ul class="font-black mt-3">
+                                ${response.nutritionFoodList.map(food => `
+                                <div class="flex flex-row">
+                                    <div class="ml-2 bg-yellow-500">
+                                        <img src="https://iztyfajjvmsf17707682.cdn.ntruss.com/store_img/cow.png?type=m&w=120&h=120" alt="food_sample">
+                                    </div>
+                                     <div class="divider divider-horizontal daisy-divider"></div>
+                                    <div class="flex flex-col">
+                                        <div class="mb-10">
+                                            <a href="/foodInfo/search?keyword=${food}" class="text-black mt-1">${food}</a>
+                                        </div>
+
+                                        <div>
+                                            <h1 class="text-sm">중요 정보</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        `;
                     },
                     error: function () {
                         alert("데이터 통신 중 에러 발생");
