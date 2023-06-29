@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="flex justify-center">
-                        <a href="/member/me">
+                        <a th:href="@{|/member/modify/${memberId}|}">
                             <button class="btn btn-xs btn-outline btn-lg"
                                     th:attr="data-member-id=${@rq.member.id}">수정하기
                             </button>

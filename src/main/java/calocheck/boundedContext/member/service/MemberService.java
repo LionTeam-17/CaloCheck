@@ -3,6 +3,7 @@ package calocheck.boundedContext.member.service;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.repository.MemberRepository;
+import calocheck.boundedContext.post.entity.Post;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,6 +70,29 @@ public class MemberService {
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }
 
+    @Transactional
+    public RsData<Member> modify(final Long id, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat, Member actor
+    ) {
+        Optional<Member> oMember = memberRepository.findById(id);
+
+        if (!oMember.get().equals(actor)) {
+            return RsData.of("F-2", "수정 권한이 없습니다.");
+        }
+
+        Member member = oMember.get();
+
+        Member modifyMember =member.toBuilder()
+                .age(age)
+                .height(height)
+                .weight(weight)
+                .muscleMass(muscleMass)
+                .bodyFat(bodyFat)
+                .build();
+
+        memberRepository.save(modifyMember);
+        return RsData.of("S-1", "정보가 수정되었습니다.", member);
+    }
+
     public RsData<Member> checkDuplicateValue(String username, String email, String nickname) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
@@ -117,10 +141,12 @@ public class MemberService {
         return RsData.of("S-1", "닉네임이 수정되었습니다.");
     }
 
-    @Transactional
-    public RsData<Member> updateInfo(Member actor, Long memberId2, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
 
-        if (actor.getId() != memberId2) {
+
+    /*@Transactional
+    public RsData<Member> modifyInfo(Member actor, Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+
+        if (actor.getId() != memberId) {
             return RsData.of("F-1", "사용자 정보가 일치하지 않습니다.");
         }
 
@@ -135,7 +161,7 @@ public class MemberService {
         memberRepository.save(actor);
 
         return RsData.of("S-1", "정보가 수정되었습니다.");
-    }
+    } */
 
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
