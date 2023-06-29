@@ -38,12 +38,20 @@ public class PostController {
                                @RequestParam(value = "kw", defaultValue = "") String kw,
                                Model model) {
 
-
         if (!kw.equals("")) {
-            List<Post> filteringPostList = postService.findBySubjectLike("%" + kw + "%");
-            Page<Post> filteringPaging = postService.findBySubjectLike("%" + kw + "%", page);
+            List<Post> filteringList = postService.findBySubjectLikeOrMemberNicknameLike
+                    (
+                            "%" + kw + "%",
+                            "%" + kw + "%"
+                    );
+            Page<Post> filteringPaging = postService.findBySubjectLikeOrMemberNicknameLike
+                    (
+                            "%" + kw + "%",
+                            "%" + kw + "%",
+                            page
+                    );
 
-            model.addAttribute("postList", filteringPostList);
+            model.addAttribute("postList", filteringList);
             model.addAttribute("paging", filteringPaging);
         } else {
             List<Post> postList = postService.findAll();

@@ -24,7 +24,8 @@
                                            placeholder="검색어를 입력하세요." th:value="${kw}"
                                            type="text">
                                     <a class="btn btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
-                                       href="#" onclick="event.preventDefault(); location.href = '?kw=' + $(this).prev().val().trim().replace(/ /g, '');"
+                                       href="#"
+                                       onclick="event.preventDefault(); location.href = '?kw=' + $(this).prev().val().trim().replace(/ /g, '');"
                                        style="background:#112D4E; color:white">
                                         <span class="flex mt-1 justify-center items-center"></span>
                                     </a>
@@ -59,7 +60,7 @@
                     <div class="flex flex-grow justify-between">
                         <span class="font-bold text-sm px-2 flex justify-center" style="width: 5%">번호</span>
                         <span class="font-bold text-sm flex justify-center" style="width: 30%">제목</span>
-                        <span class="font-bold text-sm flex justify-center" style="width: 10%">작성자</span>
+                        <span class="font-bold text-sm flex justify-center" style="width: 15%">작성자</span>
                         <span class="font-bold text-sm flex justify-center" style="width: 18%">작성일</span>
                         <span class="font-bold text-sm flex justify-center" style="width: 6%">추천</span>
                     </div>
@@ -81,7 +82,7 @@
                                       th:if="${top3Post.commentList.size() != 0}"
                                       th:text="'[' + ${top3Post.commentList.size()} + ']'"></span>
                             </a>
-                            <span class="font-bold text-xs flex justify-center" style="width: 10%"
+                            <span class="font-bold text-xs flex justify-center" style="width: 15%;word-break: break-all"
                                   th:text="${top3Post.member.nickname}"></span>
                             <span class="font-bold text-xs flex justify-center" style="width: 18%"
                                   th:if="${top3Post.isToday == true}"
@@ -114,7 +115,7 @@
                 <div class="flex flex-grow justify-between">
                     <span class="font-bold text-sm px-2 flex justify-center" style="width: 5%">번호</span>
                     <span class="font-bold text-sm flex justify-center" style="width: 30%">제목</span>
-                    <span class="font-bold text-sm flex justify-center" style="width: 10%">작성자</span>
+                    <span class="font-bold text-sm flex justify-center" style="width: 15%">작성자</span>
                     <span class="font-bold text-sm flex justify-center" style="width: 18%">작성일</span>
                     <span class="font-bold text-sm flex justify-center" style="width: 6%">추천</span>
                 </div>
@@ -142,7 +143,7 @@
                                   th:if="${post.commentList.size() != 0}"
                                   th:text="'[' + ${post.commentList.size()} + ']'"></span>
                         </a>
-                        <span class="font-bold text-xs flex justify-center" style="width: 10%"
+                        <span class="font-bold text-xs flex justify-center" style="width: 15%"
                               th:text="${post.member.nickname}"></span>
                         <span class="font-bold text-xs flex justify-center" style="width: 18%"
                               th:if="${post.isToday == true}"
