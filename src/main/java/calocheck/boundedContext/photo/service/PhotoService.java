@@ -191,4 +191,23 @@ public class PhotoService {
         return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
+    public String getPostDetailPhoto(String photoUrl){
+
+        String[] split = photoUrl.split("calocheck/");
+
+        StringBuilder sb = new StringBuilder();
+        String protocol = request.getScheme();
+
+        if(protocol.equals("http")){
+            sb.append("http://mxpijmgqueja17962851.cdn.ntruss.com/");
+        }else if(protocol.equals("https")){
+            sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/");
+        }
+
+        sb.append(split[1]);
+        sb.append("?type=m&w=500&h=500&quality=90&bgcolor=FFFFFF&extopt=3");
+
+        return sb.toString();
+    }
+
 }

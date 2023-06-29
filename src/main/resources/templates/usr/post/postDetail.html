@@ -21,6 +21,9 @@
 
     <div class="max-w-5xl w-full mt-4 px-4">
         <div class="flex flex-col">
+            <div class="flex justify-center">
+                <img th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+            </div>
             <h1 class="font-bold font-xl mb-4" th:text="${post.subject}"></h1>
             <div class="flex justify-between">
                 <div>

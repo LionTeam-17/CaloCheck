@@ -6,6 +6,7 @@ import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
+import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.photo.service.PhotoService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
@@ -88,13 +89,14 @@ public class PostController {
             return rq.historyBack("내용을 입력해주세요.");
         }
 
+        //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우(default 이미지 적용)
         RsData<String> isImgRsData = photoService.isImgFile(img.getOriginalFilename());
 
-        String photoUrl = "not image file";
+        String photoUrl = S3Config.getSampleImg();
 
-        if (isImgRsData.isSuccess()) {
+        if (isImgRsData.getResultCode().equals("S-6")) {
 
-            //S3 Bucket 에 이미지 업로드
+            //S3 Bucket 에 이미지 업로드 및 경로 재대입
             photoUrl = photoService.photoUpload(img);
 
             //업로드된 이미지가 안전한 이미지인지 확인
@@ -104,7 +106,7 @@ public class PostController {
                 return rq.redirectWithMsg("/post/createForm", isSafeImg);
             }
 
-        } else {
+        } else if (isImgRsData.isFail()){
             //첨부파일이 올바르지 않습니다.
             return rq.redirectWithMsg("/post/createForm", isImgRsData);
         }
