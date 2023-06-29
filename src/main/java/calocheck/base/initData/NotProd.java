@@ -8,6 +8,7 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.entity.PostLike;
@@ -48,7 +49,7 @@ public class NotProd {
 
             Post[] posts = IntStream
                     .rangeClosed(1, 100)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % 10])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), S3Config.getSampleImg(), members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
 
