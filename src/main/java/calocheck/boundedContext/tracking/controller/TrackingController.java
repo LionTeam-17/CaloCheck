@@ -23,7 +23,7 @@ import java.util.Optional;
 public class TrackingController {
 
     private final TrackingService trackingService;
-    private final MemberService memberService; // Declare MemberService
+    private final MemberService memberService;
 
     @Autowired
     public TrackingController(TrackingService trackingService, MemberService memberService) { // Inject MemberService
@@ -32,20 +32,12 @@ public class TrackingController {
     }
 
     @GetMapping("/tracking/{memberId}")
-    public String showTracking(@PathVariable("memberId") Long memberId, Model model, Principal principal) {
+    public String showTracking(@PathVariable("memberId") Long memberId, Model model) {
         Optional<Member> memberOptional = memberService.findById(memberId);
-        String currentPrincipalName = principal.getName();
-        Member currentMember = memberService.findByUsername(currentPrincipalName)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + currentPrincipalName));
 
         if (!memberOptional.isPresent()) {
-            //로그인을 했을 때만 접근 가능
+            // Handle error. For example, you can return a error message or error page.
             return "error/memberNotFound";
-        }
-
-        if (!currentMember.getId().equals(memberId)) {
-            //본인의 아이디로 본인의 페이지만 접근가능
-            return "error/unauthorized";
         }
 
         Member member = memberOptional.get();
@@ -57,7 +49,7 @@ public class TrackingController {
 
     @PostMapping("/tracking")
     public String createTracking(@ModelAttribute("tracking")
-                                     @DateTimeFormat(pattern = "yyyy-MM-dd") Tracking tracking,
+                                 @DateTimeFormat(pattern = "yyyy-MM-dd") Tracking tracking,
                                  Principal principal) {
         // Retrieve the logged in member
         String currentPrincipalName = principal.getName();
@@ -67,19 +59,25 @@ public class TrackingController {
         // Set member in tracking data
         tracking.setMember(member);
 
-        // Save tracking data
-        Tracking createdTracking = trackingService.createTracking(
-                member,
-                tracking.getDateTime(),
-                tracking.getWeight(),
-                tracking.getBodyFat(),
-                tracking.getMuscleMass()
-        );
+        // Check if tracking data for the given date already exists
+        Optional<Tracking> existingTracking = trackingService.findByMemberAndDate(member, tracking.getDateTime());
+
+        Tracking savedTracking;
+        if (existingTracking.isPresent()) {
+            // Update existing tracking data
+            Tracking trackingToUpdate = existingTracking.get();
+            trackingToUpdate.setWeight(tracking.getWeight());
+            trackingToUpdate.setBodyFat(tracking.getBodyFat());
+            trackingToUpdate.setMuscleMass(tracking.getMuscleMass());
+
+            savedTracking = trackingService.updateTracking(trackingToUpdate);
+        } else {
+            // Save new tracking data
+            savedTracking = trackingService.createTracking(tracking);
+        }
 
         // Redirect to tracking page
-        return "redirect:/tracking/" + createdTracking.getMember().getId();
+        return "redirect:/tracking/" + savedTracking.getMember().getId();
     }
-
-
 
 }

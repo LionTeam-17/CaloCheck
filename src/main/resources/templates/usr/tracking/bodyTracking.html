@@ -35,7 +35,7 @@
             <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
                 <div class="form-container">
                     <label for="date">날짜:</label>
-                    <input type="date" id="date" th:field="*{dateTime}">
+                    <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">
                 </div>
                 <div class="form-container">
                     <label for="myWeight">체중:</label>
@@ -57,10 +57,17 @@
             <script th:inline="javascript">
                 const data = /*[[${trackingData}]]*/ [];
 
-                const dates = data.map(tracking => new Date(tracking.dateTime));
-                const weights = data.map(tracking => tracking.weight);
-                const bodyFats = data.map(tracking => tracking.bodyFat);
-                const muscleMasses = data.map(tracking => tracking.muscleMass);
+                // Filter data for the past three months
+                const currentDate = new Date();
+                const threeMonthsAgo = new Date();
+                threeMonthsAgo.setMonth(currentDate.getMonth() - 2); // Subtract 2 because months are zero-based
+
+                const filteredData = data.filter(tracking => new Date(tracking.dateTime) >= threeMonthsAgo);
+
+                const dates = filteredData.map(tracking => new Date(tracking.dateTime));
+                const weights = filteredData.map(tracking => tracking.weight);
+                const bodyFats = filteredData.map(tracking => tracking.bodyFat);
+                const muscleMasses = filteredData.map(tracking => tracking.muscleMass);
 
                 const datasets = {
                     'Weight': weights,
@@ -92,7 +99,11 @@
                                 x: {
                                     type: 'time',
                                     time: {
-                                        unit: 'day'
+                                        unit: 'day',
+                                        tooltipFormat: 'MM-dd'
+                                    },
+                                    ticks: {
+                                        maxTicksLimit: data.length
                                     }
                                 }
                             },
@@ -100,6 +111,7 @@
                     });
                 }
 
+                // Function to toggle active class and show/hide graphs
                 function openData(type) {
                     let i, chart;
                     let charts = document.getElementsByClassName("chart");
@@ -109,15 +121,19 @@
                     document.getElementById(type).style.display = "block";
                 }
 
-                // 현재 날짜 가져오기
-                const currentDate = new Date();
+                // Set up date field
+                const dateField = document.getElementById('date');
+                const currentDateFormatted = new Date().toISOString().split('T')[0];
+                dateField.max = currentDateFormatted;
+                dateField.min = currentDateFormatted;
+                dateField.value = currentDateFormatted;
 
-                // date 입력 필드의 최대값 설정
+                /* 과거날짜까지 선택 가능
+                // Set up date field
                 const dateField = document.getElementById('date');
                 dateField.max = currentDate.toISOString().split('T')[0];
-
-                // 입력 필드의 기본값으로 현재 날짜 설정
                 dateField.value = currentDate.toISOString().split('T')[0];
+                */
 
                 // Default to showing the Weight chart
                 openData('Weight');

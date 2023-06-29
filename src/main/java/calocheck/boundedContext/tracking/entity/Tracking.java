@@ -47,6 +47,7 @@ public class Tracking extends BaseEntity {
     public void setMember(Member member) {
         this.member = member;
     }
+
     public void setDateTime(LocalDate dateTime) {
         this.dateTime = dateTime;
     }
@@ -62,4 +63,5 @@ public class Tracking extends BaseEntity {
     public void setMuscleMass(Double muscleMass) {
         this.muscleMass = muscleMass;
     }
+
 }

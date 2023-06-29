@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TrackingService {
@@ -37,5 +38,13 @@ public class TrackingService {
 
     public Tracking createTracking(Tracking tracking) {
         return trackingRepository.save(tracking);
+    }
+
+    public Tracking updateTracking(Tracking tracking) {
+        return trackingRepository.save(tracking);
+    }
+
+    public Optional<Tracking> findByMemberAndDate(Member member, LocalDate date) {
+        return trackingRepository.findByMemberAndDateTime(member, date);
     }
 }
