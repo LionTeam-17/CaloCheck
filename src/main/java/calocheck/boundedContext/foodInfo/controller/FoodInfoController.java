@@ -4,6 +4,7 @@ import calocheck.base.rq.Rq;
 import calocheck.base.util.FoodDataExtractor;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,10 +56,10 @@ public class FoodInfoController {
             return rq.historyBack("해당 음식 정보가 존재하지 않습니다.");
         }
 
-        NutrientInfo nutrientInfo = foodInfo.getNutrientInfo();
+        List<Nutrient> nutrients = foodInfo.getNutrientInfo().getNutrientList();
 
         model.addAttribute("foodInfo", foodInfo);
-        model.addAttribute("nutrients", nutrientInfo);
+        model.addAttribute("nutrients", nutrients);
 
         return "usr/foodInfo/details";
     }

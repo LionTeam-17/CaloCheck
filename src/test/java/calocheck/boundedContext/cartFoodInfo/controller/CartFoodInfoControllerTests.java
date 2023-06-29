@@ -2,10 +2,8 @@ package calocheck.boundedContext.cartFoodInfo.controller;
 
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
-import calocheck.boundedContext.foodInfo.controller.FoodInfoController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +18,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -67,7 +64,7 @@ public class CartFoodInfoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findByMember(1L);
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
 
         assertThat(cartFoodInfos.size()).isEqualTo(5);
     }
@@ -85,7 +82,7 @@ public class CartFoodInfoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findByMember(1L);
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
 
         assertThat(cartFoodInfos.size()).isEqualTo(3);
     }
@@ -104,7 +101,7 @@ public class CartFoodInfoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findByMember(1L);
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
 
         assertThat(cartFoodInfos.size()).isEqualTo(4);
         assertThat(cartFoodInfos.get(0).getQuantity()).isEqualTo(3);

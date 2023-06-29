@@ -1,7 +1,6 @@
 package calocheck.base.initData;
 
 import calocheck.base.util.FoodDataExtractor;
-import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
@@ -86,7 +85,7 @@ public class NotProd {
 
             foodDataExtractor.readFile();
 
-            IntStream.rangeClosed(1, 4)
+            IntStream.rangeClosed(190, 199)
                     .mapToObj(i -> foodInfoService.findById((long)i))
                     .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };

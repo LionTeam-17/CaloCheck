@@ -7,6 +7,7 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class CartFoodInfoController {
     public String showCartList(Model model) {
         Member member = rq.getMember();
 
-        List<CartFoodInfo> cartList = cartFoodInfoService.findByMember(member);
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
 
         model.addAttribute("cartList", cartList);
 
@@ -77,6 +78,12 @@ public class CartFoodInfoController {
     @PreAuthorize("isAuthenticated()")
     public String showCartTotal(Model model) {
         Member member = rq.getMember();
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
+        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
+
+        model.addAttribute("kcalTotal", kcalTotal);
+        model.addAttribute("nutrientTotal", nutrientTotal);
 
         return "usr/cartFoodInfo/total";
     }

@@ -13,12 +13,6 @@
   <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    #nutrientChart {
-      width: 350px;
-      height: 350px;
-    }
-  </style>
 </head>
 
 <body>
@@ -63,92 +57,7 @@
   </div>
 
   <script th:inline="javascript">
-    // 원형 그래프를 그릴 데이터
-    const data = {
-      labels: [
-        "데이터1",
-        "데이터2",
-        "데이터3",
-        "데이터4",
-        "데이터5",
-        "데이터6",
-        "데이터7",
-        "데이터8",
-        "데이터9",
-        "데이터10",
-        "데이터11",
-        "데이터12",
-        "데이터13",
-        "데이터14"
-      ],
-      datasets: [
-        {
-          data: [
-            10,
-            20,
-            30,
-            40,
-            50,
-            60,
-            70,
-            70,
-            70,
-            70,
-            70,
-            0,
-            0,
-            0,
-          ], // 각 데이터의 값
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#FF8C00",
-            "#9966FF",
-            "#C0C0C0",
-            "#FFD700",
-            "#3CB371",
-            "#FF4500",
-            "#00BFFF",
-            "#BA55D3",
-            "#008080",
-            "#F08080"], // 각 데이터의 배경색
-          hoverBackgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#FF8C00",
-            "#9966FF",
-            "#C0C0C0",
-            "#FFD700",
-            "#3CB371",
-            "#FF4500",
-            "#00BFFF",
-            "#BA55D3",
-            "#008080",
-            "#F08080"
-          ] // 각 데이터의 호버 배경색
-        }
-      ]
-    };
 
-    // 원형 그래프의 옵션
-    const options = {
-      responsive: false,
-      maintainAspectRatio: false
-    };
-
-    // 캔버스 요소 선택
-    const ctx = document.getElementById("nutrientChart").getContext("2d");
-
-    // 원형 그래프 생성
-    new Chart(ctx, {
-      type: "doughnut",
-      data: data,
-      options: options
-    });
   </script>
 </main>
 </body>

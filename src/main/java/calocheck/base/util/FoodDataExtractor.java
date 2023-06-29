@@ -3,6 +3,8 @@ package calocheck.base.util;
 
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
+import calocheck.boundedContext.nutrient.service.NutrientService;
 import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.nutrientInfo.service.NutrientInfoService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FoodDataExtractor {
     private final FoodInfoService foodInfoService;
+    private final NutrientService nutrientService;
     private final NutrientInfoService nutrientInfoService;
 
     Map<String, Integer> indexMap = new HashMap<>() {{
@@ -86,50 +89,65 @@ public class FoodDataExtractor {
                 double kcal = !Ut.check.isDouble(kcalStr) ? 0 : Double.parseDouble(kcalStr);
                 String proteinStr = row.getCell(indexMap.get("단백질(g)")).getStringCellValue();
                 double protein = !Ut.check.isDouble(proteinStr) ? 0 : Double.parseDouble(proteinStr);
+                Nutrient proteinNutri = nutrientService.create("단백질", protein, "g");
                 String fatStr = row.getCell(indexMap.get("지방(g)")).getStringCellValue();
                 double fat = !Ut.check.isDouble(fatStr) ? 0 : Double.parseDouble(fatStr);
+                Nutrient fatNutri = nutrientService.create("지방", fat, "g");
                 String carbohydrateStr = row.getCell(indexMap.get("탄수화물(g)")).getStringCellValue();
                 double carbohydrate = !Ut.check.isDouble(carbohydrateStr) ? 0 : Double.parseDouble(carbohydrateStr);
+                Nutrient carbohydrateNutri = nutrientService.create("탄수화물", carbohydrate, "g");
                 String sugarStr = row.getCell(indexMap.get("총당류(g)")).getStringCellValue();
                 double sugar = !Ut.check.isDouble(sugarStr) ? 0 : Double.parseDouble(sugarStr);
+                Nutrient sugarNutri = nutrientService.create("총당류", sugar, "g");
                 String fiberStr = row.getCell(indexMap.get("총식이섬유(g)")).getStringCellValue();
                 double fiber = !Ut.check.isDouble(fiberStr) ? 0 : Double.parseDouble(fiberStr);
+                Nutrient fiberNutri = nutrientService.create("총식이섬유", fiber, "g");
                 String calciumStr = row.getCell(indexMap.get("칼슘(mg)")).getStringCellValue();
                 double calcium = !Ut.check.isDouble(calciumStr) ? 0 : Double.parseDouble(calciumStr);
+                Nutrient calciumNutri = nutrientService.create("칼슘", calcium, "mg");
                 String ironStr = row.getCell(indexMap.get("철(mg)")).getStringCellValue();
                 double iron = !Ut.check.isDouble(ironStr) ? 0 : Double.parseDouble(ironStr);
+                Nutrient ironNutri = nutrientService.create("철", iron, "mg");
                 String magnesiumStr = row.getCell(indexMap.get("마그네슘(mg)")).getStringCellValue();
                 double magnesium = !Ut.check.isDouble(magnesiumStr) ? 0 : Double.parseDouble(magnesiumStr);
+                Nutrient magnesiumNutri = nutrientService.create("마그네슘", magnesium, "mg");
                 String potassiumStr = row.getCell(indexMap.get("칼륨(mg)")).getStringCellValue();
                 double potassium = !Ut.check.isDouble(potassiumStr) ? 0 : Double.parseDouble(potassiumStr);
+                Nutrient potassiumNutri = nutrientService.create("칼륨", potassium, "mg");
                 String sodiumStr = row.getCell(indexMap.get("나트륨(mg)")).getStringCellValue();
                 double sodium = !Ut.check.isDouble(sodiumStr) ? 0 : Double.parseDouble(sodiumStr);
+                Nutrient sodiumNutri = nutrientService.create("나트륨", sodium, "mg");
                 String cholesterolStr = row.getCell(indexMap.get("콜레스테롤(g)")).getStringCellValue();
                 double cholesterol = !Ut.check.isDouble(cholesterolStr) ? 0 : Double.parseDouble(cholesterolStr);
+                Nutrient cholesterolNutri = nutrientService.create("콜레스테롤", cholesterol, "g");
                 String saturatedStr = row.getCell(indexMap.get("포화지방산(g)")).getStringCellValue();
                 double saturated = !Ut.check.isDouble(saturatedStr) ? 0 : Double.parseDouble(saturatedStr);
+                Nutrient saturatedNutri = nutrientService.create("포화지방산", saturated, "g");
                 String transFattyAcidStr = row.getCell(indexMap.get("트랜스지방산(g)")).getStringCellValue();
                 double transFattyAcid = !Ut.check.isDouble(transFattyAcidStr) ? 0 : Double.parseDouble(transFattyAcidStr);
+                Nutrient transFattyAcidNutri = nutrientService.create("트랜스지방산", transFattyAcid, "g");
                 String unSaturatedStr = row.getCell(indexMap.get("불포화지방산(g)")).getStringCellValue();
                 double unSaturated = !Ut.check.isDouble(unSaturatedStr) ? 0 : Double.parseDouble(unSaturatedStr);
+                Nutrient unSaturatedNutri = nutrientService.create("불포화지방산", unSaturated, "g");
 
-                NutrientInfo nutrientInfo = nutrientInfoService.create(
-                        kcal,
-                        protein,
-                        fat,
-                        carbohydrate,
-                        sugar,
-                        fiber,
-                        calcium,
-                        iron,
-                        magnesium,
-                        potassium,
-                        sodium,
-                        cholesterol,
-                        saturated,
-                        transFattyAcid,
-                        unSaturated
-                );
+                List<Nutrient> nutritentList = new ArrayList<>() {{
+                    add(proteinNutri);
+                    add(fatNutri);
+                    add(carbohydrateNutri);
+                    add(sugarNutri);
+                    add(fiberNutri);
+                    add(calciumNutri);
+                    add(ironNutri);
+                    add(magnesiumNutri);
+                    add(potassiumNutri);
+                    add(sodiumNutri);
+                    add(cholesterolNutri);
+                    add(saturatedNutri);
+                    add(transFattyAcidNutri);
+                    add(unSaturatedNutri);
+                }};
+
+                NutrientInfo nutrientInfo = nutrientInfoService.create(kcal, nutritentList);
 
                 FoodInfo foodInfo = foodInfoService.create(
                         nutrientInfo,

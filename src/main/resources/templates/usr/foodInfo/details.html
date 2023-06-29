@@ -11,6 +11,14 @@
 
     <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
     <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #nutrientChart {
+            width: 350px;
+            height: 350px;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,16 +38,16 @@
                 </a>
             </div>
 
-            <div class="m-5 flex">
+            <div class="m-3 flex">
                 <div class="divider"></div>
                 <div class="flex flex-col">
                     <!-- FoodInfo 정보 출력 시작-->
                     <div class="flex">
-                        <div class="flex m-2">
+                        <div class="flex m-1">
                             <div class="text-xs font-bold m-1">제조사/유통사</div>
                             <div class="text-xs text-black m-1" th:text="${foodInfo.manufacturer}"></div>
                         </div>
-                        <div class="flex m-2">
+                        <div class="flex m-1">
                             <div class="text-xs font-bold m-1">식품 대분류</div>
                             <div class="text-xs text-black m-1" th:text="${foodInfo.category}"></div>
                         </div>
@@ -57,93 +65,22 @@
                         </div>
                     </div>
                     <!-- FoodInfo 정보 출력 끝-->
-                    <div class="divider my-2" style="height: 1px"></div>
+                    <div class="divider my-2"></div>
 
+                    <canvas id="nutrientChart"></canvas>
+
+                    <div class="divider my-2" style="height: 1px"></div>
                     <!-- nutrientInfo 정보 출력 시작-->
-                    <div class="flex">
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">에너지(kcal)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.kcal}"></div>
+                    <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrients}"
+                         class="flex justify-between">
+                        <div class="flex">
+                            <i class="fa-solid fa-list"></i>
+                            <div class="text-xs font-bold m-1"
+                                 th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
                         </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">단백질(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.protein}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">지방(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.fat}"></div>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">탄수화물(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.carbohydrate}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">당류(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.sugar}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">식이섬유(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.fiber}"></div>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">칼슘(mg)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.calcium}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">철(mg)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.iron}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">마그네슘(mg)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.magnesium}"></div>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">칼륨(mg)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.potassium}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">나트륨(mg)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.sodium}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">콜레스테롤(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.cholesterol}"></div>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">포화 지방산(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.saturated}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">트랜스 지방산(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.transFattyAcid}"></div>
-                        </div>
-                        <div class="flex m-2" style="width: 25%">
-                            <div class="text-xs font-bold m-1">불포화 지방산(g)</div>
-                            <div class="text-xs text-black m-1"
-                                 th:text="${nutrients.unSaturated}"></div>
-                        </div>
+                        <div class="text-xs text-black m-1"
+                             th:text="${nutrient.value}"></div>
+                        <div class="divider"></div>
                     </div>
 
                     <!-- nutrientInfo 정보 출력 끝-->
@@ -154,6 +91,89 @@
         </div>
     </div>
     <script th:inline="javascript">
+        const background = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#FF8C00",
+            "#9966FF",
+            "#C0C0C0",
+            "#FFD700",
+            "#3CB371",
+            "#FF4500",
+            "#00BFFF",
+            "#BA55D3",
+            "#008080",
+            "#F08080"
+        ];
+
+        let hoverBackground = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#FF8C00",
+            "#9966FF",
+            "#C0C0C0",
+            "#FFD700",
+            "#3CB371",
+            "#FF4500",
+            "#00BFFF",
+            "#BA55D3",
+            "#008080",
+            "#F08080"
+        ];
+
+
+        var nutrientData = {
+            labels: [],
+            datasets: [
+                {
+                data: [],
+                backgroundColor: [],
+                hoverBackgroundColor: []
+            }]
+        };
+
+        let label;
+        let value;
+        let back;
+        let hover;
+        let loopIndex;
+
+        // 원형 그래프를 그릴 데이터
+        /*[# th:each="nutrient, loop : ${nutrients}"]*/
+            loopIndex = /*[[${loop.index}]]*/null;
+            label = /*[[${nutrient.name}]]*/null;
+            value = /*[[${nutrient.value}]]*/null;
+            back = background[loopIndex];
+            hover = hoverBackground[loopIndex];
+
+            if (value != 0) {
+                nutrientData.labels.push(label);
+                nutrientData.datasets[0].data.push(value);
+                nutrientData.datasets[0].backgroundColor.push(back);
+                nutrientData.datasets[0].hoverBackgroundColor.push(hover);
+            }
+        /*[/]*/
+
+        // 원형 그래프의 옵션
+        const options = {
+            responsive: false,
+            maintainAspectRatio: false
+        };
+
+        // 캔버스 요소 선택
+        const ctx = document.getElementById("nutrientChart").getContext("2d");
+
+        // 원형 그래프 생성
+        new Chart(ctx, {
+            type: "doughnut",
+            data: nutrientData,
+            options: options
+        });
+
         function addCart(foodId) {
             const header = $("meta[name='_csrf_header']").attr("content");
             const token = $("meta[name='_csrf']").attr("content");

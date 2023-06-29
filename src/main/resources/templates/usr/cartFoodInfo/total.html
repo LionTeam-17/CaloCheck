@@ -41,11 +41,11 @@
                 <div class="flex m-2">
                     <div class="text-xs font-bold m-1">에너지(kcal)</div>
                     <div class="text-xs text-black m-1"
-                         th:text="1000"></div>
+                         th:text="${kcalTotal}"></div>
                 </div>
             </div>
 
-            <div th:each="nutrient, loop: ${nutrientTotal}"
+            <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrientTotal}"
                  class="flex justify-between">
                 <div class="flex">
                     <i class="fa-solid fa-list"></i>
@@ -96,25 +96,36 @@
         ];
 
 
-        const data = {
+        var nutrientTotalData = {
             labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: []
-            }]
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [],
+                    hoverBackgroundColor: []
+                }]
         };
+
+        let label;
+        let value;
+        let back;
+        let hover;
+        let loopIndex;
+
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrientTotal}"]*/
-        let label = /*[[${nutrient.name}]]*/null;
-        let value = /*[[${nutrient.value}]]*/null;
-        let back = background[loop.index];
-        let hover = hoverBackground[loop.index];
+            loopIndex = /*[[${loop.index}]]*/null;
+            label = /*[[${nutrient.name}]]*/null;
+            value = /*[[${nutrient.value}]]*/null;
+            back = background[loopIndex];
+            hover = hoverBackground[loopIndex];
 
-        data.labels.push(label);
-        data.datasets[0].data.push(value);
-        data.datasets[0].backgroundColor.push(back);
-        data.datasets[0].hoverBackgroundColor.push(hover);
+            if (value != 0) {
+                nutrientTotalData.labels.push(label);
+                nutrientTotalData.datasets[0].data.push(value);
+                nutrientTotalData.datasets[0].backgroundColor.push(back);
+                nutrientTotalData.datasets[0].hoverBackgroundColor.push(hover);
+            }
         /*[/]*/
 
         // 원형 그래프의 옵션
@@ -129,7 +140,7 @@
         // 원형 그래프 생성
         new Chart(ctx, {
             type: "doughnut",
-            data: data,
+            data: nutrientTotalData,
             options: options
         });
     </script>
