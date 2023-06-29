@@ -22,9 +22,9 @@
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
             <!-- Create tabs for Weight, Body Fat and Muscle Mass -->
             <div class="tab_button">
-                <button class="tablink active" onclick="openData('Weight')">체중</button>
-                <button class="tablink" onclick="openData('Body Fat')">체지방량</button>
-                <button class="tablink" onclick="openData('Muscle Mass')">근육량</button>
+                <button class="tablink" id="WeightTab" data-tab="Weight" onclick="openData('Weight')">체중</button>
+                <button class="tablink" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
+                <button class="tablink" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">근육량</button>
             </div>
 
             <!-- Create canvas for each data type -->
@@ -35,7 +35,8 @@
             <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
                 <div class="form-container">
                     <label for="date">날짜:</label>
-                    <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">
+                    <input type="date" id="date" th:field="*{dateTime}">
+                    <!-- <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted"> -->
                 </div>
                 <div class="form-container">
                     <label for="myWeight">체중:</label>
@@ -68,6 +69,7 @@
                 const weights = filteredData.map(tracking => tracking.weight);
                 const bodyFats = filteredData.map(tracking => tracking.bodyFat);
                 const muscleMasses = filteredData.map(tracking => tracking.muscleMass);
+                console.log(dates.length);
 
                 const datasets = {
                     'Weight': weights,
@@ -103,7 +105,7 @@
                                         tooltipFormat: 'MM-dd'
                                     },
                                     ticks: {
-                                        maxTicksLimit: data.length
+                                        maxTicksLimit: dates.length
                                     }
                                 }
                             },
@@ -113,11 +115,25 @@
 
                 // Function to toggle active class and show/hide graphs
                 function openData(type) {
-                    let i, chart;
-                    let charts = document.getElementsByClassName("chart");
+                    // Hide all charts
+                    let i, charts, tablinks;
+                    charts = document.getElementsByClassName("chart");
                     for (i = 0; i < charts.length; i++) {
                         charts[i].style.display = "none";
                     }
+
+                    // Remove the active class from all tablinks
+                    tablinks = document.getElementsByClassName("tablink");
+                    for (i = 0; i < tablinks.length; i++) {
+                        if(tablinks[i].getAttribute('data-tab') !== type) {
+                            tablinks[i].classList.remove("active");
+                        }
+                        else {
+                            tablinks[i].classList.add("active");
+                        }
+                    }
+
+                    // Show the selected chart
                     document.getElementById(type).style.display = "block";
                 }
 
@@ -125,7 +141,7 @@
                 const dateField = document.getElementById('date');
                 const currentDateFormatted = new Date().toISOString().split('T')[0];
                 dateField.max = currentDateFormatted;
-                dateField.min = currentDateFormatted;
+                //dateField.min = currentDateFormatted;//
                 dateField.value = currentDateFormatted;
 
                 /* 과거날짜까지 선택 가능
