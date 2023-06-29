@@ -1,0 +1,159 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
+<head>
+    <title>장바구니</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
+
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<main layout:fragment="Content">
+    <div class="flex flex-col m-4">
+        <div class="w-full">
+            <div class="flex justify-center">
+                <h1 class="font-bold text-black text-sm mb-4">
+                    식사 후 영양정보
+                </h1>
+            </div>
+            <div class="flex justify-center m-2 text-xs">
+                챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
+            </div>
+            <div class="divider"></div>
+            <div class="flex justify-center flex-col">
+                <div class="flex justify-center">
+                    <h1 class="font-bold text-black text-sm mb-4">
+                        영양성분
+                    </h1>
+                </div>
+
+                <div class="flex flex-row justify-center">
+                    <div>
+                        <i class="fa-solid fa-circle" style="color: #28529a;"></i>
+                        <!-- th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'" -->
+                        <span class="text-xs font-bold inline-block m-1 w-48">에너지(kcal)</span>
+                    </div>
+                    <div>
+                        <!-- th:text="${nutrient.value} -->
+                        <div class="text-xs text-black m-1"
+                             th:text="1000"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-row justify-center">
+                    <div>
+                        <i class="fa-solid fa-circle" style="color: #E5D85C;"></i>
+                        <span class="text-xs font-bold inline-block m-1 w-48">단백질(g)</span>
+                    </div>
+                    <div>
+                        <div class="text-xs text-black m-1"
+                             th:text="1000"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-row justify-center">
+                    <div>
+                        <i class="fa-solid fa-circle" style="color: #1DDB16;"></i>
+                        <span class="text-xs font-bold inline-block m-1 w-48">칼슘(mg)</span>
+                    </div>
+                    <div>
+                        <div class="text-xs text-black m-1"
+                             th:text="1000"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:each="nutrient, loop: ${nutrientTotal}"
+                 class="flex justify-center">
+                <div class="flex justify-between">
+                    <div class="flex">
+                        <i class="fa-solid fa-list"></i>
+                        <div class="text-xs font-bold m-1"
+                             th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
+                    </div>
+                    <div class="text-xs text-black m-1"
+                         th:text="${nutrient.value}"></div>
+                    <div class="divider"></div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div>
+                <div class="flex flex-col">
+                    <div class="flex justify-center">
+                        <h1 class="font-bold text-black text-sm mb-4">
+                            분류
+                        </h1>
+                    </div>
+
+                    <div class="btn-group flex flex-row justify-center">
+                        <input type="radio" name="mealTime" data-title="아침" value="breakfast" class="btn btn-secondary"
+                               checked/>
+                        <input type="radio" name="mealTime" data-title="점심" value="lunch" class="btn btn-secondary"/>
+                        <input type="radio" name="mealTime" data-title="저녁" value="dinner" class="btn btn-secondary"/>
+                        <input type="radio" name="mealTime" data-title="기타" value="etc" class="btn btn-secondary"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div>
+                <div class="flex flex-col">
+                    <div class="flex justify-center">
+                        <h1 class="font-bold text-black text-sm mb-4">
+                            식단 점수
+                        </h1>
+                    </div>
+
+                    <div class="flex justify-center rating rating-lg">
+                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
+                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" checked/>
+                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
+                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
+                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div>
+                <div class="flex flex-col">
+                    <div class="flex justify-center">
+                        <h1 class="font-bold text-black text-sm mb-4">
+                            메모
+                        </h1>
+                    </div>
+
+                    <div class="flex justify-center rating rating-lg">
+                <textarea
+                        class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
+                        cols="20" name="iContent" placeholder="내용을 입력하세요."
+                        rows="5"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-5">
+                <button type="submit" class="btn btn-primary btn-active">식단 추가하기</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+
+    </script>
+</main>
+</body>
+
+</html>

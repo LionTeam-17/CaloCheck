@@ -73,4 +73,12 @@ public class CartFoodInfoController {
         cartFoodInfoService.updateFoodInfo(member, foodInfo, quantity);
         return new CartDTO("success");
     }
+
+    @GetMapping("/addMenu")
+    @PreAuthorize("isAuthenticated()")
+    public String showAddMenu(Model model){
+        Member member = rq.getMember();
+
+        return "usr/cartFoodInfo/addMenu";
+    }
 }
