@@ -28,6 +28,7 @@
             </div>
 
             <!-- Create canvas for each data type -->
+
             <canvas id="Weight" class="chart"></canvas>
             <canvas id="Body Fat" class="chart"></canvas>
             <canvas id="Muscle Mass" class="chart"></canvas>
@@ -54,8 +55,36 @@
                     <button type="submit">기록하기</button>
                 </div>
             </form>
+            <canvas id="myChart" class="chart"></canvas>
 
             <script th:inline="javascript">
+                // <block:setup:1>
+                const months = [];
+                for (let i = 1; i <= 7; i++) {
+                    months.push(i);
+                }
+
+                const ctx = document.getElementById('myChart');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
                 const data = /*[[${trackingData}]]*/ [];
 
                 // Filter data for the past three months
@@ -65,11 +94,11 @@
 
                 const filteredData = data.filter(tracking => new Date(tracking.dateTime) >= threeMonthsAgo);
 
-                const dates = filteredData.map(tracking => new Date(tracking.dateTime));
+                const dates = filteredData.map(tracking => tracking.dateTime.slice(5));
                 const weights = filteredData.map(tracking => tracking.weight);
                 const bodyFats = filteredData.map(tracking => tracking.bodyFat);
                 const muscleMasses = filteredData.map(tracking => tracking.muscleMass);
-                console.log(dates.length);
+
 
                 const datasets = {
                     'Weight': weights,
@@ -99,11 +128,11 @@
                         options: {
                             scales: {
                                 x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'day',
-                                        tooltipFormat: 'MM-dd'
-                                    },
+                                    // type: 'time',
+                                    // time: {
+                                    //     unit: 'day',
+                                    //     tooltipFormat: 'MM-dd'
+                                    // },
                                     ticks: {
                                         maxTicksLimit: dates.length
                                     }
@@ -113,16 +142,13 @@
                     });
                 }
 
-                // Function to toggle active class and show/hide graphs
                 function openData(type) {
-                    // Hide all charts
                     let i, charts, tablinks;
                     charts = document.getElementsByClassName("chart");
                     for (i = 0; i < charts.length; i++) {
                         charts[i].style.display = "none";
                     }
 
-                    // Remove the active class from all tablinks
                     tablinks = document.getElementsByClassName("tablink");
                     for (i = 0; i < tablinks.length; i++) {
                         if(tablinks[i].getAttribute('data-tab') !== type) {
