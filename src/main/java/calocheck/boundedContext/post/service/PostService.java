@@ -22,11 +22,12 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public RsData<Post> savePost(String subject, String content, final Member member) {
+    public RsData<Post> savePost(String subject, String content, String photoUrl, final Member member) {
         Post post = Post.builder()
                 .member(member)
                 .subject(subject)
                 .content(content)
+                .photoUrl(photoUrl)
                 .build();
 
         postRepository.save(post);

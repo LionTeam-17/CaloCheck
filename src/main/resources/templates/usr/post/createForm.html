@@ -34,7 +34,7 @@
 
     <div class="flex flex-col max-w-5xl w-full justify-center">
         <section class="mb-5 max-w-5xl w-full">
-            <form class="flex flex-col gap-6" method="POST" onsubmit="SavePost__submit(this); return false;"
+            <form class="flex flex-col gap-6" method="POST" enctype="multipart/form-data" onsubmit="SavePost__submit(this); return false;"
                   th:action>
                 <div class="flex flex-grow max-w-5xl w-full justify-center">
                     <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
@@ -73,8 +73,9 @@
                                 </div>
 
                                 <div>
-                                    <select class="select select-bordered w-full max-w-xs mt-3">
+                                    <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
                                         <option disabled selected>어떤 음식에 대한 사진인가요?</option>
+                                        <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
                                         <option>아침 - 사과</option>
                                         <option>아침 - 바나나</option>
                                         <option>점심 - 조미김</option>

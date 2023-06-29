@@ -35,6 +35,7 @@ public class Post extends BaseEntity {
     @ToString.Exclude
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
+    private String photoUrl;
 
     public Boolean isToday() {
         return Ut.time.diffTime(LocalDateTime.now(), getCreateDate());

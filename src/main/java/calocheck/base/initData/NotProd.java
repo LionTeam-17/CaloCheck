@@ -46,9 +46,11 @@ public class NotProd {
                             .getData())
                     .toArray(Member[]::new);
 
+            String defaultPhotoUrl = "https://kr.object.ncloudstorage.com/calocheck/sample/sample_img_no.png";
+
             Post[] posts = IntStream
                     .rangeClosed(1, 100)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % 10])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), defaultPhotoUrl, members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
 

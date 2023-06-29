@@ -63,4 +63,8 @@ public class FoodInfoService {
     public Page<FoodInfo> findByFoodNameContains(Pageable pageable, String foodName) {
         return foodInfoRepository.findByFoodNameContains(foodName, pageable);
     }
+
+    public FoodInfo findByFoodName(String foodName){
+        return foodInfoRepository.findByFoodName(foodName).orElse(null);
+    }
 }
