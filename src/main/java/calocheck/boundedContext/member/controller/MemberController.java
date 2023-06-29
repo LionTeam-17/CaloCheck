@@ -4,6 +4,7 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.post.entity.Post;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -70,6 +71,26 @@ public class MemberController {
         return rq.redirectWithMsg("/member/login", joinRs);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{memberId}")
+    public String showModify(@PathVariable Long memberId) {
+        return "usr/member/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{memberId}")
+    public String modify(@PathVariable Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+
+        RsData modifyRsData = memberService.modify(memberId, age, height, weight, muscleMass, bodyFat, rq.getMember());
+
+        if (modifyRsData.isFail()) {
+            return rq.historyBack(modifyRsData);
+        }
+
+        return rq.redirectWithMsg("/member/mypage", modifyRsData);
+    }
+
+
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String showLogin() {
@@ -96,6 +117,20 @@ public class MemberController {
         }
 
         return ResponseEntity.ok().body("{\"message\": \"닉네임이 %s(으)로 수정되었습니다.\"}".formatted(nickname));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/email/{id}")
+    public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestParam("email") String email) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateEmail(member, id, email);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"이메일이 %s(으)로 수정되었습니다.\"}".formatted(email));
     }
 
     @PreAuthorize("isAuthenticated()")

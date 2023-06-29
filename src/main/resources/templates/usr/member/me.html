@@ -39,11 +39,23 @@
                                     </div>
                                     <div id="updateNicknameResult" class="mt-1 text-red-400" style="display: none;"></div>
                                 </td>
-
                             </tr>
                             <tr>
                                 <td>이메일</td>
-                                <td><span th:text="${@rq.member.email}"></span></td>
+                                <td class="flex flex-col gap-2">
+                                    <div id="emailContainer" class="flex gap-5">
+                                        <span id="emailValue" th:text="${@rq.member.email}"></span>
+                                        <button id="editEmailBtn" class="btn btn-xs btn-outline"
+                                                th:attr="data-member-id=${@rq.member.id}">수정하기
+                                        </button>
+                                    </div>
+                                    <div id="emailUpdateContainer" class="flex mt-1" style="display: none;">
+                                        <input type="text" id="emailInput" placeholder="새로운 이메일"
+                                               class="p-2 max-w-xs rounded-md border border-gray-200">
+                                        <button id="updateEmailBtn" class="btn btn-xs btn-outline mx-1">수정완료</button>
+                                        <div id="updateEmailResult" class="mt-1 text-red-400" style="display: none;"></div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>가입날짜</td>
@@ -68,21 +80,43 @@
         const memberId = editNicknameBtn.getAttribute("data-member-id");
         const updateNicknameResult = document.getElementById("updateNicknameResult");
 
+        const editEmailBtn = document.getElementById("editEmailBtn");
+        const emailUpdateContainer = document.getElementById("emailUpdateContainer");
+        const emailValue = document.getElementById("emailValue");
+        const emailInput = document.getElementById("emailInput");
+        const updateEmailBtn = document.getElementById("updateEmailBtn");
+        const updateEmailResult = document.getElementById("updateEmailResult");
+        const memberId2 = editEmailBtn.getAttribute("data-member-id");
+
         // csrf 토큰
         var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        // 수정하기 버튼 클릭 시
+
+        // 닉네임 쪽 수정하기 버튼 클릭 시
         editNicknameBtn.addEventListener("click", () => {
             nicknameUpdateContainer.style.display = "block";
             editNicknameBtn.style.display = "none";
             nicknameInput.value = nicknameValue.textContent;
         });
 
+        // 이메일 수정하기 버튼 클릭 시
+        editEmailBtn.addEventListener("click", () => {
+            emailUpdateContainer.style.display = "block";
+            editEmailBtn.style.display = "none";
+            emailInput.value = emailValue.textContent;
+        });
+
         // 수정된 닉네임을 페이지에 반영
         function updateNicknameDisplay(newNickname) {
             const nicknameValue = document.getElementById("nicknameValue");
             nicknameValue.textContent = newNickname;
+        }
+
+        // 수정된 이메일을 페이지에 반영
+        function updateEmailDisplay(newEmail) {
+            const emailValue = document.getElementById("emailValue");
+            emailValue.textContent = newEmail;
         }
 
         // 수정 완료 버튼 클릭 시
@@ -133,6 +167,49 @@
             nicknameUpdateContainer.style.display = "none";
             updateNicknameResult.style.display = "none";
             editNicknameBtn.style.display = "block";
+        });
+
+        // 수정 완료 버튼 클릭 시
+        updateEmailBtn.addEventListener("click", () => {
+            const newEmail = emailInput.value;
+
+            // 내용을 입력하지 않은 경우
+            if (!newEmail) {
+                updateEmailResult.style.display = "block";
+                updateEmailResult.textContent = "변경할 이메일을 입력해주세요.";
+                return;
+            }
+
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if(!emailRegex.test(newEmail)) {
+                updateEmailResult.style.display = "block";
+                updateEmailResult.textContent = "올바른 이메일 형식을 입력해주세요.";
+                return;
+            }
+
+            const endpoint = `/member/update/email/${memberId2}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", endpoint);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    const response = JSON.parse(xhr.responseText);
+                    const returnMessage = response.message;
+
+                    if (xhr.status === 200) {
+                        toastNotice(returnMessage);
+                        updateEmailDisplay(newEmail); // 수정된 닉네임 반영
+                    } else {
+                        toastWarning(returnMessage);
+                    }
+                }
+            };
+            xhr.send("email=" + encodeURIComponent(newEmail));
+            emailUpdateContainer.style.display = "none";
+            updateEmailResult.style.display = "none";
+            editEmailBtn.style.display = "block";
         });
     </script>
 
