@@ -18,41 +18,108 @@
 <th:block layout:fragment="Content">
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
-            <div class="tab_button">
-                <button class="tablink" id="WeightTab" data-tab="Weight" onclick="openData('Weight')">체중</button>
-                <button class="tablink" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
-                <button class="tablink" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">근육량</button>
+            <div>
+                <div class="tab_button flex">
+                    <button class="tablink" id="WeightTab" data-tab="Weight" onclick="openData('Weight')">체중</button>
+                    <button class="tablink" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
+                    <button class="tablink" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">근육량</button>
+                    <button id="openModal" class="ml-auto px-4 py-2">기록하기</button>
+                </div>
+
+                <div class="displayModal fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="displayModal inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-1">
+                                <div class="flex justify-center">
+                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-5" id="modal-title">
+                                            내 신체정보 기록하기
+                                        </h3>
+                                        <div class="mt-2 flex justify-center">
+                                            <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}" class="w-full">
+                                                <div class="form-container flex flex-row justify-start">
+                                                    <label for="date">날짜: </label>
+                                                    <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">
+                                                </div>
+                                                <div class="form-container flex flex-row justify-start">
+                                                    <label for="myWeight">체중: </label>
+                                                    <input type="number" id="myWeight" th:field="*{weight}">
+                                                </div>
+                                                <div class="form-container flex flex-row justify-start">
+                                                    <label for="bodyFat">체지방량: </label>
+                                                    <input type="number" id="bodyFat" th:field="*{bodyFat}">
+                                                </div>
+                                                <div class="form-container flex flex-row justify-start">
+                                                    <label for="muscleMass">근육량: </label>
+                                                    <input type="number" id="muscleMass" th:field="*{muscleMass}">
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white px-4 pb-3 flex justify-center">
+                                <button id="confirmRecord" type="submit" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    기록하기
+                                </button>
+                                <button id="closeModal" type="button" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    취소하기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <canvas id="Weight" class="chart"></canvas>
             <canvas id="Body Fat" class="chart"></canvas>
             <canvas id="Muscle Mass" class="chart"></canvas>
 
-            <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}">
-                <div class="form-container">
-                    <label for="date">날짜:</label>
-                    <!-- <input type="date" id="date" th:field="*{dateTime}">-->
-                     <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">
-                </div>
-                <div class="form-container">
-                    <label for="myWeight">체중:</label>
-                    <input type="number" id="myWeight" th:field="*{weight}">
-                </div>
-                <div class="form-container">
-                    <label for="bodyFat">체지방량:</label>
-                    <input type="number" id="bodyFat" th:field="*{bodyFat}">
-                </div>
-                <div class="form-container">
-                    <label for="muscleMass">근육량:</label>
-                    <input type="number" id="muscleMass" th:field="*{muscleMass}">
-                </div>
-                <div class="form-container">
-                    <button type="submit">기록하기</button>
-                </div>
-            </form>
-            <canvas id="myChart" class="chart"></canvas>
 
             <script th:inline="javascript">
+                $(document).ready(function(){
+                    $("#openModal").click(function(){
+                        $(".displayModal").show();
+                    });
+
+                    $("#closeModal").click(function(){
+                        $(".displayModal").hide();
+                    });
+                    openData('Weight');
+
+                    $("#confirmRecord").click(function() {
+                        $("form").submit();
+
+                        const selectedTab = $(".tablink.active").attr("data-tab");
+                        displayBodyInfo(selectedTab);
+                    });
+
+                });
+
+                function openData(type) {
+                    let i, charts, tablinks;
+                    charts = document.getElementsByClassName("chart");
+                    for (i = 0; i < charts.length; i++) {
+                        if (charts[i].id === type) {
+                            charts[i].style.display = "block";
+                        } else {
+                            charts[i].style.display = "none";
+                        }
+                    }
+
+                    tablinks = document.getElementsByClassName("tablink");
+                    for (i = 0; i < tablinks.length; i++) {
+                        if (tablinks[i].getAttribute('data-tab') !== type) {
+                            tablinks[i].classList.remove("active");
+                        } else {
+                            tablinks[i].classList.add("active");
+                        }
+                    }
+                }
                 const data = /*[[${trackingData}]]*/ [];
 
                 const currentDate = new Date();
@@ -103,25 +170,6 @@
                     });
                 }
 
-                function openData(type) {
-                    let i, charts, tablinks;
-                    charts = document.getElementsByClassName("chart");
-                    for (i = 0; i < charts.length; i++) {
-                        charts[i].style.display = "none";
-                    }
-
-                    tablinks = document.getElementsByClassName("tablink");
-                    for (i = 0; i < tablinks.length; i++) {
-                        if(tablinks[i].getAttribute('data-tab') !== type) {
-                            tablinks[i].classList.remove("active");
-                        }
-                        else {
-                            tablinks[i].classList.add("active");
-                        }
-                    }
-
-                    document.getElementById(type).style.display = "block";
-                }
 
                 const dateField = document.getElementById('date');
                 const currentDateFormatted = new Date().toISOString().split('T')[0];
@@ -136,7 +184,6 @@
                 dateField.value = currentDate.toISOString().split('T')[0];
                 */
 
-                openData('Weight');
             </script>
         </div>
     </main>
