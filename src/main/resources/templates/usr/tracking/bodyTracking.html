@@ -75,9 +75,34 @@
             </div>
 
 
-            <canvas id="Weight" class="chart"></canvas>
-            <canvas id="Body Fat" class="chart"></canvas>
-            <canvas id="Muscle Mass" class="chart"></canvas>
+            <canvas id="Weight" class="chart" style="max-width: 800px;"></canvas>
+            <canvas id="Body Fat" class="chart" style="max-width: 800px;"></canvas>
+            <canvas id="Muscle Mass" class="chart" style="max-width: 800px;"></canvas>
+
+
+            <div id="bodyInfo" class="flex justify-center mt-4">
+                <div class="max-h-[400px] overflow-y-auto">
+                    <table class="table-auto w-full bg-white border">
+                        <thead>
+                        <tr class = "table_head">
+                            <th class="px-4 py-2 border-b">날짜</th>
+                            <th class="px-4 py-2 border-b">체중</th>
+                            <th class="px-4 py-2 border-b">체지방량</th>
+                            <th class="px-4 py-2 border-b">근육량</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- trackingData를 이용하여 테이블 행을 반복적으로 생성 -->
+                        <tr th:each="tracking : ${trackingData}" class="border-b text-black">
+                            <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>
+                            <td class="px-4 py-2" th:text="${tracking.weight}"></td>
+                            <td class="px-4 py-2" th:text="${tracking.bodyFat}"></td>
+                            <td class="px-4 py-2" th:text="${tracking.muscleMass}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 
             <script th:inline="javascript">
@@ -159,13 +184,14 @@
                             }]
                         },
                         options: {
+                            responsive: true,
                             scales: {
                                 x: {
                                     ticks: {
                                         maxTicksLimit: dates.length
                                     }
                                 }
-                            },
+                            }
                         }
                     });
                 }

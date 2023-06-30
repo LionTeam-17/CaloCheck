@@ -88,5 +88,33 @@
 
 .displayModal {
     display: none;
+}
 
+.table_head{
+    background-color: #3F72AF;
+    color : white;
+    border-color: #112D4E;
+    text-align: left;
+}
+
+.chart {
+    width: 100% !important;
+    max-width: 800px;
+    height: auto !important;
+}
+
+@media (max-width: 600px) {
+    .chart {
+        height: 300px !important;
+    }
+
+    .displayModal .flex.items-end {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .displayModal .inline-block {
+        width: 80%;
+        max-width: 80%;
+    }
 }

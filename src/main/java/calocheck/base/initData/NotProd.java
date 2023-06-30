@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
-
 @Configuration
 @Profile({"dev", "test"})
 public class NotProd {
+
     @Bean
     @Transactional
     public CommandLineRunner initData(
@@ -62,5 +62,7 @@ public class NotProd {
 
             foodDataExtractor.readFile();
         };
+
     }
+
 }
