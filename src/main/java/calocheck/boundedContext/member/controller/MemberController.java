@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ public class MemberController {
     private final PostRepository postRepository;
     @AllArgsConstructor
     @Getter
+    @Setter
     public static class JoinForm {
         @NotBlank
         @Size(min = 4, max = 20)
@@ -72,6 +74,26 @@ public class MemberController {
             return rq.historyBack(checkRsData.getMsg());
         }
 
+        if (joinForm.getAge() == null) {
+            joinForm.setAge(0);
+        }
+
+        if (joinForm.getHeight() == null) {
+            joinForm.setHeight(0.0);
+        }
+
+        if (joinForm.getWeight() == null) {
+            joinForm.setWeight(0.0);
+        }
+
+        if (joinForm.getMuscleMass() == null) {
+            joinForm.setMuscleMass(0.0);
+        }
+
+        if (joinForm.getBodyFat() == null) {
+            joinForm.setBodyFat(0.0);
+        }
+
         RsData<Member> joinRs = memberService.join(
                 joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname(),
                 joinForm.getAge(), joinForm.getHeight(), joinForm.getWeight(), joinForm.getMuscleMass(), joinForm.getBodyFat()
@@ -98,7 +120,7 @@ public class MemberController {
             return rq.historyBack(modifyRsData);
         }
 
-        return rq.redirectWithMsg("/member/mypage", modifyRsData);
+        return rq.redirectWithMsg("/member/mypage/{memberId}", modifyRsData);
     }
 
 
