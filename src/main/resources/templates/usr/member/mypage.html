@@ -35,14 +35,14 @@
 
             <div class="flex flex-col justify-center mt-5 gap-1" >
                 <div class="flex">
-                    <div class="mx-2 text-2xl font-bold">
-                        <button id="myInformation">
+                    <div class="mx-2 text-2xl">
+                        <button id="myInformationBtn">
                             <span>내 정보</span>
                         </button>
                     </div>
                     <div class="divider divider-horizontal !mx-2"></div>
-                    <div class="mx-2 text-2xl font-bold">
-                        <button id="myPost">
+                    <div class="mx-2 text-2xl">
+                        <button id="myPostBtn">
                             <span>내 포스트</span>
                         </button>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="divider !my-1"></div>
             </div>
 
-            <div class="box">
+            <div id="myInformation" class="box">
                 <div class="flex flex-col gap-10">
                     <div class="mt-10"> 나이 :
                         <span th:text="${@rq.member.age}" style="font-weight: bold;"></span>
@@ -81,8 +81,37 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <div class="hero-content">
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <script>
+        const myInformationBtn = document.getElementById("myInformationBtn");
+        const myInformation = document.getElementById("myInformation");
+        const myPostBtn = document.getElementById("myPostBtn");
+        const myPost = document.getElementById("myPost");
+
+        // 버튼 이벤트
+        myInformationBtn.addEventListener("click", () => {
+            myInformation.style.display = "block";
+            myPost.style.display = "none";
+
+            myPostBtn.style.fontWeight = "normal";
+            myInformationBtn.style.fontWeight = "bold";
+        });
+
+        myPostBtn.addEventListener("click", () => {
+            myPost.style.display = "block";
+            myInformation.style.display = "none";
+
+            myInformationBtn.style.fontWeight = "normal";
+            myPostBtn.style.fontWeight = "bold";
+        });
+    </script>
 </th:block>
 </body>
 </html>

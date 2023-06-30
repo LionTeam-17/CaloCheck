@@ -5,6 +5,8 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.post.repository.PostRepository;
+import calocheck.boundedContext.post.service.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,10 +14,17 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/member")
@@ -23,6 +32,8 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
     private final Rq rq;
+    private final PostService postService;
+    private final PostRepository postRepository;
     @AllArgsConstructor
     @Getter
     public static class JoinForm {
@@ -132,10 +143,37 @@ public class MemberController {
 
         return ResponseEntity.ok().body("{\"message\": \"이메일이 %s(으)로 수정되었습니다.\"}".formatted(email));
     }
-
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/mypage")
-    public String showMyPage() {
+    @GetMapping("/mypage/{id}")
+    public String showMyPage(
+            Model model,
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        // 회원 정보를 가져옵니다.
+        Member member = memberService.findById(id).orElse(null);
+
+        // 회원이 작성한 모든 글을 조회합니다.
+        List<Post> allPosts = member.getPosts();
+
+        int totalPosts = allPosts.size();
+        int totalPages = (int) Math.ceil((double) totalPosts / size);
+
+        // 유효한 페이지 번호인지 확인하고 조정합니다.
+        if (page < 0) {
+            page = 0;
+        } else if (page >= totalPages) {
+            page = totalPages - 1;
+        }
+
+        // 페이징 처리를 위한 글 목록을 구합니다.
+        int startIdx = page * size;
+        int endIdx = Math.min(startIdx + size, allPosts.size());
+        List<Post> pagedPosts = allPosts.subList(startIdx, endIdx);
+
+        // 조회된 글 목록을 모델에 추가합니다.
+        model.addAttribute("postList", pagedPosts);
 
         return "usr/member/mypage";
     }

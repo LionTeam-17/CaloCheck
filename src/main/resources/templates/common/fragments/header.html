@@ -59,7 +59,7 @@
                     </li>
 
                     <li>
-                        <a href="/member/mypage" class="text-gray-600 hover:text-gray-800">
+                        <a th:href="@{|/member/mypage/${@rq.member.id}|}" sec:authorize="isAuthenticated()" class="text-gray-600 hover:text-gray-800">
                             <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
