@@ -81,24 +81,39 @@
                     </div>
                 </div>
             </div>
+
             <div id="myPost" class="hidden flex flex-col">
-                <div th:if="${not #lists.isEmpty(postList)}">
-                        <div th:each="post : ${postList}">
-                            <span>
-                                <a th:href="@{|/post/${post.id}|}">
-                                    <h3 th:text="${post.subject}"></h3>
-                                </a>
-                            </span>
+                <li th:if="${not #lists.isEmpty(postList)}">
+                    <div th:each="post : ${postList}">
+                        <div class="mt-5 flex flex-row gap-4">
+                            <a th:href="@{|/post/${post.id}|}"
+                               class="card flex-shrink-0 w-full shadow-xl bg-base-100"
+                               style="width: 500px">
+                                <div class="card-body">
+                                    <div class="flex justify-between">
+                                        <div th:text="${post.subject}" class="text-lg font-bold "></div>
+                                        <div class="flex flex-col gap-1">
+                                            <div th:text="${#temporals.format(post.createDate, 'yy년 MM월 dd일')}" class="text-xs"></div>
+                                            <div class="flex flex-end gap-1">
+                                                <i class="fa-regular fa-thumbs-up"></i>
+                                                <span th:text="${post.popularity}" class="text-xs"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                </div>
+                    </div>
+                </li>
                 <div>
                     <div th:unless="${not #lists.isEmpty(postList)}">
                         <li>작성된 글이 없습니다.</li>
                     </div>
                 </div>
+
                 <!-- 페이징 처리를 표시합니다 -->
                 <div>
-                    <div class="pagination mt-5 flex gap-3">
+                    <div class="pagination mt-5 flex justify-center gap-3">
                         <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
                         </div>
