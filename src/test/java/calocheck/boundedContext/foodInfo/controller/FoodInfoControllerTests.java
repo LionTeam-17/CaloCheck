@@ -22,7 +22,6 @@ public class FoodInfoControllerTests {
     @Autowired
     private MockMvc mvc;
 
-
     @Test
     @DisplayName("검색 페이지")
     void showSearchPage() throws Exception {

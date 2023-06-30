@@ -21,6 +21,9 @@
 
     <div class="max-w-5xl w-full mt-4 px-4">
         <div class="flex flex-col">
+            <div class="flex justify-center">
+                <img th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+            </div>
             <h1 class="font-bold font-xl mb-4" th:text="${post.subject}"></h1>
             <div class="flex justify-between">
                 <div>
@@ -29,9 +32,10 @@
                           th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                 </div>
                 <div>
-                    <a class="btn btn-primary btn-sm w-[40px]" th:href="@{|/post/${postId}/modify|}"
+                    <a class="btn btn-sm w-[40px]" style="background:#112D4E" th:href="@{|/post/${postId}/modify|}"
                        th:if="${@rq.login && post.member.id == @rq.member.id}">수정</a>
-                    <button class="btn btn-primary btn-sm mx-1 w-[40px]"
+                    <button class="btn btn-sm mx-1 w-[40px]"
+                            style="background:#112D4E"
                             onclick="$(this).next().submit();"
                             th:attr="data-post-id=${postId}"
                             th:id="dBtn_+${postId}"
@@ -42,17 +46,35 @@
                           th:action="@{|/post/${postId}/delete|}">
                         <input name="_method" type="hidden" value="PATCH">
                     </form>
-                    <a class="btn btn-primary btn-sm w-[40px]" href="/post/list">목록</a>
+                    <a class="btn btn-sm w-[40px]" href="/post/list" style="background:#112D4E">목록</a>
                 </div>
             </div>
         </div>
         <div class="divider my-1"></div>
         <div class="h-[500px]" th:text="${post.content}"></div>
         <div class="flex justify-center">
-            <div class="btn btn-primary w-20">
-                <i class="fa-regular fa-thumbs-up"></i>
-                <span>&nbsp;추천</span>
-            </div>
+            <form class="btn w-20" style="background:#112D4E"
+                  method="POST" th:action="@{|/post/${postId}/postLike|}"
+                  th:if="${@rq.login && @postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
+                <button class="link-button" name="submit" type="submit" value="value">
+                    <i class="fa-regular fa-thumbs-up"></i>&nbsp;추천
+                </button>
+            </form>
+            <form class="btn w-20" method="POST"
+                  style="background:#112D4E" th:action="@{|/post/${postId}/postLike|}"
+                  th:if="${@rq.logout}">
+                <button class="link-button" name="submit" type="submit" value="value">
+                    <i class="fa-regular fa-thumbs-up"></i>&nbsp;추천
+                </button>
+            </form>
+            <form class="btn w-20" style="background:#112D4E"
+                  method="POST" th:action="@{|/post/${postId}/postLike/delete|}"
+                  th:if="${@rq.login && !@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
+                <button class="link-button" name="submit" type="submit" value="value">
+                    <i class="fa-solid fa-thumbs-up"></i>&nbsp;추천
+                </button>
+            </form>
+
         </div>
         <span>전체 댓글</span>
         <span style="color: red" th:text="${commentList.size()}"></span>
@@ -71,7 +93,7 @@
                             <div class="flex justify-center items-center" th:text="${comment.content}"></div>
                             <a class="ml-2 text-[12px]" onclick="$(this).next().submit();"
                                style="cursor:pointer;"
-                               th:if="${@rq.login && post.member.id == @rq.member.id}"><i
+                               th:if="${@rq.login && comment.member.id == @rq.member.id}"><i
                                     class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
                             <form method="POST"
                                   th:action="@{|/post/${postId}/${comment.id}/delete|}">
@@ -100,7 +122,7 @@
                             <!-- 등록 버튼 -->
                             <div class="submit-button flex">
                                 <div class="flex">
-                                    <button class="btn btn-primary btn-sm ml-2 w-20">
+                                    <button class="btn btn-sm ml-2 w-20" style="background:#112D4E">
                                         <span class="text-center">등록</span>
                                     </button>
                                 </div>

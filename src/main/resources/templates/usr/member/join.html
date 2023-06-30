@@ -85,34 +85,41 @@
 
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="joinFormSubmit(this); return false;">
             <div>
-                <input type="text" name="username" maxlength="20" placeholder="아이디" class="input input-bordered">
+                <input type="text" name="username" maxlength="20" size="40" placeholder="아이디" class="input input-bordered">
             </div>
             <div>
-                <input type="password" name="password" maxlength="20" placeholder="비밀번호" class="input input-bordered">
+                <input type="password" name="password" maxlength="20" size="40" placeholder="비밀번호" class="input input-bordered">
             </div>
             <div>
-                <input type="text" name="email" maxlength="30" placeholder="이메일" class="input input-bordered">
+                <input type="text" name="email" maxlength="30" size="40" placeholder="이메일" class="input input-bordered">
             </div>
-            <div>
-                <input type="text" name="nickname" maxlength="20" placeholder="닉네임" class="input input-bordered">
+            <div class="flex justify-between">
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <input type="text" name="nickname" maxlength="20" size="15" placeholder="닉네임" class="input input-bordered">
+                    </div>
+                    <div>
+                        <input type="text" name="height" size="15" placeholder="키(선택)" class="input input-bordered">
+                    </div>
+                    <div>
+                        <input type="text" name="weight" size="15" placeholder="몸무게(선택)" class="input input-bordered">
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <input type="text" name="age" size="15" placeholder="나이(선택)" class="input input-bordered">
+                    </div>
+                    <div>
+                        <input type="text" name="muscleMass" size="15" placeholder="근육량(선택)" class="input input-bordered">
+                    </div>
+                    <div>
+                        <input type="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
+                    </div>
+                </div>
             </div>
-            <div>
-                <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered">
-            </div>
-            <div>
-                <input type="text" name="height" placeholder="키" class="input input-bordered">
-            </div>
-            <div>
-                <input type="text" name="weight" placeholder="몸무게" class="input input-bordered">
-            </div>
-            <div>
-                <input type="text" name="muscleMass" placeholder="근육량" class="input input-bordered">
-            </div>
-            <div>
-                <input type="text" name="bodyFat" placeholder="체지방량" class="input input-bordered">
-            </div>
+
             <div class="form-control">
-                <input type="submit" value="회원가입" class="btn btn-accent">
+                <input type="submit" value="회원가입" size="30" class="btn btn-accent">
             </div>
 
         </form>

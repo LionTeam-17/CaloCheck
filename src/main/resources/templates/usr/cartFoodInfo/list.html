@@ -1,0 +1,225 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+    <title>장바구니</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
+
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+</head>
+
+<body>
+<main layout:fragment="Content">
+    <div class="flex flex-col m-4">
+        <div class="w-full">
+            <div class="flex justify-between">
+                <h1 class="font-bold text-sm mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    장바구니 음식 목록
+                </h1>
+            </div>
+            <div class="flex flex-col justify-center">
+                <div class="p-3 flex flex-grow justify-between">
+                    <span class="font-bold text-xs flex justify-center" style="width:6%">번호</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:20%">1회/총제공량</span>
+                    <span class="font-bold text-xs flex justify-center" style="width:8%">수량</span>
+                </div>
+            </div>
+            <div class="divider m-2"></div>
+            <div id="cartInfosEmpty" class="flex flex-wrap justify-center w-full"
+                 th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
+                장바구니 항목이 없습니다.
+            </div>
+            <div id="cartInfos" class="flex flex-col w-full justify-center" th:if="${!cartList.isEmpty()}">
+                <div class="flex flex-col justify-center"
+                     th:id="${cartFoodInfo.foodInfo.id}"
+                     th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
+                     th:each="cartFoodInfo, loop: ${cartList}">
+                    <div class="flex flex-grow justify-between">
+                        <span class="font-bold text-xs text-black flex justify-center"
+                              style="width:6%"
+                              th:text="${cartFoodInfo.foodInfo.id}"></span>
+                        <span class="font-bold text-xs text-start text-black flex"
+                              style="width:36%"
+                              th:text="${cartFoodInfo.foodInfo.foodName}"></span>
+                        <span class="font-bold text-xs text-black flex justify-center"
+                              style="width:36%"
+                              th:text="${cartFoodInfo.foodInfo.manufacturer}"></span>
+                        <span class="font-bold flex text-xs justify-center"
+                              style="width:20%"
+                              th:text="${cartFoodInfo.foodInfo.portionSize} + '/' + ${cartFoodInfo.foodInfo.totalSize} + '(' + ${cartFoodInfo.foodInfo.unit} + ')'"></span>
+                        <span class="font-bold flex text-xs justify-center"
+                              style="width:8%"
+                              th:text="${cartFoodInfo.quantity}"></span>
+                    </div>
+                    <div class="divider my-2" style="height: 1px"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white px-20 py-40">
+            <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
+            <div class="flex">
+                <div class="text-xs font-bold m-2">제조사/유통사</div>
+                <div id="manufacturerLabel" class="text-xs text-black m-2"></div>
+            </div>
+            <div class="flex">
+                <div class="text-xs font-bold m-2">수량</div>
+                <div id="quantityLabel" class="text-xs text-black m-2"></div>
+                <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                        onclick="quantityUp()">+
+                </button>
+                <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                        onclick="quantityDown()">-
+                </button>
+            </div>
+
+            <div class="m-3">
+                <button class="bg-red-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
+                        onclick="executeDeleteLogic()">삭제
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
+                        onclick="executeUpdateLogic()">수정
+                </button>
+                <button class="bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
+                        onclick="closeCustomModal()">취소
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        var cartInfosTag = document.getElementById("cartInfos");
+        var removeElement;
+        var removeFoodId;
+
+        function updateFoodInfoConfirm(foodId, element) {
+            removeFoodId = foodId;
+            removeElement = element;
+            openCustomModal(element);
+        }
+
+        function quantityUp() {
+            let quantityTag = document.getElementById("quantityLabel");
+            quantityTag.innerText = parseInt(quantityTag.innerText) + 1;
+        }
+
+        function quantityDown() {
+            let quantityTag = document.getElementById("quantityLabel");
+            let res = parseInt(quantityTag.innerText) - 1;
+            quantityTag.innerText = res <= 0 ? 0 : res;
+        }
+
+        function openCustomModal(element) {
+            let foodNameTag = document.getElementById("foodNameLabel");
+            let manufacturerTag = document.getElementById("manufacturerLabel");
+            let quantityTag = document.getElementById("quantityLabel");
+            let childElements = element.children[0].children;
+
+            foodNameTag.innerText = childElements[1].innerText;
+            manufacturerTag.innerText = childElements[2].innerText;
+            quantityTag.innerText = childElements[4].innerText;
+
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function executeUpdateLogic() {
+            document.getElementById('customModal').classList.add('hidden');
+            closeCustomModal();
+            updateFoodInfo();
+        }
+
+        function executeDeleteLogic() {
+            document.getElementById('customModal').classList.add('hidden');
+            closeCustomModal();
+            deleteFoodInfo();
+        }
+
+        function deleteFoodInfo() {
+            const header = $("meta[name='_csrf_header']").attr("content");
+            const token = $("meta[name='_csrf']").attr("content");
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+
+            if (removeFoodId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/cartFoodInfo/remove",
+                    data: {
+                        foodId: removeFoodId
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.result === "success") {
+                            console.log("success");
+                            removeElement.remove();
+
+                            if (cartInfosTag.children.length == 0) {
+                                document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        }
+
+        function updateFoodInfo() {
+            let quantity = document.getElementById("quantityLabel").innerText;
+            const header = $("meta[name='_csrf_header']").attr("content");
+            const token = $("meta[name='_csrf']").attr("content");
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(header, token);
+            });
+
+            if (removeFoodId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/cartFoodInfo/update",
+                    data: {
+                        foodId: removeFoodId,
+                        quantity: quantity
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.result === "success") {
+                            console.log("success");
+                            if (quantity == 0) {
+                                removeElement.remove();
+                            } else {
+                                removeElement.children[0].children[4].innerText = quantity;
+                            }
+
+                            if (cartInfosTag.children.length == 0) {
+                                document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        }
+    </script>
+</main>
+</body>
+
+</html>

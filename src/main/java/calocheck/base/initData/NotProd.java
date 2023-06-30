@@ -1,13 +1,18 @@
 package calocheck.base.initData;
 
 import calocheck.base.util.FoodDataExtractor;
+import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
+import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
+import calocheck.boundedContext.postLike.entity.PostLike;
+import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.service.TrackingService;
@@ -34,6 +39,9 @@ public class NotProd {
             CommentService commentService,
             FoodDataExtractor foodDataExtractor,
             TrackingService trackingService
+            PostLikeService postLikeService,
+            FoodInfoService foodInfoService,
+            CartFoodInfoService cartFoodInfoService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -45,18 +53,21 @@ public class NotProd {
 
             Post[] posts = IntStream
                     .rangeClosed(1, 100)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % 10])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), S3Config.getSampleImg(), members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
 
-            recommendService.createRecommend("carbohydrate", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("protein", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
-            recommendService.createRecommend("fat", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
-            recommendService.createRecommend("calcium", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("sodium", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
-            recommendService.createRecommend("potassium", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
-            recommendService.createRecommend("vitaminA", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
-            recommendService.createRecommend("vitaminC", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("탄수화물", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("단백질", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
+            recommendService.createRecommend("지방", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
+            recommendService.createRecommend("칼슘", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("나트륨", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
+            recommendService.createRecommend("칼륨", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
+            recommendService.createRecommend("비타민A", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
+            recommendService.createRecommend("비타민C", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("고단백&저지방 육류", RecommendConfig.getMeatDescription(), RecommendConfig.getMeatFoodList());
+            recommendService.createRecommend("GI지수 높은 음식", RecommendConfig.getHighGIDescription(), RecommendConfig.getHighGIFoodList());
+            recommendService.createRecommend("GI지수 낮은 음식", RecommendConfig.getLowGIDescription(), RecommendConfig.getLowGIFoodList());
 
 
             Comment[] comments = IntStream
@@ -65,7 +76,24 @@ public class NotProd {
                             .getData())
                     .toArray(Comment[]::new);
 
+            PostLike[] postLikes100 = IntStream
+                    .rangeClosed(0, 4)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[97].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
+            PostLike[] postLikes99 = IntStream
+                    .rangeClosed(0, 3)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[98].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
+            PostLike[] postLikes98 = IntStream
+                    .rangeClosed(0, 2)
+                    .mapToObj(i -> postLikeService.savePostLike(posts[99].getId(), members[i])
+                            .getData())
+                    .toArray(PostLike[]::new);
+
             foodDataExtractor.readFile();
+
 
             //Tracking 샘플 데이터
             LocalDate startDate = LocalDate.now().minusDays(90);
@@ -89,7 +117,9 @@ public class NotProd {
                     date = date.plusDays(random.nextInt(4) + 1);
                 }
             }
-
+            IntStream.rangeClosed(190, 199)
+                    .mapToObj(i -> foodInfoService.findById((long)i))
+                    .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };
 
     }

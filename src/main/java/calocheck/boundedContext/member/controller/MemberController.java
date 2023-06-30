@@ -6,6 +6,7 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
+import calocheck.boundedContext.post.entity.Post;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,12 +14,10 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -91,10 +90,72 @@ public class MemberController {
         return rq.redirectWithMsg("/member/login", joinRs);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{memberId}")
+    public String showModify(@PathVariable Long memberId) {
+        return "usr/member/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{memberId}")
+    public String modify(@PathVariable Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+
+        RsData modifyRsData = memberService.modify(memberId, age, height, weight, muscleMass, bodyFat, rq.getMember());
+
+        if (modifyRsData.isFail()) {
+            return rq.historyBack(modifyRsData);
+        }
+
+        return rq.redirectWithMsg("/member/mypage", modifyRsData);
+    }
+
+
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String showLogin() {
 
         return "usr/member/login";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
+    public String showMe() {
+
+        return "usr/member/me";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/nickname/{id}")
+    public ResponseEntity<String> updateNickname(@PathVariable Long id, @RequestParam("nickname") String nickname) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateNickname(member, id, nickname);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"닉네임이 %s(으)로 수정되었습니다.\"}".formatted(nickname));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/email/{id}")
+    public ResponseEntity<String> updateEmail(@PathVariable Long id, @RequestParam("email") String email) {
+        Member member = rq.getMember();
+
+        RsData updateRsData = memberService.updateEmail(member, id, email);
+
+        if (updateRsData.isFail()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + updateRsData.getMsg() + "\"}");
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"이메일이 %s(으)로 수정되었습니다.\"}".formatted(email));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/mypage")
+    public String showMyPage() {
+
+        return "usr/member/mypage";
     }
 }

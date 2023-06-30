@@ -1,0 +1,85 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+
+<head>
+    <title>
+        내 정보 수정 페이지
+    </title>
+</head>
+
+<body>
+
+<th:block layout:fragment="Content">
+
+    <div class="flex-grow flex items-center justify-center">
+
+        <script th:inline="javascript">
+            function modifyInformation(form) {
+                // iComment 이(가) 올바른지 체크
+                form.age.value = form.age.value.trim();
+                form.height.value = form.height.value.trim();
+                form.weight.value = form.weight.value.trim();
+                form.muscleMass.value = form.muscleMass.value.trim();
+                form.bodyFat.value = form.bodyFat.value.trim();
+
+                if (form.age.value.length == 0) {
+                    toastWarning('나이를 입력해주세요.');
+                    form.age.focus();
+                    return;
+                }
+                if (form.height.value.length == 0) {
+                    toastWarning('키를 입력해주세요.');
+                    form.height.focus();
+                    return;
+                }
+                if (form.weight.length == 0) {
+                    toastWarning('몸무게를 입력해주세요.');
+                    form.weight.focus();
+                    return;
+                }
+                if (form.muscleMass.value.length == 0) {
+                    toastWarning('근육량을 입력해주세요.');
+                    form.muscleMass.focus();
+                    return;
+                }
+                if (form.bodyFat.value.length == 0) {
+                    toastWarning('체지방량을 입력해주세요.');
+                    form.bodyFat.focus();
+                    return;
+                }
+
+                form.submit();
+            }
+        </script>
+        <div class="hero-content flex-col">
+
+            <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
+            내 정보 수정
+            </h2>
+
+            <form th:action method="POST" class="p-10 flex flex-col gap-4"
+                  onsubmit="modifyInformation(this); return false;">
+                <div class="form-control flex flex-col gap-3">
+                    <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered">
+                </div>
+                <div class="form-control flex flex-col gap-3">
+                    <input type="text" name="height" maxlength="3" placeholder="키(cm)" class="input input-bordered">
+                </div>
+                <div class="form-control flex flex-col gap-3">
+                    <input type="text" name="weight" maxlength="3" placeholder="몸무게(kg)" class="input input-bordered">
+                </div>
+                <div class="form-control flex flex-col gap-3">
+                    <input type="text" name="muscleMass" maxlength="3" placeholder="근육량(kg)" class="input input-bordered">
+                </div>
+                <div class="form-control flex flex-col gap-3">
+                    <input type="text" name="bodyFat" maxlength="3" placeholder="체지방량(kg)" class="input input-bordered">
+                </div>
+
+                <div class="form-control">
+                    <input type="submit" value="수정완료" size="30" class="btn btn-accent">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</th:block>
+</body>

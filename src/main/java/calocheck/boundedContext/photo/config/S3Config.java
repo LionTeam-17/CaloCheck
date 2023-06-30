@@ -54,6 +54,14 @@ public class S3Config {
     }
 
     @Getter
+    private static String sampleImg;
+
+    @Value("${cloud.aws.s3.sampleImg}")
+    public void setSampleImg(String sampleImg){
+        S3Config.sampleImg = sampleImg;
+    }
+
+    @Getter
     private static String cdnUrl;
 
     @Value("${cloud.cdn.url}")
