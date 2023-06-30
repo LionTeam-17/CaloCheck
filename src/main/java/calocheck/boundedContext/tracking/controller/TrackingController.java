@@ -7,6 +7,7 @@ import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ public class TrackingController {
             this.trackingService = trackingService;
             this.memberService = memberService;
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/tracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
@@ -48,7 +49,7 @@ public class TrackingController {
         model.addAttribute("tracking", new Tracking());
         return "usr/tracking/bodyTracking";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/tracking")
     public String createTracking(@ModelAttribute("tracking")
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Tracking tracking,
