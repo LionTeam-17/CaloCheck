@@ -84,10 +84,11 @@
             <div id="myPost" class="hidden flex flex-col">
                 <div th:if="${not #lists.isEmpty(postList)}">
                         <div th:each="post : ${postList}">
-                            <li>
-                                <h3 th:text="${post.subject}"></h3>
-                                <p th:text="${post.content}"></p>
-                            </li>
+                            <span>
+                                <a th:href="@{|/post/${post.id}|}">
+                                    <h3 th:text="${post.subject}"></h3>
+                                </a>
+                            </span>
                         </div>
                 </div>
                 <div>
@@ -97,24 +98,24 @@
                 </div>
                 <!-- 페이징 처리를 표시합니다 -->
                 <div>
-                    <div class="pagination">
-                        <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                    <div class="pagination mt-5 flex gap-3">
+                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
-                        </li>
-                        <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
-                        </li>
-                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                        </div>
+                        <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
                             th:classappend="${pageNum == page} ? 'active'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
                                th:text="${pageNum+1}"></a>
-                        </li>
-                        <li class="page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}">다음</a>
-                        </li>
-                        <li class="page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages -1}, size=${size})}">마지막</a>
-                        </li>
+                        </div>
                     </div>
                 </div>
             </div>
