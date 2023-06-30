@@ -86,66 +86,71 @@
             </div>
 
             <div class="divider"></div>
-            <div>
-                <div class="flex flex-col">
-                    <div class="flex justify-center">
-                        <h1 class="font-bold text-black text-sm mb-4">
-                            분류
-                        </h1>
-                    </div>
+            <form class="flex flex-col gap-6" method="POST" enctype="multipart/form-data" th:action>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                분류
+                            </h1>
+                        </div>
 
-                    <div class="btn-group flex flex-row justify-center">
-                        <input type="radio" name="mealTime" data-title="아침" value="breakfast" class="btn btn-secondary"
-                               checked/>
-                        <input type="radio" name="mealTime" data-title="점심" value="lunch" class="btn btn-secondary"/>
-                        <input type="radio" name="mealTime" data-title="저녁" value="dinner" class="btn btn-secondary"/>
-                        <input type="radio" name="mealTime" data-title="기타" value="etc" class="btn btn-secondary"/>
+                        <div class="btn-group flex flex-row justify-center">
+                            <input type="radio" name="mealTime" data-title="아침" value="breakfast"
+                                   class="btn btn-secondary"
+                                   checked/>
+                            <input type="radio" name="mealTime" data-title="점심" value="lunch"
+                                   class="btn btn-secondary"/>
+                            <input type="radio" name="mealTime" data-title="저녁" value="dinner"
+                                   class="btn btn-secondary"/>
+                            <input type="radio" name="mealTime" data-title="기타" value="etc" class="btn btn-secondary"/>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="divider"></div>
-            <div>
-                <div class="flex flex-col">
-                    <div class="flex justify-center">
-                        <h1 class="font-bold text-black text-sm mb-4">
-                            식단 점수
-                        </h1>
+                <div class="divider"></div>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                식단 점수
+                            </h1>
+                        </div>
+
+                        <div class="flex justify-center rating rating-lg">
+                            <input type="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400" checked/>
+                            <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400"/>
+                        </div>
+
                     </div>
-
-                    <div class="flex justify-center rating rating-lg">
-                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
-                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400" checked/>
-                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
-                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
-                        <input type="radio" name="rating-8" class="mask mask-star-2 bg-orange-400"/>
-                    </div>
-
                 </div>
-            </div>
 
-            <div class="divider"></div>
-            <div>
-                <div class="flex flex-col">
-                    <div class="flex justify-center">
-                        <h1 class="font-bold text-black text-sm mb-4">
-                            메모
-                        </h1>
-                    </div>
+                <div class="divider"></div>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                메모
+                            </h1>
+                        </div>
 
-                    <div class="flex justify-center rating rating-lg">
+                        <div class="flex justify-center rating rating-lg">
                 <textarea
                         class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
-                        cols="20" name="iContent" placeholder="내용을 입력하세요."
+                        cols="20" name="menuMemo" placeholder="내용을 입력하세요."
                         rows="5"></textarea>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
 
-            <div class="flex justify-center mt-5">
-                <button type="submit" class="btn btn-primary btn-active">식단 추가하기</button>
-            </div>
+                <div class="flex justify-center mt-5">
+                    <button type="submit" class="btn btn-primary btn-active">식단 추가하기</button>
+                </div>
+            </form>
 
         </div>
     </div>

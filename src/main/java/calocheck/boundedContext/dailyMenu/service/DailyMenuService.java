@@ -42,4 +42,9 @@ public class DailyMenuService {
 
         return dailyMenu.orElse(null);
     }
+
+    public DailyMenu getByMember(Member member){
+
+        return dailyMenuRepository.findByMember(member).orElse(null);
+    }
 }

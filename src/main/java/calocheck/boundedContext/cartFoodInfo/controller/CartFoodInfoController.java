@@ -4,6 +4,9 @@ import calocheck.base.rq.Rq;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.dailyFoodInfo.service.DailyFoodInfoService;
+import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
@@ -23,6 +26,8 @@ public class CartFoodInfoController {
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
     private final Rq rq;
+    private final DailyMenuService dailyMenuService;
+    private final DailyFoodInfoService dailyFoodInfoService;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -80,5 +85,25 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
 
         return "usr/cartFoodInfo/addMenu";
+    }
+
+    @PostMapping("/addMenu")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public String addMenu(String mealTime, int menuScore, String menuMemo) {
+
+        //DailyMenu 는 member 를 가지고 있고, 데일리 메뉴에는 DailyFoodInfo(음식 개별당 영양)의 리스트가 들어있다.
+
+        Member loginMember = rq.getMember();
+
+        DailyMenu dailyMenuByMember = dailyMenuService.getByMember(loginMember);
+
+        //DailyMenu 에 DailyFoodInfo들(리스트) 을 넣어주어야 한다??
+//        dailyFoodInfoService.create(dailyMenuByMember, )
+
+        //장바구니에서 삭제
+//        cartFoodInfoService.delete();
+
+        return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
     }
 }
