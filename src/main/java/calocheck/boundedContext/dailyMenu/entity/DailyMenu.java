@@ -19,6 +19,6 @@ import java.util.List;
 public class DailyMenu extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-    @OneToMany(mappedBy = "dailyMenu", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<DailyFoodInfo> dailyFoodInfoList;
+//    @OneToMany(mappedBy = "dailyMenu", cascade = CascadeType.ALL, orphanRemoval = true)
+//    List<DailyFoodInfo> dailyFoodInfoList;
 }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
     <title>장바구니</title>
@@ -35,54 +34,18 @@
                     </h1>
                 </div>
 
-                <div class="flex flex-row justify-center">
+                <div class="flex flex-row justify-center" th:each="calcNutrient : ${calcNutrients}">
                     <div>
-                        <i class="fa-solid fa-circle" style="color: #28529a;"></i>
-                        <!-- th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'" -->
-                        <span class="text-xs font-bold inline-block m-1 w-48">에너지(kcal)</span>
-                    </div>
-                    <div>
-                        <!-- th:text="${nutrient.value} -->
-                        <div class="text-xs text-black m-1"
-                             th:text="1000"></div>
-                    </div>
-                </div>
-
-                <div class="flex flex-row justify-center">
-                    <div>
-                        <i class="fa-solid fa-circle" style="color: #E5D85C;"></i>
-                        <span class="text-xs font-bold inline-block m-1 w-48">단백질(g)</span>
+                        <i id="nutrientColor" class="fa-solid fa-circle"></i>
+                        <span id="nutrientData" class="text-xs font-bold inline-block m-1 w-48"
+                              th:text="${calcNutrient.getName()} + '(' + ${calcNutrient.getUnit()} + ')'"></span>
                     </div>
                     <div>
                         <div class="text-xs text-black m-1"
-                             th:text="1000"></div>
+                             th:text="${calcNutrient.getValue()}"></div>
                     </div>
                 </div>
 
-                <div class="flex flex-row justify-center">
-                    <div>
-                        <i class="fa-solid fa-circle" style="color: #1DDB16;"></i>
-                        <span class="text-xs font-bold inline-block m-1 w-48">칼슘(mg)</span>
-                    </div>
-                    <div>
-                        <div class="text-xs text-black m-1"
-                             th:text="1000"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div th:each="nutrient, loop: ${nutrientTotal}"
-                 class="flex justify-center">
-                <div class="flex justify-between">
-                    <div class="flex">
-                        <i class="fa-solid fa-list"></i>
-                        <div class="text-xs font-bold m-1"
-                             th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
-                    </div>
-                    <div class="text-xs text-black m-1"
-                         th:text="${nutrient.value}"></div>
-                    <div class="divider"></div>
-                </div>
             </div>
 
             <div class="divider"></div>
@@ -119,7 +82,8 @@
 
                         <div class="flex justify-center rating rating-lg">
                             <input type="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400" checked/>
+                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"
+                                   checked/>
                             <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400"/>
@@ -139,7 +103,7 @@
 
                         <div class="flex justify-center rating rating-lg">
                 <textarea
-                        class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
+                        class="border flex flex-grow max-w-lg border-black border-opacity-10 resize-none p-4 focus:outline-none"
                         cols="20" name="menuMemo" placeholder="내용을 입력하세요."
                         rows="5"></textarea>
                         </div>
@@ -148,6 +112,7 @@
                 </div>
 
                 <div class="flex justify-center mt-5">
+                    <a href="/cartFoodInfo/total" class="btn btn-primary btn-active mr-5">이전</a>
                     <button type="submit" class="btn btn-primary btn-active">식단 추가하기</button>
                 </div>
             </form>
@@ -156,6 +121,25 @@
     </div>
 
     <script th:inline="javascript">
+        const nutrientColor = document.getElementById('nutrientColor');
+        const nutrientName = '단백질';
+
+        console.log(nutrientName);
+
+        switch (nutrientName) {
+            case '단백질':
+                nutrientColor.style.color = '#E5D85C';
+                break;
+            case '탄수화물':
+                nutrientColor.style.color = '#ABCDEF';
+                break;
+            case '지방':
+                nutrientColor.style.color = '#F0A1B2';
+                break;
+            default:
+                // 다른 경우의 처리
+                break;
+        }
 
     </script>
 </main>
