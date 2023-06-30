@@ -38,7 +38,7 @@
                                             내 신체정보 기록하기
                                         </h3>
                                         <div class="mt-2 flex justify-center">
-                                            <form action="#" th:action="@{/tracking}" method="post" th:object="${tracking}" class="w-full">
+                                            <form action="#" th:action="@{/tracking/bodyTracking}" method="post" th:object="${tracking}" class="w-full">
                                                 <div class="form-container flex flex-row justify-start">
                                                     <label for="date">날짜: </label>
                                                     <input type="date" id="date" th:field="*{dateTime}" min="currentDateFormatted" max="currentDateFormatted">

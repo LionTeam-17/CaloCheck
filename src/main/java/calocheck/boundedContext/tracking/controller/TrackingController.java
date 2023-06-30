@@ -6,16 +6,14 @@ import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
@@ -24,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/tracking")
+@RequiredArgsConstructor
 public class TrackingController {
     private final TrackingService trackingService;
     private final MemberService memberService;
@@ -36,7 +36,7 @@ public class TrackingController {
             this.memberService = memberService;
     }
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/tracking")
+    @GetMapping("/bodyTracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
 
@@ -53,7 +53,7 @@ public class TrackingController {
     }
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/tracking")
+    @PostMapping("/bodyTracking")
     public String createTracking(@ModelAttribute("tracking")
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Tracking tracking,
                                  Principal principal) {
@@ -108,7 +108,7 @@ public class TrackingController {
             savedTracking = trackingService.createTracking(tracking);
         }
 
-        return "redirect:/tracking";
+        return "redirect:/tracking/bodyTracking";
     }
 
 
