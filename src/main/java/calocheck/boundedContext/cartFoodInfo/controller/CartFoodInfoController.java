@@ -121,8 +121,13 @@ public class CartFoodInfoController {
 
         Member member = rq.getMember();
 
+        //식단에 추가
         dailyFoodInfoService.create(member, mealTime, menuScore, menuMemo);
         
+        //장바구니 삭제
+        cartFoodInfoService.deleteAllList(member);
+
+        //내 식단 캘린더로 이동
         return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
     }
 }

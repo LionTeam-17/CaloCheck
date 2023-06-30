@@ -4,6 +4,7 @@ import calocheck.base.entity.BaseEntity;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -11,6 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
+import java.util.Map;
 
 @SuperBuilder(toBuilder = true)
 @Getter
