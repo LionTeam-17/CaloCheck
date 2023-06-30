@@ -1,13 +1,13 @@
 package calocheck.base.initData;
 
 import calocheck.base.util.FoodDataExtractor;
-import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.entity.PostLike;
@@ -48,18 +48,21 @@ public class NotProd {
 
             Post[] posts = IntStream
                     .rangeClosed(1, 100)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % 10])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), S3Config.getSampleImg(), members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
 
-            recommendService.createRecommend("carbohydrate", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("protein", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
-            recommendService.createRecommend("fat", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
-            recommendService.createRecommend("calcium", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
-            recommendService.createRecommend("sodium", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
-            recommendService.createRecommend("potassium", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
-            recommendService.createRecommend("vitaminA", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
-            recommendService.createRecommend("vitaminC", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("탄수화물", RecommendConfig.getCarbohydrateDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("단백질", RecommendConfig.getProteinDescription(), RecommendConfig.getProteinFoodList());
+            recommendService.createRecommend("지방", RecommendConfig.getFatDescription(), RecommendConfig.getFatFoodList());
+            recommendService.createRecommend("칼슘", RecommendConfig.getCalciumDescription(), RecommendConfig.getCalciumFoodList());
+            recommendService.createRecommend("나트륨", RecommendConfig.getSodiumDescription(), RecommendConfig.getSodiumFoodList());
+            recommendService.createRecommend("칼륨", RecommendConfig.getPotassiumDescription(), RecommendConfig.getPotassiumFoodList());
+            recommendService.createRecommend("비타민A", RecommendConfig.getVitaminADescription(), RecommendConfig.getVitaminAFoodList());
+            recommendService.createRecommend("비타민C", RecommendConfig.getVitaminCDescription(), RecommendConfig.getVitaminCFoodList());
+            recommendService.createRecommend("고단백&저지방 육류", RecommendConfig.getMeatDescription(), RecommendConfig.getMeatFoodList());
+            recommendService.createRecommend("GI지수 높은 음식", RecommendConfig.getHighGIDescription(), RecommendConfig.getHighGIFoodList());
+            recommendService.createRecommend("GI지수 낮은 음식", RecommendConfig.getLowGIDescription(), RecommendConfig.getLowGIFoodList());
 
 
             Comment[] comments = IntStream
@@ -86,7 +89,7 @@ public class NotProd {
 
             foodDataExtractor.readFile();
 
-            IntStream.rangeClosed(1, 4)
+            IntStream.rangeClosed(190, 199)
                     .mapToObj(i -> foodInfoService.findById((long)i))
                     .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };

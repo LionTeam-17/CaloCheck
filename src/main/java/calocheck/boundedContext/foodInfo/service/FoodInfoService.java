@@ -1,6 +1,6 @@
 package calocheck.boundedContext.foodInfo.service;
 
-import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ import java.util.Optional;
 public class FoodInfoService {
     private final FoodInfoRepository foodInfoRepository;
 
-    public FoodInfo create(NutritionInfo nutritionInfo,
+    public FoodInfo create(NutrientInfo nutrientInfo,
                            String foodName, String manufacturer, String category,
                            int portionSize, String unit, int totalSize) {
 
         FoodInfo foodItem = FoodInfo.builder()
-                .nutritionInfo(nutritionInfo)
+                .nutrientInfo(nutrientInfo)
                 .foodName(foodName).manufacturer(manufacturer).category(category)
                 .portionSize(portionSize).unit(unit).totalSize(totalSize)
                 .build();
@@ -29,12 +29,12 @@ public class FoodInfoService {
         return foodInfoRepository.save(foodItem);
     }
 
-    public FoodInfo update(FoodInfo foodInfo, NutritionInfo nutritionInfo,
+    public FoodInfo update(FoodInfo foodInfo, NutrientInfo nutrientInfo,
                            String foodName, String manufacturer, String category,
                            int portionSize, String unit, int totalSize) {
 
         FoodInfo updated = foodInfo.toBuilder()
-                .nutritionInfo(nutritionInfo)
+                .nutrientInfo(nutrientInfo)
                 .foodName(foodName).manufacturer(manufacturer).category(category)
                 .portionSize(portionSize).unit(unit).totalSize(totalSize)
                 .build();
@@ -62,5 +62,9 @@ public class FoodInfoService {
 
     public Page<FoodInfo> findByFoodNameContains(Pageable pageable, String foodName) {
         return foodInfoRepository.findByFoodNameContains(foodName, pageable);
+    }
+
+    public FoodInfo findByFoodName(String foodName){
+        return foodInfoRepository.findByFoodName(foodName).orElse(null);
     }
 }
