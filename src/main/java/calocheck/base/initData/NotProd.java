@@ -38,7 +38,7 @@ public class NotProd {
             RecommendService recommendService,
             CommentService commentService,
             FoodDataExtractor foodDataExtractor,
-            TrackingService trackingService
+            TrackingService trackingService,
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
             CartFoodInfoService cartFoodInfoService
