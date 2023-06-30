@@ -160,13 +160,6 @@ public class MemberController {
         int totalPosts = allPosts.size();
         int totalPages = (int) Math.ceil((double) totalPosts / size);
 
-        // 유효한 페이지 번호인지 확인하고 조정합니다.
-        if (page < 0) {
-            page = 0;
-        } else if (page >= totalPages) {
-            page = totalPages - 1;
-        }
-
         // 페이징 처리를 위한 글 목록을 구합니다.
         int startIdx = page * size;
         int endIdx = Math.min(startIdx + size, allPosts.size());
@@ -174,6 +167,10 @@ public class MemberController {
 
         // 조회된 글 목록을 모델에 추가합니다.
         model.addAttribute("postList", pagedPosts);
+
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
+        model.addAttribute("totalPages", totalPages);
 
         return "usr/member/mypage";
     }

@@ -35,13 +35,13 @@
 
             <div class="flex flex-col justify-center mt-5 gap-1" >
                 <div class="flex">
-                    <div class="mx-2 text-2xl">
+                    <div class="mx-2 text-2xl font-bold">
                         <button id="myInformationBtn">
                             <span>내 정보</span>
                         </button>
                     </div>
                     <div class="divider divider-horizontal !mx-2"></div>
-                    <div class="mx-2 text-2xl">
+                    <div class="mx-2 text-2xl font-bold">
                         <button id="myPostBtn">
                             <span>내 포스트</span>
                         </button>
@@ -81,10 +81,42 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="hero-content">
+            <div id="myPost" class="hidden flex flex-col">
+                <div th:if="${not #lists.isEmpty(postList)}">
+                        <div th:each="post : ${postList}">
+                            <li>
+                                <h3 th:text="${post.subject}"></h3>
+                                <p th:text="${post.content}"></p>
+                            </li>
+                        </div>
                 </div>
-
+                <div>
+                    <div th:unless="${not #lists.isEmpty(postList)}">
+                        <li>작성된 글이 없습니다.</li>
+                    </div>
+                </div>
+                <!-- 페이징 처리를 표시합니다 -->
+                <div>
+                    <div class="pagination">
+                        <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
+                        </li>
+                        <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
+                        </li>
+                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                            th:classappend="${pageNum == page} ? 'active'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
+                               th:text="${pageNum+1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}">다음</a>
+                        </li>
+                        <li class="page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages -1}, size=${size})}">마지막</a>
+                        </li>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -94,6 +126,14 @@
         const myInformation = document.getElementById("myInformation");
         const myPostBtn = document.getElementById("myPostBtn");
         const myPost = document.getElementById("myPost");
+
+        const page_elements = document.getElementsByClassName("page-link");
+        Array.from(page_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                document.getElementById('page').value = this.dataset.page;
+                document.getElementById('postForm').submit();
+            });
+        });
 
         // 버튼 이벤트
         myInformationBtn.addEventListener("click", () => {
