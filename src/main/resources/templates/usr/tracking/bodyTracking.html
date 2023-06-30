@@ -79,15 +79,21 @@
             <canvas id="Body Fat" class="chart" style="max-width: 800px;"></canvas>
             <canvas id="Muscle Mass" class="chart" style="max-width: 800px;"></canvas>
 
-            <div class="info-container">
-                <p class="info-label">이름 :</p>
-                <p class="info-value" th:text="${member.username} + '님'"></p>
-                <p class="info-label">나이 :</p>
-                <p class="info-value" th:text="${member.age} + '세'"></p>
-                <p class="info-label">키 :</p>
-                <p class="info-value" th:text="${member.height} + 'cm'"></p>
+            <div style="width: 200px; border: 1px solid #ccc; border-radius: 10px; padding: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); margin: 30px auto;">
+                <h2 style="margin-bottom: 20px; font-size: 20px; color: #333;">유저 정보</h2>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: #666;">이름 :</span>
+                    <span th:text="${member.username} + '님'"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: #666;">나이 :</span>
+                    <span th:text="${member.age} + '세'"></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: bold; color: #666;">키 :</span>
+                    <span th:text="${member.height} + 'cm'"></span>
+                </div>
             </div>
-
 
             <div id="bodyInfo" class="flex justify-center mt-4">
                 <div class="max-h-[400px] overflow-y-auto">

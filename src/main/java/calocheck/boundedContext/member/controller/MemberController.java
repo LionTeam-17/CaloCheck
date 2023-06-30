@@ -83,6 +83,8 @@ public class MemberController {
             tracking.setWeight(member.getWeight());
             tracking.setBodyFat(member.getBodyFat());
             tracking.setMuscleMass(member.getMuscleMass());
+            trackingService.calculateBMI(tracking);
+            trackingService.calculateBodyFatPercentage(tracking);
             trackingService.createTracking(tracking);
         }
         String msg = joinRs.getMsg() + "\n로그인 후 이용해주세요.";

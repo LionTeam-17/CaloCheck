@@ -65,6 +65,7 @@ public class TrackingController {
         tracking.setMember(member);
         tracking.setDateTime(LocalDate.now());
 
+
         if (tracking.getAge() == null) {
             tracking.setAge(member.getAge());
         }
@@ -79,6 +80,12 @@ public class TrackingController {
         }
         if (tracking.getMuscleMass() == null) {
             tracking.setMuscleMass(member.getMuscleMass());
+        }
+        if (tracking.getBmi() == null) {
+            trackingService.calculateBMI(tracking);
+        }
+        if (tracking.getBodyFatPercentage() == null) {
+            trackingService.calculateBodyFatPercentage(tracking);
         }
 
         Optional<Tracking> existingTracking = trackingService.findByMemberAndDate(member, tracking.getDateTime());
