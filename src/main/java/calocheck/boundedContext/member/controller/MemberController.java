@@ -4,6 +4,8 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.tracking.entity.Tracking;
+import calocheck.boundedContext.tracking.service.TrackingService;
 import calocheck.boundedContext.post.entity.Post;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -17,12 +19,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
     private final Rq rq;
+    private final TrackingService trackingService;
+
     @AllArgsConstructor
     @Getter
     public static class JoinForm {
@@ -66,8 +72,21 @@ public class MemberController {
                 joinForm.getAge(), joinForm.getHeight(), joinForm.getWeight(), joinForm.getMuscleMass(), joinForm.getBodyFat()
         );
 
+        if (joinRs.isSuccess()) {
+            Member member = joinRs.getData();
+            Tracking tracking = new Tracking();
+            tracking.setMember(member);
+            tracking.setAge(member.getAge());
+            tracking.setHeight(member.getHeight());
+            tracking.setDateTime(LocalDate.now());
+            tracking.setWeight(member.getWeight());
+            tracking.setBodyFat(member.getBodyFat());
+            tracking.setMuscleMass(member.getMuscleMass());
+            trackingService.calculateBMI(tracking);
+            trackingService.calculateBodyFatPercentage(tracking);
+            trackingService.createTracking(tracking);
+        }
         String msg = joinRs.getMsg() + "\n로그인 후 이용해주세요.";
-
         return rq.redirectWithMsg("/member/login", joinRs);
     }
 
