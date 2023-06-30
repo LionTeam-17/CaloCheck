@@ -12,6 +12,7 @@ import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -107,9 +108,9 @@ public class CartFoodInfoController {
         //식사 후 영양정보 계산
         List<Nutrient> calcNutrients = dailyFoodInfoService.calcNutrient(member, nutrientTotal);
 
+//        model.addAttribute("nutrientTotal", nutrientTotal);     //post 로 넘겨주기 위함(프론트 사용x)
         model.addAttribute("calcNutrients", calcNutrients);
-
-
+        
         return "usr/cartFoodInfo/addMenu";
     }
 
@@ -118,15 +119,10 @@ public class CartFoodInfoController {
     @PreAuthorize("isAuthenticated()")
     public String addMenu(String mealTime, int menuScore, String menuMemo) {
 
-        //DailyMenu 는 member 를 가지고 있고, 데일리 메뉴에는 DailyFoodInfo(음식 개별당 영양)의 리스트가 들어있다.
+        Member member = rq.getMember();
 
-
-//        DailyFoodInfo dailyFoodInfo = dailyFoodInfoService.create(loginMember,allByMember);
+        dailyFoodInfoService.create(member, mealTime, menuScore, menuMemo);
         
-
-        //장바구니에서 삭제
-//        cartFoodInfoService.delete();
-
         return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
     }
 }

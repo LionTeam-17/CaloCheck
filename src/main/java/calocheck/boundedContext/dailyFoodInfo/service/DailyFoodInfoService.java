@@ -26,15 +26,24 @@ public class DailyFoodInfoService {
     private final CartFoodInfoService cartFoodInfoService;
     private final NutrientService nutrientService;
 
-    public DailyFoodInfo create(Member member, FoodInfo foodInfo, String mealTime, double quantity) {
-        DailyFoodInfo dailyFoodInfo = DailyFoodInfo.builder()
-                .member(member)
-                .foodInfo(foodInfo)
-                .mealTime(mealTime)
-                .quantity(quantity)
-                .build();
+    public void create(Member member, String mealTime, int menuScore, String menuMemo) {
 
-        return dailyFoodInfoRepository.save(dailyFoodInfo);
+        List<CartFoodInfo> cartByMember = cartFoodInfoService.findAllByMember(member);
+
+        for(int i=0; i<cartByMember.size(); i++){
+
+            DailyFoodInfo dailyFoodInfo = DailyFoodInfo.builder()
+                    .member(member)
+                    .foodInfo(cartByMember.get(i).getFoodInfo())
+                    .mealTime(mealTime)
+                    .menuMemo(menuMemo)
+                    .menuScore(menuScore)
+                    .quantity(cartByMember.get(i).getQuantity())
+                    .build();
+
+            dailyFoodInfoRepository.save(dailyFoodInfo);
+        }
+
     }
 
 //    //식단 수정? => 가능한가? 어디에서?

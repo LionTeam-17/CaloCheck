@@ -42,8 +42,4 @@ public class NutrientService {
         return nutrient.orElse(null);
     }
 
-    public Nutrient findByName(String nutrientName){
-
-        return nutrientRepository.findByName(nutrientName).orElse(null);
-    }
 }
