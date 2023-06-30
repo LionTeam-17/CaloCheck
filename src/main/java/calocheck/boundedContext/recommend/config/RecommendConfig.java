@@ -73,6 +73,30 @@ public class RecommendConfig {
     }
 
     @Getter
+    private static String[] meatFoodList; //저지방&고단백 육류
+
+    @Value("${custom.recommendList.meat}")
+    public void setMeatFoodList(String[] meatFoodList) {
+        RecommendConfig.meatFoodList = meatFoodList;
+    }
+
+    @Getter
+    private static String[] highGIFoodList; //GI지수 높은 음식
+
+    @Value("${custom.recommendList.highGI}")
+    public void setHighGIFoodList(String[] highGIFoodList) {
+        RecommendConfig.highGIFoodList = highGIFoodList;
+    }
+
+    @Getter
+    private static String[] lowGIFoodList; //GI지수 낮은 음식
+
+    @Value("${custom.recommendList.lowGI}")
+    public void setLowGIFoodList(String[] lowGIFoodList) {
+        RecommendConfig.lowGIFoodList = lowGIFoodList;
+    }
+
+    @Getter
     private static String carbohydrateDescription;
 
     @Value("${custom.description.carbohydrate}")
@@ -134,6 +158,30 @@ public class RecommendConfig {
     @Value("${custom.description.vitaminC}")
     public void setVitaminCDescription(String vitaminCDescription){
         RecommendConfig.vitaminCDescription = vitaminCDescription;
+    }
+
+    @Getter
+    private static String meatDescription;
+
+    @Value("${custom.description.meat}")
+    public void setMeatDescription(String meatDescription){
+        RecommendConfig.meatDescription = meatDescription;
+    }
+
+    @Getter
+    private static String highGIDescription;
+
+    @Value("${custom.description.highGI}")
+    public void setHighGIDescription(String highGIDescription){
+        RecommendConfig.highGIDescription = highGIDescription;
+    }
+
+    @Getter
+    private static String lowGIDescription;
+
+    @Value("${custom.description.lowGI}")
+    public void setLowGIDescription(String lowGIDescription){
+        RecommendConfig.lowGIDescription = lowGIDescription;
     }
 
 }

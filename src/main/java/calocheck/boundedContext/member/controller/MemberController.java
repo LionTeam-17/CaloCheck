@@ -121,6 +121,7 @@ public class MemberController {
         }
 
         return rq.redirectWithMsg("/member/mypage/{memberId}", modifyRsData);
+
     }
 
 

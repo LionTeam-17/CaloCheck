@@ -16,7 +16,7 @@
         <div class="hero-content flex-col gap-20">
 
             <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
-            마이페이지
+                마이페이지
             </h2>
 
             <div class="flex flex-col justify-center gap-10" style="width: 900px">
@@ -49,6 +49,7 @@
                 </div>
                 <div class="divider !my-1"></div>
             </div>
+
 
             <div id="myInformation" class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 500px; height: 500px">
                 <div class="card-body flex flex-col gap-10">
@@ -123,7 +124,7 @@
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
                         </div>
                         <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
-                            th:classappend="${pageNum == page} ? 'active'">
+                             th:classappend="${pageNum == page} ? 'active'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
                                th:text="${pageNum+1}"></a>
                         </div>

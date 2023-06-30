@@ -1,7 +1,7 @@
 package calocheck.boundedContext.foodInfo.entity;
 
 import calocheck.base.entity.BaseEntity;
-import calocheck.boundedContext.nutritionInfo.entity.NutritionInfo;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class FoodInfo extends BaseEntity {
     @OneToOne
-    private NutritionInfo nutritionInfo; // 영양 정보
+    private NutrientInfo nutrientInfo; // 영양 정보
     private String foodName; // 식품명
     private String manufacturer; // 제조사/유통사
     private String category; // 식품대분류
