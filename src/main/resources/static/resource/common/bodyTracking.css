@@ -1,0 +1,137 @@
+.tablink{
+    background-color: #112D4E;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 13px;
+    transition: 0.3s;
+    font-size: 15px;
+    margin-right: 5px;
+    border-radius: 10px;
+}
+
+#openModal {
+    background-color: #112D4E;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 13px;
+    font-size: 15px;
+}
+
+#confirmRecord {
+    background-color: #112D4E;
+}
+
+.tablink:hover {
+    background-color: #3F72AF;
+}
+
+#openModal:hover, #confirmRecord:hover {
+    background-color: #3F72AF;
+}
+
+.tablink.active {
+    background-color: #3F72AF;
+    color: white;
+}
+
+#openModal.active {
+    background-color: #3F72AF;
+    color: white;
+}
+
+.form-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    width: 80px;
+    text-align: left;
+}
+
+.form-input {
+    width: 100%; /* 입력 창을 컨테이너에 맞게 확장 */
+}
+
+.form-container input[type="date"],
+.form-container input[type="number"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 80%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.form-container button[type="submit"] {
+    padding: 8px 16px;
+    background-color: #112D4E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #3F72AF;
+}
+
+.displayModal {
+    display: none;
+}
+
+.table_head{
+    background-color: #3F72AF;
+    color : white;
+    border-color: #112D4E;
+    text-align: left;
+}
+
+.chart {
+    width: 100% !important;
+    max-width: 800px;
+    height: auto !important;
+}
+
+.info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: #3F72AF;
+    color: white;
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.info-label {
+    font-weight: bold;
+    margin-right: 5px;
+    margin-left: 10px;
+}
+@media (max-width: 600px) {
+    .chart {
+        height: 300px !important;
+    }
+
+    .displayModal .flex.items-end {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .displayModal .inline-block {
+        width: 80%;
+        max-width: 80%;
+    }
+}

@@ -9,23 +9,27 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.entity.PostLike;
 import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
+import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Random;
 import java.util.stream.IntStream;
-
 
 @Configuration
 @Profile({"dev", "test"})
 public class NotProd {
+
     @Bean
     @Transactional
     public CommandLineRunner initData(
@@ -34,6 +38,7 @@ public class NotProd {
             RecommendService recommendService,
             CommentService commentService,
             FoodDataExtractor foodDataExtractor,
+            TrackingService trackingService,
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
             CartFoodInfoService cartFoodInfoService
@@ -42,7 +47,7 @@ public class NotProd {
             Member[] members = IntStream
                     .rangeClosed(1, 10)
                     .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", null,
-                                    "닉네임%d".formatted(i), null, null, null, null, null)
+                                    "닉네임%d".formatted(i), 25, 178.4, 65.0, 30.0, 20.0)
                             .getData())
                     .toArray(Member[]::new);
 
@@ -89,9 +94,34 @@ public class NotProd {
 
             foodDataExtractor.readFile();
 
+
+            //Tracking 샘플 데이터
+            LocalDate startDate = LocalDate.now().minusDays(90);
+            Random random = new Random();
+
+            for (Member member : members) {
+                int age = member.getAge();
+                double height = member.getHeight();
+                double weight = 60 + random.nextDouble() * 5;
+                double bodyFat = 20 + random.nextDouble() * 5;
+                double muscleMass = 30 + random.nextDouble() * 5;
+                LocalDate date = startDate;
+
+                while (!date.isAfter(LocalDate.now())) {
+                    weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
+                    bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
+                    muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
+                    Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
+                    trackingService.calculateBMI(tracking);
+                    trackingService.calculateBodyFatPercentage(tracking);
+                    date = date.plusDays(random.nextInt(4) + 1);
+                }
+            }
             IntStream.rangeClosed(190, 199)
                     .mapToObj(i -> foodInfoService.findById((long)i))
                     .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };
+
     }
+
 }
