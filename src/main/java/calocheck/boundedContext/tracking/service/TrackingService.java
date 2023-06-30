@@ -20,7 +20,7 @@ public class TrackingService {
         this.trackingRepository = trackingRepository;
     }
 
-    public Tracking createTracking(Member member, LocalDate dateTime, Integer age, Double height, Double weight, Double bodyFat, Double muscleMass) {
+    public Tracking createTracking(Member member, LocalDate dateTime, Integer age, Double height, Double weight, Double bodyFat, Double muscleMass, Double bmi, Double bodyFatPercentage) {
         Tracking tracking = Tracking.builder()
                 .member(member)
                 .dateTime(dateTime)
@@ -29,7 +29,12 @@ public class TrackingService {
                 .weight(weight)
                 .bodyFat(bodyFat)
                 .muscleMass(muscleMass)
+                .bmi(bmi)
+                .bodyFatPercentage(bodyFatPercentage)
                 .build();
+
+        calculateBMI(tracking);
+        calculateBodyFatPercentage(tracking);
 
         return trackingRepository.save(tracking);
     }
@@ -43,10 +48,28 @@ public class TrackingService {
     }
 
     public Tracking updateTracking(Tracking tracking) {
+        calculateBMI(tracking);
+        calculateBodyFatPercentage(tracking);
+
         return trackingRepository.save(tracking);
     }
 
     public Optional<Tracking> findByMemberAndDate(Member member, LocalDate date) {
         return trackingRepository.findByMemberAndDateTime(member, date);
     }
+    public void calculateBMI(Tracking tracking) {
+        if (tracking.getHeight() != null && tracking.getWeight() != null) {
+            double heightInMeters = tracking.getHeight() / 100; // Convert height to meters
+            double bmi = tracking.getWeight() / (heightInMeters * heightInMeters);
+            tracking.setBmi(bmi);
+        }
+    }
+
+    public void calculateBodyFatPercentage(Tracking tracking) {
+        if (tracking.getWeight() != null && tracking.getBodyFat() != null) {
+            double bodyFatPercentage = (tracking.getBodyFat() / tracking.getWeight()) * 100;
+            tracking.setBodyFatPercentage(bodyFatPercentage);
+        }
+    }
+
 }

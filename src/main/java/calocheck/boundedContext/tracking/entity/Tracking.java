@@ -12,7 +12,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -24,12 +23,36 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Tracking extends BaseEntity {
     @ManyToOne
     private Member member;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateTime;
+
     private Integer age;
     private Double height;
     private Double weight;
     private Double bodyFat;
     private Double muscleMass;
+    private Double bmi;
+    private Double bodyFatPercentage;
+
+    public void setWeight(Double weight) {
+        this.weight = Math.round(weight * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setBodyFat(Double bodyFat) {
+        this.bodyFat = Math.round(bodyFat * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setMuscleMass(Double muscleMass) {
+        this.muscleMass = Math.round(muscleMass * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setBmi(Double bmi) {
+        this.bmi = Math.round(bmi * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setBodyFatPercentage(Double bodyFatPercentage) {
+        this.bodyFatPercentage = Math.round(bodyFatPercentage * 100) / 100.0; // Round to 2 decimal places
+    }
 
 }

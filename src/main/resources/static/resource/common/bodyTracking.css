@@ -103,6 +103,23 @@
     height: auto !important;
 }
 
+.info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: #3F72AF;
+    color: white;
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.info-label {
+    font-weight: bold;
+    margin-right: 5px;
+    margin-left: 10px;
+}
 @media (max-width: 600px) {
     .chart {
         height: 300px !important;

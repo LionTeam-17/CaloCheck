@@ -46,6 +46,7 @@ public class TrackingController {
 
         Member member = memberOptional.get();
         List<Tracking> trackingData = trackingService.findTrackingsByMember(member);
+        model.addAttribute("member", member);
         model.addAttribute("trackingData", trackingData);
         model.addAttribute("tracking", new Tracking());
         return "usr/tracking/bodyTracking";
@@ -80,7 +81,6 @@ public class TrackingController {
             tracking.setMuscleMass(member.getMuscleMass());
         }
 
-        // if no tracking exists for this date, set initial tracking data to member's registration data
         Optional<Tracking> existingTracking = trackingService.findByMemberAndDate(member, tracking.getDateTime());
         Tracking savedTracking;
         if (existingTracking.isPresent()) {
@@ -89,9 +89,11 @@ public class TrackingController {
             trackingToUpdate.setBodyFat(tracking.getBodyFat());
             trackingToUpdate.setMuscleMass(tracking.getMuscleMass());
 
+            trackingService.calculateBMI(trackingToUpdate);
+            trackingService.calculateBodyFatPercentage(trackingToUpdate);
+
             savedTracking = trackingService.updateTracking(trackingToUpdate);
         } else {
-            // set initial tracking data to member's registration data
             tracking.setWeight(member.getWeight());
             tracking.setBodyFat(member.getBodyFat());
             tracking.setMuscleMass(member.getMuscleMass());

@@ -6,6 +6,7 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
@@ -82,7 +83,9 @@ public class NotProd {
                     weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
                     bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
                     muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
-                    trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass);
+                    Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
+                    trackingService.calculateBMI(tracking);
+                    trackingService.calculateBodyFatPercentage(tracking);
                     date = date.plusDays(random.nextInt(4) + 1);
                 }
             }
