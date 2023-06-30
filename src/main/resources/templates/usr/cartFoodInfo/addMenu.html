@@ -1,0 +1,65 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+  <title>장바구니</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+  <!-- 라이브러리 CSS 불러오기 -->
+  <link rel="stylesheet" href="/resource/library/library.css">
+
+  <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+
+  <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+  <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<main layout:fragment="Content">
+  <div class="flex flex-col m-4">
+    <div class="w-full">
+      <div class="flex justify-center">
+        <h1 class="font-bold text-black text-sm mb-4">
+          <i class="fa-solid fa-list"></i>
+          식사 후 영양정보
+        </h1>
+      </div>
+      <div class="flex justify-center m-2 text-xs">
+        챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
+      </div>
+      <div class="divider"></div>
+      <div class="flex justify-between">
+        <h1 class="font-bold text-black text-sm mb-4">
+          <i class="fa-solid fa-list"></i>
+          영양성분
+        </h1>
+        <div class="flex m-2">
+          <div class="text-xs font-bold m-1">에너지(kcal)</div>
+          <div class="text-xs text-black m-1"
+               th:text="1000"></div>
+        </div>
+      </div>
+
+      <div th:each="nutrient, loop: ${nutrientTotal}"
+           class="flex justify-between">
+        <div class="flex">
+          <i class="fa-solid fa-list"></i>
+          <div class="text-xs font-bold m-1"
+               th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
+        </div>
+        <div class="text-xs text-black m-1"
+             th:text="${nutrient.value}"></div>
+        <div class="divider"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script th:inline="javascript">
+
+  </script>
+</main>
+</body>
+
+</html>
