@@ -20,10 +20,12 @@ public class TrackingService {
         this.trackingRepository = trackingRepository;
     }
 
-    public Tracking createTracking(Member member, LocalDate dateTime, Double weight, Double bodyFat, Double muscleMass) {
+    public Tracking createTracking(Member member, LocalDate dateTime, Integer age, Double height, Double weight, Double bodyFat, Double muscleMass) {
         Tracking tracking = Tracking.builder()
                 .member(member)
                 .dateTime(dateTime)
+                .age(age)
+                .height(height)
                 .weight(weight)
                 .bodyFat(bodyFat)
                 .muscleMass(muscleMass)
