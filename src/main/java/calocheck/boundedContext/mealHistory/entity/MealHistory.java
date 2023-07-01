@@ -5,9 +5,7 @@ import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -32,4 +30,8 @@ public class MealHistory extends BaseEntity {
     private String mealMemo;
 
     private int mealScore;
+
+    @ElementCollection
+    private List<Nutrient> nutrients;
+
 }

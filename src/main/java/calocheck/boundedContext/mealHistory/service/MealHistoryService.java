@@ -1,11 +1,14 @@
 package calocheck.boundedContext.mealHistory.service;
 
+import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
+import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.repository.MealHistoryRepository;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
+import calocheck.boundedContext.nutrient.repository.NutrientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +24,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MealHistoryService {
     private final MealHistoryRepository mealHistoryRepository;
-    private final DailyMenuService dailyMenuService;
+    private final NutrientRepository nutrientRepository;
+    private final CartFoodInfoService cartFoodInfoService;
 
     public MealHistory create(Member member, List<DailyMenu> dailyMenuList, String mealType, String mealMemo, int mealScore) {
+
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
+        List<Nutrient> calcNutrients = calcNutrient(member, nutrientTotal);
+
+        //fixme 여기서 repo를 참조하면 좋지 않음.
+        nutrientRepository.saveAll(calcNutrients);
 
         MealHistory mealHistory = MealHistory.builder()
                 .member(member)
@@ -31,9 +42,16 @@ public class MealHistoryService {
                 .mealType(mealType)
                 .mealMemo(mealMemo)
                 .mealScore(mealScore)
+                .nutrients(calcNutrients)
                 .build();
 
         mealHistoryRepository.save(mealHistory);
+
+        for(int i=0; i<calcNutrients.size(); i++){
+
+            System.out.printf("%s = %f", calcNutrients.get(i).getName(), calcNutrients.get(i).getValue());
+
+        }
 
         return mealHistory;
     }
