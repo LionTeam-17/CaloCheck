@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -103,5 +104,25 @@ public class MealHistoryService {
         decimal = decimal.setScale(2, RoundingMode.HALF_UP);
 
         return decimal.doubleValue();
+    }
+
+    public void calcTodayNutrition(Member member){
+
+        List<MealHistory> byMemberAndCreateDate = mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
+
+        if(byMemberAndCreateDate.isEmpty()){
+            System.out.println("오늘의 식단이 존재하지 않습니다!!");
+        } else{
+
+            for(int i=0; i<byMemberAndCreateDate.size(); i++){
+
+                String mealType = byMemberAndCreateDate.get(i).getMealType();
+
+                System.out.println("언제 먹은 식단인가요? " + mealType);
+
+            }
+            
+        }
+
     }
 }
