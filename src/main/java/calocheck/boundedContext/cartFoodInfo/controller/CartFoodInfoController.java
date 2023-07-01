@@ -4,7 +4,9 @@ import calocheck.base.rq.Rq;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
@@ -111,20 +113,22 @@ public class CartFoodInfoController {
         return "usr/cartFoodInfo/addMenu";
     }
 
-//    @PostMapping("/addMenu")
-//    @ResponseBody
-//    @PreAuthorize("isAuthenticated()")
-//    public String addMenu(String mealTime, int menuScore, String menuMemo) {
-//
-//        Member member = rq.getMember();
-//
-//        //식단에 추가
-//        dailyFoodInfoService.create(member, mealTime, menuScore, menuMemo);
-//
-//        //장바구니 삭제
-//        cartFoodInfoService.deleteAllList(member);
-//
-//        //내 식단 캘린더로 이동
-//        return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
-//    }
+    @PostMapping("/addMenu")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public String addMenu(String mealType, int menuScore, String menuMemo) {
+
+        Member member = rq.getMember();
+
+        //식단에 추가
+        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, mealType);
+
+        MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
+
+        //장바구니 삭제
+        cartFoodInfoService.deleteAllList(member);
+
+        //내 식단 캘린더로 이동
+        return "%s, %d, %s".formatted(mealType, menuScore, menuMemo);
+    }
 }

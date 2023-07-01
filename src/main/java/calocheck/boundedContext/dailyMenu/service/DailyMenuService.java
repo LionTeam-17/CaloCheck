@@ -19,7 +19,7 @@ public class DailyMenuService {
     private final CartFoodInfoService cartFoodInfoService;
 
     @Transactional
-    public List<DailyMenu> create(Member member, String mealType, String mealMemo, int mealScore) {
+    public List<DailyMenu> create(Member member, String mealType) {
 
         List<CartFoodInfo> cartByMember = cartFoodInfoService.findAllByMember(member);
         List<DailyMenu> dailyMenuList = new ArrayList<>();
@@ -37,8 +37,6 @@ public class DailyMenuService {
             dailyMenuRepository.save(dailyMenu);
             dailyMenuList.add(dailyMenu);
         }
-
-//        mealHistoryService.create(member, dailyMenuList, mealType, mealMemo, mealScore);
 
         return dailyMenuList;
     }
