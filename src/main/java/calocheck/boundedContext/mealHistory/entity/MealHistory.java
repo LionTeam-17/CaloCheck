@@ -1,40 +1,35 @@
-package calocheck.boundedContext.dailyFoodInfo.entity;
+package calocheck.boundedContext.mealHistory.entity;
 
 import calocheck.base.entity.BaseEntity;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
-import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.member.entity.Member;
-import calocheck.boundedContext.nutrient.entity.Nutrient;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 @SuperBuilder(toBuilder = true)
 @Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyFoodInfo extends BaseEntity {
+public class MealHistory extends BaseEntity {
+
+    //회원의 전체 식사 기록을 의미하는 MealHistory 엔티티
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private FoodInfo foodInfo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "mealHistory")
+    private List<DailyMenu> dailyFoodInfoList;
 
     private String mealTime;
 
     private String menuMemo;
 
     private int menuScore;
-
-    private double quantity;
 
 }

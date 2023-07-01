@@ -1,24 +1,31 @@
 package calocheck.boundedContext.dailyMenu.entity;
 
-import calocheck.base.entity.BaseEntity;
-import calocheck.boundedContext.dailyFoodInfo.entity.DailyFoodInfo;
-import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.mealHistory.entity.MealHistory;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
 @SuperBuilder(toBuilder = true)
 @Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyMenu extends BaseEntity {
+public class DailyMenu {
+
+    //매 기록마다의 식사(아침, 점심, 저녁, 기타)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-//    @OneToMany(mappedBy = "dailyMenu", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<DailyFoodInfo> dailyFoodInfoList;
+    private MealHistory mealHistory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FoodInfo foodInfo;
+
+    private double quantity;
 }

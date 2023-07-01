@@ -4,15 +4,12 @@ import calocheck.base.rq.Rq;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
-import calocheck.boundedContext.dailyFoodInfo.entity.DailyFoodInfo;
-import calocheck.boundedContext.dailyFoodInfo.service.DailyFoodInfoService;
-import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,8 +25,8 @@ public class CartFoodInfoController {
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
     private final Rq rq;
-    private final DailyMenuService dailyMenuService;
-    private final DailyFoodInfoService dailyFoodInfoService;
+    private final MealHistoryService dailyMenuService;
+    private final DailyMenuService dailyFoodInfoService;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
