@@ -31,10 +31,9 @@ public class MealHistoryService {
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
-        List<Nutrient> calcNutrients = calcNutrient(member, nutrientTotal);
 
         //fixme 여기서 repo를 참조하면 좋지 않음.
-        nutrientRepository.saveAll(calcNutrients);
+        nutrientRepository.saveAll(nutrientTotal);
 
         MealHistory mealHistory = MealHistory.builder()
                 .member(member)
@@ -42,14 +41,14 @@ public class MealHistoryService {
                 .mealType(mealType)
                 .mealMemo(mealMemo)
                 .mealScore(mealScore)
-                .nutrients(calcNutrients)
+                .nutrients(nutrientTotal)
                 .build();
 
         mealHistoryRepository.save(mealHistory);
 
-        for(int i=0; i<calcNutrients.size(); i++){
+        for(int i=0; i<nutrientTotal.size(); i++){
 
-            System.out.printf("%s = %f", calcNutrients.get(i).getName(), calcNutrients.get(i).getValue());
+            System.out.printf("%s = %f", mealHistory.getNutrients().get(i).getName(), mealHistory.getNutrients().get(i).getValue());
 
         }
 
