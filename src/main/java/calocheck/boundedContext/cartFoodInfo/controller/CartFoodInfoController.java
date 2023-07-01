@@ -25,8 +25,8 @@ public class CartFoodInfoController {
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
     private final Rq rq;
-    private final MealHistoryService dailyMenuService;
-    private final DailyMenuService dailyFoodInfoService;
+    private final MealHistoryService mealHistoryService;
+    private final DailyMenuService dailyMenuService;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -103,7 +103,7 @@ public class CartFoodInfoController {
         Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
 
         //식사 후 영양정보 계산
-        List<Nutrient> calcNutrients = dailyFoodInfoService.calcNutrient(member, nutrientTotal);
+        List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(member, nutrientTotal);
 
 //        model.addAttribute("nutrientTotal", nutrientTotal);     //post 로 넘겨주기 위함(프론트 사용x)
         model.addAttribute("calcNutrients", calcNutrients);
@@ -111,20 +111,20 @@ public class CartFoodInfoController {
         return "usr/cartFoodInfo/addMenu";
     }
 
-    @PostMapping("/addMenu")
-    @ResponseBody
-    @PreAuthorize("isAuthenticated()")
-    public String addMenu(String mealTime, int menuScore, String menuMemo) {
-
-        Member member = rq.getMember();
-
-        //식단에 추가
-        dailyFoodInfoService.create(member, mealTime, menuScore, menuMemo);
-        
-        //장바구니 삭제
-        cartFoodInfoService.deleteAllList(member);
-
-        //내 식단 캘린더로 이동
-        return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
-    }
+//    @PostMapping("/addMenu")
+//    @ResponseBody
+//    @PreAuthorize("isAuthenticated()")
+//    public String addMenu(String mealTime, int menuScore, String menuMemo) {
+//
+//        Member member = rq.getMember();
+//
+//        //식단에 추가
+//        dailyFoodInfoService.create(member, mealTime, menuScore, menuMemo);
+//
+//        //장바구니 삭제
+//        cartFoodInfoService.deleteAllList(member);
+//
+//        //내 식단 캘린더로 이동
+//        return "%s, %d, %s".formatted(mealTime, menuScore, menuMemo);
+//    }
 }

@@ -3,6 +3,7 @@ package calocheck.boundedContext.mealHistory.entity;
 import calocheck.base.entity.BaseEntity;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,12 +25,11 @@ public class MealHistory extends BaseEntity {
     private Member member;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "mealHistory")
-    private List<DailyMenu> dailyFoodInfoList;
+    private List<DailyMenu> dailyMenuList;
 
-    private String mealTime;
+    private String mealType;
 
-    private String menuMemo;
+    private String mealMemo;
 
-    private int menuScore;
-
+    private int mealScore;
 }

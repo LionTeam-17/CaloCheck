@@ -5,15 +5,11 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.repository.DailyMenuRepository;
 import calocheck.boundedContext.member.entity.Member;
-import calocheck.boundedContext.nutrient.entity.Nutrient;
-import calocheck.boundedContext.nutrient.service.NutrientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,26 +17,33 @@ public class DailyMenuService {
 
     private final DailyMenuRepository dailyMenuRepository;
     private final CartFoodInfoService cartFoodInfoService;
-    private final NutrientService nutrientService;
 
-    public void create(Member member, String mealTime, int menuScore, String menuMemo) {
+    @Transactional
+    public List<DailyMenu> create(Member member, String mealType, String mealMemo, int mealScore) {
 
         List<CartFoodInfo> cartByMember = cartFoodInfoService.findAllByMember(member);
+        List<DailyMenu> dailyMenuList = new ArrayList<>();
 
+        //식단을 추가하게 되면, 카트의 내용들 중 음식명과 양을 가져와서, 저장한다
+        for (int i = 0; i < cartByMember.size(); i++) {
 
+            DailyMenu dailyMenu = DailyMenu.builder()
+                    .member(member)
+                    .foodInfo(cartByMember.get(i).getFoodInfo())
+                    .quantity(cartByMember.get(i).getQuantity())
+                    .mealType(mealType)
+                    .build();
 
+            dailyMenuRepository.save(dailyMenu);
+            dailyMenuList.add(dailyMenu);
+        }
+
+//        mealHistoryService.create(member, dailyMenuList, mealType, mealMemo, mealScore);
+
+        return dailyMenuList;
     }
 
-//    //식단 수정? => 가능한가? 어디에서?
-//    public DailyFoodInfo udpate(DailyFoodInfo dailyFoodInfo) {
-//
-//        DailyFoodInfo updated = dailyFoodInfo.toBuilder()
-//                .mealTime(meal)
-//                .build();
-//
-//        return dailyFoodInfoRepository.save(updated);
-//    }
-
+    @Transactional
     public void delete(DailyMenu dailyMenu) {
         dailyMenuRepository.delete(dailyMenu);
     }
@@ -51,38 +54,4 @@ public class DailyMenuService {
         return dailyFoodInfo.orElse(null);
     }
 
-    //권장량 - total => (권장량 - 오늘 먹은 양) - 지금 먹을 양
-    public List<Nutrient> calcNutrient(Member member, List<Nutrient> cartNutrientTotal) {
-
-        //1. 권장량
-        //2. 오늘 먹은 양
-        //3. 지금 먹을 양
-        //(권장량 - 오늘먹은 양) - 지금 먹을 양
-
-        //FIXME Sample
-        String[] nutrientName = {"단백질", "탄수화물", "지방"};
-
-        List<Nutrient> calcList = Arrays.stream(nutrientName)
-                .map(name -> cartNutrientTotal.stream()
-                        .filter(nutrient -> nutrient.getName().equals(name))
-                        .findFirst()
-                        .map(nutrient -> Nutrient.builder()
-                                .name(name)
-                                .value(formattingDoubleValue(nutrient.getValue() - 20 - 10)) // FIXME (권장량 - 오늘먹은 양) - 지금 먹을 양
-                                .unit(nutrient.getUnit())
-                                .build())
-                        .orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        return calcList;
-    }
-
-    public double formattingDoubleValue(double value) {
-
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(2, RoundingMode.HALF_UP);
-
-        return decimal.doubleValue();
-    }
 }
