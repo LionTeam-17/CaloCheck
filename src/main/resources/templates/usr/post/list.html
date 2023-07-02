@@ -25,7 +25,7 @@
                                            type="text">
                                     <a class="btn btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
                                        href="#"
-                                       onclick="event.preventDefault(); location.href = '?kw=' + $(this).prev().val().trim().replace(/ /g, '');"
+                                       onclick="event.preventDefault(); location.href = '?code=0&kw=' + $(this).prev().val().trim().replace(/ /g, '');"
                                        style="background:#112D4E; color:white">
                                         <span class="flex mt-1 justify-center items-center"></span>
                                     </a>
@@ -35,7 +35,7 @@
                                         function handleEnterKey(event) {
                                             if (event.keyCode === 13) { // 13은 엔터키의 keyCode입니다.
                                                 event.preventDefault();
-                                                location.href = '?kw=' + event.target.value.trim().replace(/ /g, '');
+                                                location.href = '?code=0&kw=' + event.target.value.trim().replace(/ /g, '');
                                             }
                                         }
                                     </script>
@@ -47,63 +47,16 @@
             </div>
         </div>
         <div class="divider my-2" style="height: 1px"></div>
-        <div th:if="${kw.equals('')}">
-            <div class="max-w-5xl w-full mt-4 px-4">
-                <div class="flex justify-between">
-                    <h1 class="font-bold mb-2">
-                        <i class="fa-solid fa-list"></i>
-                        인기 게시물
-                    </h1>
-                </div>
-                <div class="divider my-2" style="height: 1px"></div>
-                <div class="flex flex-col">
-                    <div class="flex flex-grow justify-between">
-                        <span class="font-bold text-sm px-2 flex justify-center" style="width: 5%">번호</span>
-                        <span class="font-bold text-sm flex justify-center" style="width: 30%">제목</span>
-                        <span class="font-bold text-sm flex justify-center" style="width: 15%">작성자</span>
-                        <span class="font-bold text-sm flex justify-center" style="width: 18%">작성일</span>
-                        <span class="font-bold text-sm flex justify-center" style="width: 6%">추천</span>
-                    </div>
-                </div>
-                <div class="divider my-2" style="height: 1px"></div>
-                <div class="flex flex-wrap max-w-5xl w-full" th:if="${top3PostList.isEmpty()}">
-                    게시물이 없습니다.
-                </div>
-                <div class="flex flex-col max-w-5xl w-full" th:if="${!top3PostList.isEmpty()}">
-                    <div class="flex flex-col" th:each="top3Post: ${top3PostList}">
-                        <div class="flex flex-grow justify-between">
-                        <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
-                              th:text="${top3Post.id}"></span>
-                            <a class="font-bold text-xs flex justify-start" style="width: 30%"
-                               th:href="|/post/${top3Post.id}|">
-                                <span style="word-break: break-all" th:text="${top3Post.subject}"></span>
-                                <span>&nbsp;</span>
-                                <span class="text-[8px]" style="color:gray"
-                                      th:if="${top3Post.commentList.size() != 0}"
-                                      th:text="'[' + ${top3Post.commentList.size()} + ']'"></span>
-                            </a>
-                            <span class="font-bold text-xs flex justify-center" style="width: 15%;word-break: break-all"
-                                  th:text="${top3Post.member.nickname}"></span>
-                            <span class="font-bold text-xs flex justify-center" style="width: 18%"
-                                  th:if="${top3Post.isToday == true}"
-                                  th:text="${#temporals.format(top3Post.createDate, 'HH:mm')}"></span>
-                            <span class="font-bold text-xs flex justify-center" style="width: 18%"
-                                  th:if="${top3Post.isToday == false}"
-                                  th:text="${#temporals.format(top3Post.createDate, 'yy-MM-dd')}"></span>
-                            <span class="font-bold text-xs flex justify-center" style="width: 6%"
-                                  th:text="${top3Post.popularity}"></span>
-                        </div>
-                        <div class="divider my-2" style="height: 1px"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="max-w-5xl w-full mt-4 px-4">
             <div class="flex justify-between">
-                <h1 class="font-bold mb-2">
-                    <i class="fa-solid fa-list"></i>
-                    게시글 목록
-                </h1>
+                <div class="flex">
+                    <h1 class="font-bold mb-2">
+                        <i class="fa-solid fa-list"></i>
+                        게시글 목록
+                    </h1>
+                    <a class="ml-4" th:href="@{|?code=0&kw=${kw}|}">최신순</a>
+                    <a class="ml-2" th:href="@{|?code=1&kw=${kw}|}">추천순</a>
+                </div>
                 <div class="btn btn-sm" style="background:#112D4E">
                     <a href="/post/createForm">
                         <i class="fa-solid fa-pencil"></i>&nbsp;글쓰기
@@ -130,7 +83,7 @@
                         <!-- 역순 정렬 로직 시작 -->
                         <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
                               th:if="${kw.equals('')}"
-                              th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
+                              th:text="${post.id}"></span>
                         <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
                               th:if="${!kw.equals('')}"
                               th:text="${post.id}"></span>
@@ -165,22 +118,22 @@
                     <li class="btn text-xs page-item" style="background:#112D4E"
                         th:if="${paging.hasPrevious() == true }">
                         <a class="page-link"
-                           th:href="@{|?kw=${kw}&page=${paging.number - 1}|}">
+                           th:href="@{|?code=${code}&kw=${kw}&page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
                     </li>
                     <li class="btn text-xs page-item" style="background:#112D4E"
                         th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
                         th:if="${page >= paging.number - 1 and page <= paging.number+3}">
-                        <a class="page-link" th:href="@{|?kw=${kw}&page=${page -1}|}"
+                        <a class="page-link" th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page != paging.number+1}" th:text="${page}"></a>
                         <a class="page-link text-sm" style="color:black"
-                           th:href="@{|?kw=${kw}&page=${page -1}|}"
+                           th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page == paging.number+1}" th:text="${page}"></a>
                     </li>
                     <li class="btn page-item text-xs" style="background:#112D4E"
                         th:if="${paging.hasNext() == true }">
-                        <a class="page-link" th:href="@{|?kw=${kw}&page=${paging.number+1}|}">
+                        <a class="page-link" th:href="@{|?code=${code}&kw=${kw}&page=${paging.number+1}|}">
                             <span>다음</span>
                         </a>
                     </li>

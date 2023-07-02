@@ -15,9 +15,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAll(Pageable pageable);
 
-    List<Post> findTop3ByOrderByPopularityDesc();
+    List<Post> findByOrderByPopularityDesc();
+
+    Page<Post> findByOrderByPopularityDesc(Pageable pageable);
 
     List<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw);
 
     Page<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw, Pageable pageable);
+
+    List<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw);
+
+    Page<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw, Pageable pageable);
 }
