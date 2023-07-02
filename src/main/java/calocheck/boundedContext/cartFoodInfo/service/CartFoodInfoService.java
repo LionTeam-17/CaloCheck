@@ -84,8 +84,18 @@ public class CartFoodInfoService {
         return cartFoodInfoRepository.save(updated);
     }
 
-    private void delete(CartFoodInfo cartFoodInfo) {
+    public void delete(CartFoodInfo cartFoodInfo) {
         cartFoodInfoRepository.delete(cartFoodInfo);
+    }
+
+    public void deleteAllList(Member member){
+
+        List<CartFoodInfo> allByMember = findAllByMember(member);
+
+        for (CartFoodInfo cartFoodInfo : allByMember) {
+            delete(cartFoodInfo);
+        }
+
     }
 
     public CartFoodInfo findById(Long id) {
