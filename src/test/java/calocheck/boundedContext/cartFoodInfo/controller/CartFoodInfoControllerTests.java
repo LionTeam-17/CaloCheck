@@ -53,7 +53,7 @@ public class CartFoodInfoControllerTests {
 
     @Test
     @DisplayName("장바구니 추가 요청")
-    @WithMockUser("user1")
+    @WithMockUser("user2")
     void addCartFoodInfoRequest() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
@@ -64,35 +64,43 @@ public class CartFoodInfoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(2L);
 
-        assertThat(cartFoodInfos.size()).isEqualTo(5);
+        assertThat(cartFoodInfos.size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("장바구니 삭제 요청")
-    @WithMockUser("user1")
+    @WithMockUser("user2")
     void removeCartFoodInfoRequest() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/cartFoodInfo/remove")
+                        .with(csrf())
+                        .param("foodId", "5")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
+
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(2L);
+
+        assertThat(cartFoodInfos.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("장바구니 수량 수정 요청")
+    @WithMockUser("user2")
+    void updateCartFoodInfoRequest() throws Exception {
+        // WHEN
+        ResultActions resultActions1 = mvc
+                .perform(post("/cartFoodInfo/add")
                         .with(csrf())
                         .param("foodId", "1")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
-
-        assertThat(cartFoodInfos.size()).isEqualTo(3);
-    }
-
-    @Test
-    @DisplayName("장바구니 수량 수정 요청")
-    @WithMockUser("user1")
-    void updateCartFoodInfoRequest() throws Exception {
-        // WHEN
-        ResultActions resultActions = mvc
+        ResultActions resultActions2 = mvc
                 .perform(post("/cartFoodInfo/update")
                         .with(csrf())
                         .param("foodId", "1")
@@ -101,15 +109,15 @@ public class CartFoodInfoControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("success"));
 
-        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(1L);
+        List<CartFoodInfo> cartFoodInfos = cartFoodInfoService.findAllByMember(2L);
 
-        assertThat(cartFoodInfos.size()).isEqualTo(4);
+        assertThat(cartFoodInfos.size()).isEqualTo(1);
         assertThat(cartFoodInfos.get(0).getQuantity()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("장바구니 항목 총 합계 페이지")
-    @WithMockUser("user1")
+    @WithMockUser("user2")
     void showCartTotalPage() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
@@ -128,7 +136,7 @@ public class CartFoodInfoControllerTests {
 
     @Test
     @DisplayName("식단 추가 페이지")
-    @WithMockUser("user1")
+    @WithMockUser("user2")
     void showTotalCartListPage() throws Exception {
         // WHEN
         ResultActions resultActions = mvc

@@ -54,10 +54,10 @@ public class FoodInfoControllerTests {
                 .andExpect(handler().methodName("showDetails"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString("""
-                        <div class="font-bold m-3">제조사/유통사</div>
+                        <title>음식 영양정보</title>
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <div class="font-bold m-5">에너지(kcal)</div>
+                        <div class="text-xs font-bold m-1">제조사/유통사</div>
                         """.stripIndent().trim())));
     }
 }
