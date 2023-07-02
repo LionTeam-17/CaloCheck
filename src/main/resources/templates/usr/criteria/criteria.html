@@ -1,0 +1,39 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 영양소 기준</title>
+
+</head>
+
+<body>
+<div layout:fragment="Content">
+
+    <div class="flex flex-col justify-center items-center">
+        <h1 class="text-black">나의 권장량</h1>
+        <div class="bg-gray-400">
+            <div th:text="'성별 : ' + ${criteria.gender}"></div>
+            <div th:text="'연령 : ' + ${criteria.age}"></div>
+            <div th:text="'열량 : ' + ${criteria.kcal}"></div>
+            <div th:text="'탄수화물 : ' + ${criteria.carbohydrate}"></div>
+            <div th:text="'단백질 : ' + ${criteria.protein}"></div>
+            <div th:text="'지방 : ' + ${criteria.fat}"></div>
+            <div th:text="'식이섬유 : ' + ${criteria.fiber}"></div>
+            <div th:text="'칼슘 : ' + ${criteria.calcium}"></div>
+            <div th:text="'나트륨 : ' + ${criteria.sodium}"></div>
+            <div th:text="'칼륨 : ' + ${criteria.potassium}"></div>
+            <div th:text="'마그네슘 : ' + ${criteria.magnesium}"></div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <div>
+        <h1 class="text-black">오늘 먹은 양</h1>
+        <div class="bg-gray-400">
+
+
+
+        </div>
+    </div>
+
+</div>
+</body>

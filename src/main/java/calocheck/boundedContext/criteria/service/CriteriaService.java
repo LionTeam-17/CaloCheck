@@ -2,9 +2,12 @@ package calocheck.boundedContext.criteria.service;
 
 import calocheck.boundedContext.criteria.entity.Criteria;
 import calocheck.boundedContext.criteria.repository.CriteriaRepository;
+import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,22 @@ public class CriteriaService {
         criteriaRepository.save(criteria);
 
         return criteria;
+    }
+
+    public Criteria findByGenderAndAge(Member member){
+
+        //fixme member에 gender 필요
+
+        Criteria oCriteria;
+
+        if(member.getAge()<75){
+            oCriteria = criteriaRepository.findByGenderAndAge("남자", member.getAge()).orElse(null);
+        } else{
+            oCriteria = criteriaRepository.findByGenderAndAge("남자", 75).orElse(null);
+        }
+
+        return oCriteria;
+
     }
 
 
