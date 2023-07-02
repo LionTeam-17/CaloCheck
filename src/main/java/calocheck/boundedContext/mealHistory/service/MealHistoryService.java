@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +44,7 @@ public class MealHistoryService {
 
         mealHistoryRepository.save(mealHistory);
 
-        for(int i=0; i<nutrientTotal.size(); i++){
+        for (int i = 0; i < nutrientTotal.size(); i++) {
 
             System.out.printf("%s = %f", mealHistory.getNutrients().get(i).getName(), mealHistory.getNutrients().get(i).getValue());
 
@@ -66,7 +63,7 @@ public class MealHistoryService {
         return mealHistory.orElse(null);
     }
 
-    public MealHistory getByMember(Member member){
+    public MealHistory getByMember(Member member) {
 
         return mealHistoryRepository.findByMember(member).orElse(null);
     }
@@ -106,23 +103,77 @@ public class MealHistoryService {
         return decimal.doubleValue();
     }
 
-    public void calcTodayNutrition(Member member){
+    public Map<String, Integer> calcTodayNutrition(List<MealHistory> todayMealHistory) {
 
-        List<MealHistory> byMemberAndCreateDate = mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
+        Map<String, Integer> calcNutritionMap = new HashMap<>();
 
-        if(byMemberAndCreateDate.isEmpty()){
+        if (todayMealHistory.isEmpty()) {
             System.out.println("오늘의 식단이 존재하지 않습니다!!");
-        } else{
+            return null;
+        } else {
 
-            for(int i=0; i<byMemberAndCreateDate.size(); i++){
+            int calcProtein = 0;
+            int calcFat = 0;
+            int calcCarbohydrate = 0;
+            int calcFiber = 0;
+            int calcCalcium = 0;
+            int calcMagnesium = 0;
+            int calcPotassium = 0;
+            int calcSodium = 0;
 
-                String mealType = byMemberAndCreateDate.get(i).getMealType();
+            for (int i = 0; i < todayMealHistory.size(); i++) {
 
-                System.out.println("언제 먹은 식단인가요? " + mealType);
+                System.out.printf("%d번 --- \n", i);
+                List<Nutrient> nutrients = todayMealHistory.get(i).getNutrients();
 
+                //fixme 값이 제대로 안들어가는 중
+
+                for (Nutrient nutrient : nutrients) {
+
+                    switch (nutrient.getName()) {
+                        case ("단백질"):
+                            calcProtein = (int) (calcProtein + nutrient.getValue());
+                            break;
+                        case ("지방"):
+                            calcFat = (int) (calcFat + nutrient.getValue());
+                            break;
+                        case ("탄수화물"):
+                            calcCarbohydrate = (int) (calcCarbohydrate + nutrient.getValue());
+                            break;
+                        case ("총식이섬유"):
+                            calcFiber = (int) (calcFiber + nutrient.getValue());
+                            break;
+                        case ("칼슘"):
+                            calcCalcium = (int) (calcCalcium + nutrient.getValue());
+                            break;
+                        case ("마그네슘"):
+                            calcMagnesium = (int) (calcMagnesium + nutrient.getValue());
+                            break;
+                        case ("칼륨"):
+                            calcPotassium = (int) (calcPotassium + nutrient.getValue());
+                            break;
+                        case ("나트륨"):
+                            calcSodium = (int) (calcSodium + nutrient.getValue());
+                            break;
+                    }
+                }
             }
-            
-        }
 
+            calcNutritionMap.put("탄수화물", calcCarbohydrate);
+            calcNutritionMap.put("단백질", calcProtein);
+            calcNutritionMap.put("지방", calcFat);
+            calcNutritionMap.put("식이섬유", calcFiber);
+            calcNutritionMap.put("칼슘", calcCalcium);
+            calcNutritionMap.put("마그네슘", calcMagnesium);
+            calcNutritionMap.put("칼륨", calcPotassium);
+            calcNutritionMap.put("나트륨", calcSodium);
+
+        }
+        return calcNutritionMap;
     }
-}
+
+        public List<MealHistory> findByMemberAndCreateDate (Member member){
+
+            return mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
+        }
+    }

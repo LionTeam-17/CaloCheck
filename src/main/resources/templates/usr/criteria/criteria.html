@@ -26,12 +26,25 @@
     </div>
 
     <div class="divider"></div>
-    <div>
-        <h1 class="text-black">오늘 먹은 양</h1>
-        <div class="bg-gray-400">
 
+    <div class="flex flex-col justify-center items-center">
+        <div th:unless="${calcMap}">
+            <h1 class="text-black">오늘 먹은 양</h1>
+            <h1 class="text-black"> 아직 오늘의 식단이 없어요!</h1>
+        </div>
 
-
+        <div th:if="${calcMap}">
+            <h1 class="text-black">오늘 먹은 양</h1>
+            <div class="bg-gray-400">
+                <div th:text="'탄수화물 : ' + ${calcMap.get('탄수화물')}"></div>
+                <div th:text="'단백질 : ' + ${calcMap.get('단백질')}"></div>
+                <div th:text="'지방 : ' + ${calcMap.get('지방')}"></div>
+                <div th:text="'식이섬유 : ' + ${calcMap.get('식이섬유')}"></div>
+                <div th:text="'칼슘 : ' + ${calcMap.get('칼슘')}"></div>
+                <div th:text="'마그네슘 : ' + ${calcMap.get('마그네슘')}"></div>
+                <div th:text="'칼륨 : ' + ${calcMap.get('칼륨')}"></div>
+                <div th:text="'나트륨 : ' + ${calcMap.get('나트륨')}"></div>
+            </div>
         </div>
     </div>
 
