@@ -4,6 +4,8 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.tracking.entity.Tracking;
+import calocheck.boundedContext.tracking.service.TrackingService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.repository.PostRepository;
 import calocheck.boundedContext.post.service.PostService;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/member")
@@ -35,6 +38,8 @@ public class MemberController {
     private final Rq rq;
     private final PostService postService;
     private final PostRepository postRepository;
+    private final TrackingService trackingService;
+
     @AllArgsConstructor
     @Getter
     @Setter
@@ -99,8 +104,21 @@ public class MemberController {
                 joinForm.getAge(), joinForm.getHeight(), joinForm.getWeight(), joinForm.getMuscleMass(), joinForm.getBodyFat()
         );
 
+        if (joinRs.isSuccess()) {
+            Member member = joinRs.getData();
+            Tracking tracking = new Tracking();
+            tracking.setMember(member);
+            tracking.setAge(member.getAge());
+            tracking.setHeight(member.getHeight());
+            tracking.setDateTime(LocalDate.now());
+            tracking.setWeight(member.getWeight());
+            tracking.setBodyFat(member.getBodyFat());
+            tracking.setMuscleMass(member.getMuscleMass());
+            trackingService.calculateBMI(tracking);
+            trackingService.calculateBodyFatPercentage(tracking);
+            trackingService.createTracking(tracking);
+        }
         String msg = joinRs.getMsg() + "\n로그인 후 이용해주세요.";
-
         return rq.redirectWithMsg("/member/login", joinRs);
     }
 
@@ -121,7 +139,6 @@ public class MemberController {
         }
 
         return rq.redirectWithMsg("/member/mypage/{memberId}", modifyRsData);
-
     }
 
 

@@ -4,6 +4,10 @@ import calocheck.base.rq.Rq;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.mealHistory.entity.MealHistory;
+import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
@@ -23,6 +27,8 @@ public class CartFoodInfoController {
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
     private final Rq rq;
+    private final MealHistoryService mealHistoryService;
+    private final DailyMenuService dailyMenuService;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -74,6 +80,7 @@ public class CartFoodInfoController {
         return new CartDTO("success");
     }
 
+
     @GetMapping("/total")
     @PreAuthorize("isAuthenticated()")
     public String showCartTotal(Model model) {
@@ -90,10 +97,40 @@ public class CartFoodInfoController {
 
     @GetMapping("/addMenu")
     @PreAuthorize("isAuthenticated()")
-    public String showaAddMenu(Model model) {
-        Member member = rq.getMember();
+    public String showAddMenu(Model model) {
 
+        Member member = rq.getMember();
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
+        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
+
+        //식사 후 영양정보 계산
+        List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(member, nutrientTotal);
+
+//        model.addAttribute("nutrientTotal", nutrientTotal);     //post 로 넘겨주기 위함(프론트 사용x)
+        model.addAttribute("calcNutrients", calcNutrients);
+        
         return "usr/cartFoodInfo/addMenu";
     }
 
+    @PostMapping("/addMenu")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public String addMenu(String mealType, int menuScore, String menuMemo) {
+
+        Member member = rq.getMember();
+
+        //식단에 추가
+        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, mealType);
+
+        MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
+
+        //장바구니 삭제
+        cartFoodInfoService.deleteAllList(member);
+
+        mealHistoryService.calcTodayNutrition(member);
+
+        //내 식단 캘린더로 이동
+        return "%s, %d, %s".formatted(mealType, menuScore, menuMemo);
+    }
 }

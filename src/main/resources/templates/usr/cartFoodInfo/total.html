@@ -1,4 +1,4 @@
-<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
     <title>장바구니</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -31,7 +31,9 @@
                     총 합계
                 </h1>
             </div>
-            <canvas id="nutrientChart"></canvas>
+            <div class="flex justify-center">
+                <canvas id="nutrientChart"></canvas>
+            </div>
             <div class="divider"></div>
             <div class="flex justify-between">
                 <h1 class="font-bold text-black text-sm mb-4">
@@ -56,6 +58,12 @@
                      th:text="${nutrient.value}"></div>
                 <div class="divider"></div>
             </div>
+
+            <div class="flex justify-center mt-5">
+                <a href="/cartFoodInfo/list" class="btn btn-primary btn-active mr-5">이전</a>
+                <a href="/cartFoodInfo/addMenu" class="btn btn-primary btn-active">다음</a>
+            </div>
+
         </div>
 
     </div>
@@ -114,18 +122,18 @@
 
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrientTotal}"]*/
-            loopIndex = /*[[${loop.index}]]*/null;
-            label = /*[[${nutrient.name}]]*/null;
-            value = /*[[${nutrient.value}]]*/null;
-            back = background[loopIndex];
-            hover = hoverBackground[loopIndex];
+        loopIndex = /*[[${loop.index}]]*/null;
+        label = /*[[${nutrient.name}]]*/null;
+        value = /*[[${nutrient.value}]]*/null;
+        back = background[loopIndex];
+        hover = hoverBackground[loopIndex];
 
-            if (value != 0) {
-                nutrientTotalData.labels.push(label);
-                nutrientTotalData.datasets[0].data.push(value);
-                nutrientTotalData.datasets[0].backgroundColor.push(back);
-                nutrientTotalData.datasets[0].hoverBackgroundColor.push(hover);
-            }
+        if (value != 0) {
+            nutrientTotalData.labels.push(label);
+            nutrientTotalData.datasets[0].data.push(value);
+            nutrientTotalData.datasets[0].backgroundColor.push(back);
+            nutrientTotalData.datasets[0].hoverBackgroundColor.push(hover);
+        }
         /*[/]*/
 
         // 원형 그래프의 옵션

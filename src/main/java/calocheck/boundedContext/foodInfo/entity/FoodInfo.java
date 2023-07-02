@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodInfo extends BaseEntity {
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private NutrientInfo nutrientInfo; // 영양 정보
     private String foodName; // 식품명
     private String manufacturer; // 제조사/유통사

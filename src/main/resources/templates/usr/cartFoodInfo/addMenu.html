@@ -1,64 +1,149 @@
-<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
-  <title>장바구니</title>
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>장바구니</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-  <!-- 라이브러리 CSS 불러오기 -->
-  <link rel="stylesheet" href="/resource/library/library.css">
+    <!-- 라이브러리 CSS 불러오기 -->
+    <link rel="stylesheet" href="/resource/library/library.css">
 
-  <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
+    <meta th:if="${error}" name="errorMsg" th:content="${exception}"/>
 
-  <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
-  <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
+    <meta th:if="${@rq.isLogin()}" name="currentUsername" th:content="${@rq.getMember().getUsername()}"/>
+    <meta th:if="${@rq.isLogout()}" name="currentUsername" th:content="no"/>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
 <main layout:fragment="Content">
-  <div class="flex flex-col m-4">
-    <div class="w-full">
-      <div class="flex justify-center">
-        <h1 class="font-bold text-black text-sm mb-4">
-          <i class="fa-solid fa-list"></i>
-          식사 후 영양정보
-        </h1>
-      </div>
-      <div class="flex justify-center m-2 text-xs">
-        챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
-      </div>
-      <div class="divider"></div>
-      <div class="flex justify-between">
-        <h1 class="font-bold text-black text-sm mb-4">
-          <i class="fa-solid fa-list"></i>
-          영양성분
-        </h1>
-        <div class="flex m-2">
-          <div class="text-xs font-bold m-1">에너지(kcal)</div>
-          <div class="text-xs text-black m-1"
-               th:text="1000"></div>
-        </div>
-      </div>
+    <div class="flex flex-col m-4">
+        <div class="w-full">
+            <div class="flex justify-center">
+                <h1 class="font-bold text-black text-sm mb-4">
+                    식사 후 영양정보
+                </h1>
+            </div>
+            <div class="flex justify-center m-2 text-xs">
+                챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
+            </div>
+            <div class="divider"></div>
+            <div class="flex justify-center flex-col">
+                <div class="flex justify-center">
+                    <h1 class="font-bold text-black text-sm mb-4">
+                        영양성분
+                    </h1>
+                </div>
 
-      <div th:each="nutrient, loop: ${nutrientTotal}"
-           class="flex justify-between">
-        <div class="flex">
-          <i class="fa-solid fa-list"></i>
-          <div class="text-xs font-bold m-1"
-               th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
+                <div class="flex flex-row justify-center" th:each="calcNutrient : ${calcNutrients}">
+                    <div>
+                        <i id="nutrientColor" class="fa-solid fa-circle"></i>
+                        <span id="nutrientData" class="text-xs font-bold inline-block m-1 w-48"
+                              th:text="${calcNutrient.getName()} + '(' + ${calcNutrient.getUnit()} + ')'"></span>
+                    </div>
+                    <div>
+                        <div class="text-xs text-black m-1"
+                             th:text="${calcNutrient.getValue()}"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+            <form class="flex flex-col gap-6" method="POST" enctype="multipart/form-data" th:action>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                분류
+                            </h1>
+                        </div>
+
+                        <div class="btn-group flex flex-row justify-center">
+                            <input type="radio" name="mealType" data-title="아침" value="breakfast"
+                                   class="btn btn-secondary"
+                                   checked/>
+                            <input type="radio" name="mealType" data-title="점심" value="lunch"
+                                   class="btn btn-secondary"/>
+                            <input type="radio" name="mealType" data-title="저녁" value="dinner"
+                                   class="btn btn-secondary"/>
+                            <input type="radio" name="mealType" data-title="기타" value="etc" class="btn btn-secondary"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                식단 점수
+                            </h1>
+                        </div>
+
+                        <div class="flex justify-center rating rating-lg">
+                            <input type="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"
+                                   checked/>
+                            <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400"/>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div>
+                    <div class="flex flex-col">
+                        <div class="flex justify-center">
+                            <h1 class="font-bold text-black text-sm mb-4">
+                                메모
+                            </h1>
+                        </div>
+
+                        <div class="flex justify-center rating rating-lg">
+                <textarea
+                        class="border flex flex-grow max-w-lg border-black border-opacity-10 resize-none p-4 focus:outline-none"
+                        cols="20" name="menuMemo" placeholder="내용을 입력하세요."
+                        rows="5"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+<!--                <input type="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
+
+                <div class="flex justify-center mt-5">
+                    <a href="/cartFoodInfo/total" class="btn btn-primary btn-active mr-5">이전</a>
+                    <button type="submit" class="btn btn-primary btn-active">식단 추가하기</button>
+                </div>
+            </form>
+
         </div>
-        <div class="text-xs text-black m-1"
-             th:text="${nutrient.value}"></div>
-        <div class="divider"></div>
-      </div>
     </div>
 
-  </div>
+    <script th:inline="javascript">
+        const nutrientColor = document.getElementById('nutrientColor');
+        const nutrientName = '단백질';
 
-  <script th:inline="javascript">
+        console.log(nutrientName);
 
-  </script>
+        switch (nutrientName) {
+            case '단백질':
+                nutrientColor.style.color = '#E5D85C';
+                break;
+            case '탄수화물':
+                nutrientColor.style.color = '#ABCDEF';
+                break;
+            case '지방':
+                nutrientColor.style.color = '#F0A1B2';
+                break;
+            default:
+                // 다른 경우의 처리
+                break;
+        }
+
+    </script>
 </main>
 </body>
 

@@ -125,6 +125,7 @@
                         </div>
                         <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
                              th:classappend="${pageNum == page} ? 'active'">
+
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
                                th:text="${pageNum+1}"></a>
                         </div>
