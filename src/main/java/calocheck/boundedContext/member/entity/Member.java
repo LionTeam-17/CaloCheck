@@ -35,15 +35,8 @@ public class Member extends BaseEntity {
     private Double weight;
     private Double muscleMass;
     private Double bodyFat;
-<<<<<<< HEAD
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
-
-=======
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
->>>>>>> e71b73c3db80a3ff65755246fc3bd530436e3a94
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
