@@ -24,7 +24,6 @@ public class FoodInfoServiceTests {
     @Autowired
     private FoodInfoService foodInfoService;
 
-    private final int SIZE = 14;
     private String foodName = "음식 이름1";
     private String manufacturer = "제조사1";
     private String category = "분류1";
@@ -79,7 +78,7 @@ public class FoodInfoServiceTests {
     void findAllFoodInfo() {
         List<FoodInfo> foodInfoList = foodInfoService.findAll();
 
-        assertThat(foodInfoList.size()).isEqualTo(99);
+        assertThat(foodInfoList.size()).isEqualTo(199);
     }
 
     @Test
