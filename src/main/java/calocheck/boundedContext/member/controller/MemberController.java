@@ -45,6 +45,8 @@ public class MemberController {
         @Size(min = 4, max = 20)
         private final String password;
         @NotBlank
+        private String gender;
+        @NotBlank
         @Email(message = "유효하지 않은 이메일입니다.")
         private final String email;
         @NotBlank
@@ -94,7 +96,7 @@ public class MemberController {
         }
 
         RsData<Member> joinRs = memberService.join(
-                joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname(),
+                joinForm.getUsername(), joinForm.getPassword(), joinForm.getGender(), joinForm.getEmail(), joinForm.getNickname(),
                 joinForm.getAge(), joinForm.getHeight(), joinForm.getWeight(), joinForm.getMuscleMass(), joinForm.getBodyFat()
         );
 
@@ -133,7 +135,6 @@ public class MemberController {
         }
 
         return rq.redirectWithMsg("/member/mypage/{memberId}", modifyRsData);
-      
     }
 
 

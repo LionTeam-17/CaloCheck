@@ -70,13 +70,14 @@ public class MemberControllerTests {
                         .with(csrf()) // CSRF 키 생성
                         .param("username", "user10")
                         .param("password", "1234")
+                        .param("gender", "male")
                         .param("email","aaa1@naver.com")
                         .param("nickname","도적")
-                        .param("age",null)
-                        .param("height",null)
-                        .param("weight",null)
-                        .param("muscleMass",null)
-                        .param("bodyFat",null)
+                        .param("age","27")
+                        .param("height","170")
+                        .param("weight","65")
+                        .param("muscleMass","13")
+                        .param("bodyFat","12")
                 )
                 .andDo(print());
 
