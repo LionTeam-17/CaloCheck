@@ -56,6 +56,9 @@
                     <div class="mt-10"> 나이 :
                         <span th:text="${@rq.member.age}" style="font-weight: bold;"></span>
                     </div>
+                    <div> 성별 :
+                        <span th:text="${@rq.member.gender}" style="font-weight: bold;"></span>
+                    </div>
                     <div> 키 :
                         <span th:text="${@rq.member.height}" style="font-weight: bold;"></span>
                         cm
@@ -75,7 +78,7 @@
 
                     <div class="flex justify-center">
                         <a th:href="@{|/member/modify/${@rq.member.id}|}">
-                            <button class="btn btn-xs btn-outline btn-lg"
+                            <button class="btn btn-xs btn-outline"
                                     th:attr="data-member-id=${@rq.member.id}">수정하기
                             </button>
                         </a>

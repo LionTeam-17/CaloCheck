@@ -112,12 +112,12 @@ public class MemberService {
 
     // 소셜 로그인
     @Transactional
-    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String email, String nickname, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String gender, String email, String nickname, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
         Optional<Member> opMember = findByUsername(username);
 
         if (opMember.isPresent()) return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
 
-        return join(providerTypeCode, username, "", email,  nickname,
+        return join(providerTypeCode, username, "", gender, email,  nickname,
                 0, 0.0, 0.0,0.0, 0.0); // 최초 로그인시 실행
         //TODO : 닉네임 설정
 
