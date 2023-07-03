@@ -77,13 +77,18 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<Post> findByMemberId(Long id) {
+        return postRepository.findByMemberId(id);
+    }
+
+    @Transactional(readOnly = true)
     public List<Post> findAll() {
         return postRepository.findAll();
     }
 
     //-- paging --//
     @Transactional(readOnly = true)
-    public Page<Post> getList(int page) {
+    public Page<Post> findAll(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
 
