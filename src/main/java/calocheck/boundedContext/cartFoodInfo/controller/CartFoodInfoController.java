@@ -128,8 +128,6 @@ public class CartFoodInfoController {
         //장바구니 삭제
         cartFoodInfoService.deleteAllList(member);
 
-        mealHistoryService.calcTodayNutrition(member);
-
         //내 식단 캘린더로 이동
         return "%s, %d, %s".formatted(mealType, menuScore, menuMemo);
     }
