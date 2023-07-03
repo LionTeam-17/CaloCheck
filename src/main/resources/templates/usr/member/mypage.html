@@ -115,23 +115,25 @@
                 </div>
 
                 <!-- 페이징 처리를 표시합니다 -->
-                <div class="pagination mt-20 flex justify-center gap-3">
-                    <div class="btn text-xs page-item" th:if="${totalPages > 1 && page > 0}">
-                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}" th:text="처음"></a>
-                    </div>
-                    <div class="btn text-xs page-item" th:if="${page > 0}">
-                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page - 1}, size=${size})}" th:text="이전"></a>
-                    </div>
-                    <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
-                         th:classappend="${pageNum == page} ? 'active'">
-                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
-                           th:text="${pageNum+1}"></a>
-                    </div>
-                    <div class="btn text-xs page-item" th:if="${page < totalPages - 1}">
-                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}" th:text="다음"></a>
-                    </div>
-                    <div class="btn text-xs page-item" th:if="${totalPages > 1 && page < totalPages - 1}">
-                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages - 1}, size=${size})}" th:text="마지막"></a>
+                <div>
+                    <div class="pagination mt-20 flex justify-center gap-3">
+                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
+                        </div>
+                        <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                             th:classappend="${pageNum == page} ? 'active'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
+                               th:text="${pageNum+1}"></a>
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}">다음</a>
+                        </div>
+                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages -1}, size=${size})}">마지막</a>
+                        </div>
                     </div>
                 </div>
             </div>
