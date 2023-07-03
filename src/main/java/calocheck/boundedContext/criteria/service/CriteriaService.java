@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -67,8 +69,15 @@ public class CriteriaService {
             calcKcal = 447.6 + (9.25 * weight) + (3.1 * height) - (4.33 * age);
         }
 
-        return mealHistoryService.formattingDoubleValue(calcKcal);
+        return formattingDoubleValue(calcKcal);
     }
 
+    public double formattingDoubleValue(double value) {
+
+        BigDecimal decimal = BigDecimal.valueOf(value);
+        decimal = decimal.setScale(2, RoundingMode.HALF_UP);
+
+        return decimal.doubleValue();
+    }
 
 }
