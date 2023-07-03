@@ -1,11 +1,8 @@
 package calocheck.boundedContext.member.entity;
 
 import calocheck.base.entity.BaseEntity;
-import calocheck.boundedContext.post.entity.Post;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -26,8 +23,8 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
     private String password;
+    private String gender;
     private String email;
-
     @Column(unique = true)
     private String nickname;
     private Integer age;
@@ -35,9 +32,6 @@ public class Member extends BaseEntity {
     private Double weight;
     private Double muscleMass;
     private Double bodyFat;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
