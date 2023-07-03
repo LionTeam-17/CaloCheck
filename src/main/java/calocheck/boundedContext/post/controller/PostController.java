@@ -4,7 +4,6 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
-import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.photo.service.PhotoService;
@@ -36,28 +35,63 @@ public class PostController {
     @GetMapping("/list")
     public String showPostList(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(value = "kw", defaultValue = "") String kw,
+                               @RequestParam(value = "code", defaultValue = "0") String code,
                                Model model) {
 
-
         if (!kw.equals("")) {
-            List<Post> filteringPostList = postService.findBySubjectLike("%" + kw + "%");
-            Page<Post> filteringPaging = postService.findBySubjectLike("%" + kw + "%", page);
+            if (code.equals("0")) {
+                List<Post> filteringList = postService.findBySubjectLikeOrMemberNicknameLike
+                        (
+                                "%" + kw + "%",
+                                "%" + kw + "%"
+                        );
+                Page<Post> filteringPaging = postService.findBySubjectLikeOrMemberNicknameLike
+                        (
+                                "%" + kw + "%",
+                                "%" + kw + "%",
+                                page
+                        );
 
-            model.addAttribute("postList", filteringPostList);
-            model.addAttribute("paging", filteringPaging);
+                model.addAttribute("postList", filteringList);
+                model.addAttribute("paging", filteringPaging);
+            } else {
+                List<Post> topFilteringList = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                        (
+                                "%" + kw + "%",
+                                "%" + kw + "%"
+                        );
+                Page<Post> topFilteringPaging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                        (
+                                "%" + kw + "%",
+                                "%" + kw + "%",
+                                page
+                        );
+
+                model.addAttribute("postList", topFilteringList);
+                model.addAttribute("paging", topFilteringPaging);
+            }
         } else {
-            List<Post> postList = postService.findAll();
-            Page<Post> paging = postService.getList(page);
-            List<Post> top3PostList = postService.findTop3ByOrderByPopularityDesc();
+            if (code.equals("0")) {
+                List<Post> postList = postService.findAll();
+                Page<Post> paging = postService.getList(page);
 
-            model.addAttribute("top3PostList", top3PostList);
-            model.addAttribute("postList", postList);
-            model.addAttribute("paging", paging);
+                model.addAttribute("postList", postList);
+                model.addAttribute("paging", paging);
+
+            } else {
+                List<Post> topPostList = postService.findByOrderByPopularityDesc();
+                Page<Post> paging = postService.findByOrderByPopularityDesc(page);
+
+                model.addAttribute("postList", topPostList);
+                model.addAttribute("paging", paging);
+            }
         }
+        model.addAttribute("code", code);
         model.addAttribute("kw", kw);
 
         return "usr/post/list";
     }
+
 
     @GetMapping("/{postId}")
     public String showPostPage(Model model, @PathVariable Long postId) {
@@ -102,11 +136,11 @@ public class PostController {
             //업로드된 이미지가 안전한 이미지인지 확인
             RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
 
-            if(isSafeImg.isFail()){
+            if (isSafeImg.isFail()) {
                 return rq.historyBack(isSafeImg);
             }
 
-        } else if (isImgRsData.isFail()){
+        } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
@@ -170,3 +204,4 @@ public class PostController {
         return rq.redirectWithMsg("/post/" + postId, modifyPostRsData);
     }
 }
+

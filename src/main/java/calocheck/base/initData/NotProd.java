@@ -1,5 +1,6 @@
 package calocheck.base.initData;
 
+import calocheck.base.util.CriteriaDataExtractor;
 import calocheck.base.util.FoodDataExtractor;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.entity.Comment;
@@ -41,7 +42,8 @@ public class NotProd {
             TrackingService trackingService,
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
-            CartFoodInfoService cartFoodInfoService
+            CartFoodInfoService cartFoodInfoService,
+            CriteriaDataExtractor criteriaDataExtractor
     ) {
         return args -> {
             Member[] members = IntStream
@@ -93,7 +95,7 @@ public class NotProd {
                     .toArray(PostLike[]::new);
 
             foodDataExtractor.readFile();
-
+            criteriaDataExtractor.readFile();
 
             //Tracking 샘플 데이터
             LocalDate startDate = LocalDate.now().minusDays(90);

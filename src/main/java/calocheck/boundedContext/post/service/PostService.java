@@ -92,21 +92,44 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findTop3ByOrderByPopularityDesc() {
-        return postRepository.findTop3ByOrderByPopularityDesc();
+    public List<Post> findByOrderByPopularityDesc() {
+        return postRepository.findByOrderByPopularityDesc();
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findBySubjectLike(String kw) {
-        return postRepository.findBySubjectLike(kw);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<Post> findBySubjectLike(String kw, int page) {
+    public Page<Post> findByOrderByPopularityDesc(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return postRepository.findBySubjectLike(kw, pageable);
+        return postRepository.findByOrderByPopularityDesc(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw) {
+        return postRepository.findBySubjectLikeOrMemberNicknameLike(subjectKw, nicknameKw);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findBySubjectLikeOrMemberNicknameLike(subjectKw, nicknameKw, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw) {
+        return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw, pageable);
     }
 }

@@ -47,9 +47,9 @@ public class DailyMenuService {
     }
 
     public DailyMenu findById(Long id) {
-        Optional<DailyMenu> dailyFoodInfo = dailyMenuRepository.findById(id);
+        Optional<DailyMenu> dailyMenu = dailyMenuRepository.findById(id);
 
-        return dailyFoodInfo.orElse(null);
+        return dailyMenu.orElse(null);
     }
 
 }
