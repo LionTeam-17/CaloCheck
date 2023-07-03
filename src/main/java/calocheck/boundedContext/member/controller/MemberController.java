@@ -4,11 +4,10 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
-import calocheck.boundedContext.post.entity.Post;
-import calocheck.boundedContext.post.repository.PostRepository;
-import calocheck.boundedContext.post.service.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,18 +16,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/member")
@@ -37,7 +32,6 @@ public class MemberController {
     private final MemberService memberService;
     private final Rq rq;
     private final PostService postService;
-    private final PostRepository postRepository;
     private final TrackingService trackingService;
 
     @AllArgsConstructor
@@ -197,7 +191,7 @@ public class MemberController {
         Member member = memberService.findById(id).orElse(null);
 
         // 회원이 작성한 모든 글을 조회합니다.
-        List<Post> allPosts = member.getPosts();
+        List<Post> allPosts = postService.findByMemberId(rq.getMember().getId());
 
         int totalPosts = allPosts.size();
         int totalPages = (int) Math.ceil((double) totalPosts / size);
