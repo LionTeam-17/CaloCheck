@@ -40,16 +40,16 @@ public class MemberService {
     }
     @Transactional
     public RsData<Member> join(
-            String username, String password, String email, String nickname,
+            String username, String password,String gender, String email, String nickname,
             Integer age, Double height, Double weight, Double muscleMass, Double bodyFat
     ) {
 
-        return join("Calocheck", username, password, email, nickname, age, height,weight, muscleMass, bodyFat);
+        return join("Calocheck", username, password, gender, email, nickname, age, height,weight, muscleMass, bodyFat);
     }
 
     @Transactional
     public RsData<Member> join(
-            String providerTypeCode, String username, String password, String email, String nickname,
+            String providerTypeCode, String username, String password, String gender, String email, String nickname,
             Integer age, Double height, Double weight, Double muscleMass, Double bodyFat
     ) {
         Member member = Member
@@ -57,6 +57,7 @@ public class MemberService {
                 .providerTypeCode(providerTypeCode)
                 .username(username)
                 .password(passwordEncoder.encode(password))
+                .gender(gender)
                 .email(email)
                 .nickname(nickname)
                 .age(age)

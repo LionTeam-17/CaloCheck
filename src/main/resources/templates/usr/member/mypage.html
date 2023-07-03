@@ -51,7 +51,7 @@
             </div>
 
 
-            <div id="myInformation" class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 500px; height: 500px">
+            <div id="myInformation" class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 400px; height: 500px">
                 <div class="card-body flex flex-col gap-10">
                     <div class="mt-10"> 나이 :
                         <span th:text="${@rq.member.age}" style="font-weight: bold;"></span>
@@ -89,7 +89,7 @@
                         <div class="mt-5 flex flex-row gap-4">
                             <a th:href="@{|/post/${post.id}|}"
                                class="card flex-shrink-0 w-full shadow-xl bg-base-100"
-                               style="width: 500px">
+                               style="width: 400px">
                                 <div class="card-body">
                                     <div class="flex justify-between">
                                         <div th:text="${post.subject}" class="text-lg font-bold "></div>
@@ -115,26 +115,23 @@
                 </div>
 
                 <!-- 페이징 처리를 표시합니다 -->
-                <div>
-                    <div class="pagination mt-20 flex justify-center gap-3">
-                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
-                        </div>
-                        <div class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
-                        </div>
-                        <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
-                             th:classappend="${pageNum == page} ? 'active'">
-
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
-                               th:text="${pageNum+1}"></a>
-                        </div>
-                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}">다음</a>
-                        </div>
-                        <div class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages -1}, size=${size})}">마지막</a>
-                        </div>
+                <div class="pagination mt-20 flex justify-center gap-3">
+                    <div class="btn text-xs page-item" th:if="${totalPages > 1 && page > 0}">
+                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}" th:text="처음"></a>
+                    </div>
+                    <div class="btn text-xs page-item" th:if="${page > 0}">
+                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page - 1}, size=${size})}" th:text="이전"></a>
+                    </div>
+                    <div class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
+                         th:classappend="${pageNum == page} ? 'active'">
+                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
+                           th:text="${pageNum+1}"></a>
+                    </div>
+                    <div class="btn text-xs page-item" th:if="${page < totalPages - 1}">
+                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}" th:text="다음"></a>
+                    </div>
+                    <div class="btn text-xs page-item" th:if="${totalPages > 1 && page < totalPages - 1}">
+                        <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages - 1}, size=${size})}" th:text="마지막"></a>
                     </div>
                 </div>
             </div>
