@@ -2,6 +2,7 @@ package calocheck.boundedContext.criteria.service;
 
 import calocheck.boundedContext.criteria.entity.Criteria;
 import calocheck.boundedContext.criteria.repository.CriteriaRepository;
+import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class CriteriaService {
 
     private final CriteriaRepository criteriaRepository;
+    private final MealHistoryService mealHistoryService;
 
     @Transactional
     public Criteria create(String gender, int age, int protein,
@@ -54,13 +56,7 @@ public class CriteriaService {
         return oCriteria;
     }
 
-    public double calcMemberKcal(Member member) {
-
-//        String gender = member.getGender();       fixme
-        String gender = "남자";
-        Integer age = member.getAge();
-        Double height = member.getHeight();
-        Double weight = member.getWeight();
+    public double calcMemberKcal(String gender, Integer age, Double height, Double weight) {
 
         double calcKcal = 0;
 
@@ -71,7 +67,7 @@ public class CriteriaService {
             calcKcal = 447.6 + (9.25 * weight) + (3.1 * height) - (4.33 * age);
         }
 
-        return calcKcal;
+        return mealHistoryService.formattingDoubleValue(calcKcal);
     }
 
 
