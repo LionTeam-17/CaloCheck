@@ -73,7 +73,7 @@ public class PostController {
         } else {
             if (code.equals("0")) {
                 List<Post> postList = postService.findAll();
-                Page<Post> paging = postService.getList(page);
+                Page<Post> paging = postService.findAll(page);
 
                 model.addAttribute("postList", postList);
                 model.addAttribute("paging", paging);
