@@ -18,15 +18,15 @@ public class CriteriaService {
     @Transactional
     public Criteria create(String gender, int age, int protein,
                            int fiber, int calcium, int sodium,
-                           int potassium, int magnesium){
+                           int potassium, int magnesium, int carbohydrate, int fat) {
+
 
         Criteria criteria = Criteria.builder()
                 .gender(gender)
                 .age(age)
-                .kcal(2000) // fixme 사람마다 계산해야? 그럼 여기 있으면 안될지도
-                .carbohydrate(300) //fixme 탄수화물 보류
+                .carbohydrate(carbohydrate)
                 .protein(protein)
-                .fat(30) //fixme 지방 보류
+                .fat(fat)
                 .fiber(fiber)
                 .calcium(calcium)
                 .sodium(sodium)
@@ -39,20 +39,39 @@ public class CriteriaService {
         return criteria;
     }
 
-    public Criteria findByGenderAndAge(Member member){
+    public Criteria findByGenderAndAge(Member member) {
 
         //fixme member에 gender 필요
 
         Criteria oCriteria;
 
-        if(member.getAge()<75){
+        if (member.getAge() < 75) {
             oCriteria = criteriaRepository.findByGenderAndAge("남자", member.getAge()).orElse(null);
-        } else{
+        } else {
             oCriteria = criteriaRepository.findByGenderAndAge("남자", 75).orElse(null);
         }
 
         return oCriteria;
+    }
 
+    public double calcMemberKcal(Member member) {
+
+//        String gender = member.getGender();       fixme
+        String gender = "남자";
+        Integer age = member.getAge();
+        Double height = member.getHeight();
+        Double weight = member.getWeight();
+
+        double calcKcal = 0;
+
+        //해리스-베네딕트 계산
+        if (gender.equals("남자")) {
+            calcKcal = 88.4 + (13.4 * weight) + (4.8 * height) - (5.68 * age);
+        } else {
+            calcKcal = 447.6 + (9.25 * weight) + (3.1 * height) - (4.33 * age);
+        }
+
+        return calcKcal;
     }
 
 

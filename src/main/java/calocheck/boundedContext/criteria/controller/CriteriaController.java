@@ -43,6 +43,7 @@ public class CriteriaController {
         List<MealHistory> byMemberAndCreateDate = mealHistoryService.findByMemberAndCreateDate(member);
         Map<String, Integer> calcTodayNutritionMap = mealHistoryService.calcTodayNutrition(byMemberAndCreateDate);
 
+//        model.addAttribute("kcal", member.getKcal());
         model.addAttribute("calcMap",calcTodayNutritionMap);
         model.addAttribute("criteria", byGenderAndAge);
 

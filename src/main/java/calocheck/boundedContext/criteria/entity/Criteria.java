@@ -23,10 +23,9 @@ public class Criteria {
 
     private String gender;      //성별
     private int age;            //연령
-    private int kcal;           //에너지 => fixme 계산
-    private int carbohydrate;   //탄수화물 => fixme 계산
+    private int carbohydrate;   //탄수화물
     private int protein;        //단백질
-    private int fat;            //지방 => fixme 계산
+    private int fat;            //지방
     private int fiber;          //식이섬유
     private int calcium;        //칼슘
     private int sodium;         //나트륨
