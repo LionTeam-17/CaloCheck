@@ -1,6 +1,7 @@
 package calocheck.boundedContext.member.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.repository.MemberRepository;
 import calocheck.boundedContext.post.entity.Post;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final PasswordEncoder passwordEncoder;
+    private final CriteriaService criteriaService;
 
     private final MemberRepository memberRepository;
     public Member create(
@@ -65,6 +67,7 @@ public class MemberService {
                 .weight(weight)
                 .muscleMass(muscleMass)
                 .bodyFat(bodyFat)
+                .bmr(criteriaService.calcMemberKcal(gender, age, height, weight))
                 .build();
 
         memberRepository.save(member);

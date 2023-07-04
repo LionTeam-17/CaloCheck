@@ -101,7 +101,7 @@ public class FoodDataExtractor {
                 Nutrient sugarNutri = nutrientService.create("총당류", sugar, "g");
                 String fiberStr = row.getCell(indexMap.get("총식이섬유(g)")).getStringCellValue();
                 double fiber = !Ut.check.isDouble(fiberStr) ? 0 : Double.parseDouble(fiberStr);
-                Nutrient fiberNutri = nutrientService.create("총식이섬유", fiber, "g");
+                Nutrient fiberNutri = nutrientService.create("식이섬유", fiber, "g");
                 String calciumStr = row.getCell(indexMap.get("칼슘(mg)")).getStringCellValue();
                 double calcium = !Ut.check.isDouble(calciumStr) ? 0 : Double.parseDouble(calciumStr);
                 Nutrient calciumNutri = nutrientService.create("칼슘", calcium, "mg");

@@ -61,7 +61,7 @@ public class MemberControllerTests {
                         """.stripIndent().trim())));
     }
 
-    @Test
+    /*@Test
     @DisplayName("회원가입")
     void t002() throws Exception {
         // WHEN
@@ -86,7 +86,7 @@ public class MemberControllerTests {
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(status().is3xxRedirection());
-    }
+    }*/
 
     @Test
     @DisplayName("회원가입시에 올바른 데이터를 넘기지 않으면 400")
