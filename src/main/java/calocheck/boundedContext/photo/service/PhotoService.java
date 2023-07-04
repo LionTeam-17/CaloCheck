@@ -227,7 +227,7 @@ public class PhotoService {
             }
 
             sb.append(recommendList[i]);
-            sb.append(".jpg?type=m&w=120&h=120&quality=90&bgcolor=DBE2EF&ttype=jpg");
+            sb.append(".jpg?type=m&w=200&h=200&quality=90&bgcolor=FFFFFF&ttype=jpg&extopt=3");
             
             imgList.add(sb.toString());
         }

@@ -105,7 +105,7 @@
             <div class="mt-10">
                 <h3 class="text-black-400 font-bold bolder-none my-2 mb-0.5">영양소 정보</h3>
             </div>
-            <div class="py-3 w-1/2 h-auto rounded-lg" style="background-color:#DBE2EF">
+            <div class="py-3 w-2/3 h-auto rounded-lg" style="background-color:#DBE2EF">
                 <!-- 선택된 영양소에 따라 다른 내용 출력 -->
                 <div id="descriptionDiv">
                     <h1 class="text-black ml-5 my-5">영양소를 클릭하여 정보를 확인해 보세요!</h1>
@@ -116,8 +116,8 @@
                 <h3 class="text-black-400 font-bold bolder-none my-2 mb-0.5">주로 많이 먹는 음식</h3>
             </div>
 
-            <div class="py-3 w-1/2 h-auto rounded-lg" style="background-color:#DBE2EF">
-                <div id="foodListDiv">
+            <div class="py-3 w-2/3 h-auto rounded-lg items-center" style="background-color:#DBE2EF">
+                <div id="foodListDiv" class="flex justify-center">
                     <h1 class="text-black ml-5 my-5">영양별 추천 음식이 나열됩니다</h1>
                 </div>
             </div>
@@ -148,38 +148,59 @@
                         const response = data;
                         // 결과를 HTML로 구성하여 출력
                         const descriptionDiv = document.getElementById("descriptionDiv");
+
                         descriptionDiv.innerHTML = `
                     <div>
-                        <h1 class="font-black badge badge-warning mx-5 my-3">${response.nutritionName}</h1>
+                        <h1 class="font-black badge badge-primary mx-5 my-3">${response.nutritionName}</h1>
                         <h1 class="font-black mx-5 my-3">${response.nutritionDescription}</h1>
                     </div>
                 `;
                         const foodListDiv = document.getElementById("foodListDiv");
                         const recommendPhotoData = response.recommendPhotoData;
+                        const top5ByFoodNameLists = response.top5ByFoodNameLists;
+
                         foodListDiv.innerHTML = `
                         <div class="mt-5 mb-5">
                             <ul class="font-black mt-3">
                                 ${response.nutritionFoodList.map((food, index) => `
-                                <div class="flex flex-row">
-                                    <a href="/foodInfo/search?keyword=${food}" class="ml-2 bg-yellow-500">
-                                        <img src="${recommendPhotoData[index]}" alt="food_sample">
-                                    </a>
-                                     <div class="divider divider-horizontal daisy-divider"></div>
-                                    <div class="flex flex-col">
-                                        <div class="mb-10">
-                                            <a href="/foodInfo/search?keyword=${food}" class="text-black mt-1">${food}</a>
-                                        </div>
+                                <div class="flex flex-col">
 
-                                        <div>
-                                            <h1 class="text-sm">연관 검색 식품</h1>
-                                        </div>
+                                <div class="card w-56 bg-base-100 shadow-xl flex justify-center">
+                                    <figure class="px-10 pt-10">
+                                        <img src="${recommendPhotoData[index]}" alt="food_sample">
+                                    </figure>
+                                    <div class="card-body items-center text-center">
+                                        <a href="/foodInfo/search?keyword=${food}" class="text-black mt-1">${food}</a>
+                                        <h1 class="text-black">연관 검색 식품</h1>
+                                        <div id="top5ByFoodNameLists_${index}" class="text-sm"></div>
                                     </div>
                                 </div>
+
+
                                 <div class="divider"></div>
                                 `).join('')}
                             </ul>
                         </div>
                         `;
+
+                        response.nutritionFoodList.forEach((food, index) => {
+                            const top5ByFoodNameListDiv = document.getElementById(`top5ByFoodNameLists_${index}`);
+                            const top5ByFoodNameList = top5ByFoodNameLists[index];
+
+                            if (top5ByFoodNameList) {
+                                const top5List = document.createElement("ul");
+                                top5ByFoodNameList.forEach((item) => {
+                                    const listItem = document.createElement("li");
+
+                                    listItem.textContent = item;
+                                    top5List.appendChild(listItem);
+                                });
+
+                                top5ByFoodNameListDiv.appendChild(top5List);
+                            } else {
+                                top5ByFoodNameListDiv.innerHTML = "<p>검색된 음식이 없습니다!</p>";
+                            }
+                        });
                     },
                     error: function () {
                         alert("데이터 통신 중 에러 발생");

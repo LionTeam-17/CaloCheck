@@ -1,6 +1,8 @@
 package calocheck.boundedContext.recommend.controller;
 
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.photo.service.PhotoService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.entity.Recommend;
@@ -9,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +36,7 @@ public class RecommendController {
 
     private final PhotoService photoService;
     private final RecommendService recommendService;
+    private final FoodInfoService foodInfoService;
 
     @GetMapping("/list")
     public String getRecommendList(Model model) {
@@ -52,10 +58,7 @@ public class RecommendController {
 
         List<String> recommendPhotoData = photoService.getRecommendPhotoData(recommendByName.getFoodList());
 
-
-        String s = recommendPhotoData.get(0);
-
-        System.out.println("s = " + s);
+        List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
 
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -63,6 +66,9 @@ public class RecommendController {
         result.put("nutritionDescription", recommendByName.getDescription());
         result.put("nutritionFoodList", recommendByName.getFoodList());
         result.put("recommendPhotoData", recommendPhotoData);
+        result.put("top5ByFoodNameLists", top5ByFoodNameLists);
+
+        System.out.println("top5ByFoodNameLists = " + top5ByFoodNameLists.get(0));
 
         return ResponseEntity.ok(result);
     }
