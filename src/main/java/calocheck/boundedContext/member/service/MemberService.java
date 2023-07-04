@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     @Transactional
-    public RsData<Member> modify(final Long id, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat, Member actor
+    public RsData<Member> modify(final Long id, String gender, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat, Member actor
     ) {
         Optional<Member> oMember = memberRepository.findById(id);
 
@@ -83,6 +83,7 @@ public class MemberService {
         Member member = oMember.get();
 
         Member modifyMember =member.toBuilder()
+                .gender(gender)
                 .age(age)
                 .height(height)
                 .weight(weight)

@@ -58,6 +58,21 @@
 
             <form th:action method="POST" class="p-10 flex flex-col gap-4"
                   onsubmit="modifyInformation(this); return false;">
+                <div class="flex justify-center gap-3">
+                    <div>
+                        <span>성별:</span>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="radio" name="gender" value="M">
+                            남성
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="W">
+                            여성
+                        </label>
+                    </div>
+                </div>
                 <div class="form-control flex flex-col gap-3">
                     <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered">
                 </div>
@@ -68,7 +83,7 @@
                     <input type="text" name="weight" maxlength="3" placeholder="몸무게(kg)" class="input input-bordered">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="muscleMass" maxlength="3" placeholder="근육량(kg)" class="input input-bordered">
+                    <input type="text" name="muscleMass" maxlength="3" placeholder="골격근량(kg)" class="input input-bordered">
                 </div>
                 <div class="form-control flex flex-col gap-3">
                     <input type="text" name="bodyFat" maxlength="3" placeholder="체지방량(kg)" class="input input-bordered">

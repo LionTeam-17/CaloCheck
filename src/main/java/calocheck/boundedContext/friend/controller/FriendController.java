@@ -34,7 +34,7 @@ public class FriendController {
         model.addAttribute("followingList", followingList);
         model.addAttribute("followerList", followerList);
 
-        return "usr/member/follow";
+        return "usr/member/friendList";
     }
 
     // 닉네임 검색으로 팔로우하는 경우

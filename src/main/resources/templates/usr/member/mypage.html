@@ -67,7 +67,7 @@
                         <span th:text="${member.weight}" style="font-weight: bold;"></span>
                         kg
                     </div>
-                    <div> 근육량 :
+                    <div> 골격근량 :
                         <span th:text="${member.muscleMass}" style="font-weight: bold;"></span>
                         kg
                     </div>
@@ -128,7 +128,7 @@
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
                         </li>
                         <li class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
-                             th:classappend="${pageNum == page} ? 'active'">
+                            th:classappend="${pageNum == page} ? 'active'">
                             <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
                                th:text="${pageNum+1}"></a>
                         </li>

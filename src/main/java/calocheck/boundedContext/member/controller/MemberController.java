@@ -126,9 +126,9 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{memberId}")
-    public String modify(@PathVariable Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    public String modify(@PathVariable Long memberId, String gender, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
 
-        RsData modifyRsData = memberService.modify(memberId, age, height, weight, muscleMass, bodyFat, rq.getMember());
+        RsData modifyRsData = memberService.modify(memberId, gender, age, height, weight, muscleMass, bodyFat, rq.getMember());
 
         if (modifyRsData.isFail()) {
             return rq.historyBack(modifyRsData);
