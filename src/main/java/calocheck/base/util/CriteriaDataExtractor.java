@@ -25,7 +25,9 @@ public class CriteriaDataExtractor {
     Map<String, Integer> indexMap = new HashMap<>() {{
             put("성별", 0);
             put("연령", 1);
+            put("탄수화물", 3);
             put("식이섬유", 4);
+            put("지방", 5);
             put("단백질", 6);
             put("칼슘", 7);
             put("나트륨",8);
@@ -59,9 +61,11 @@ public class CriteriaDataExtractor {
                 int sodium = (int)row.getCell(indexMap.get("나트륨")).getNumericCellValue();
                 int potassium = (int)row.getCell(indexMap.get("칼륨")).getNumericCellValue();
                 int magnesium = (int)row.getCell(indexMap.get("마그네슘")).getNumericCellValue();
+                int carbohydrate = (int)row.getCell(indexMap.get("탄수화물")).getNumericCellValue();
+                int fat = (int)row.getCell(indexMap.get("지방")).getNumericCellValue();
 
                 Criteria criteria = criteriaService.create(gender, age, fiber, protein,
-                        calcium, sodium, potassium, magnesium);
+                        calcium, sodium, potassium, magnesium, carbohydrate, fat);
 
             }
 

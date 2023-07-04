@@ -18,32 +18,44 @@
 <main layout:fragment="Content">
     <div class="flex flex-col m-4">
         <div class="w-full">
-            <div class="flex justify-center">
-                <h1 class="font-bold text-black text-sm mb-4">
-                    식사 후 영양정보
-                </h1>
-            </div>
-            <div class="flex justify-center m-2 text-xs">
-                챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
-            </div>
-            <div class="divider"></div>
             <div class="flex justify-center flex-col">
                 <div class="flex justify-center">
                     <h1 class="font-bold text-black text-sm mb-4">
-                        영양성분
+                        식사 후 영양정보
                     </h1>
+                </div>
+                <div class="flex justify-center mb-4 text-xs">
+                    챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
                 </div>
 
                 <div class="flex flex-row justify-center" th:each="calcNutrient : ${calcNutrients}">
                     <div>
-                        <i id="nutrientColor" class="fa-solid fa-circle"></i>
+                        <i class="fa-solid fa-circle" style="color:#b2c615"
+                           th:if="${calcNutrient.getName().equals('단백질')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#121882"
+                           th:if="${calcNutrient.getName().equals('탄수화물')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#401f0d"
+                           th:if="${calcNutrient.getName().equals('지방')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#16b629"
+                           th:if="${calcNutrient.getName().equals('칼슘')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#f55600"
+                           th:if="${calcNutrient.getName().equals('나트륨')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#16bed4"
+                           th:if="${calcNutrient.getName().equals('칼륨')}"></i>
+                        <i class="fa-solid fa-circle" style="color:#121af2"
+                           th:if="${calcNutrient.getName().equals('마그네슘')}"></i>
+
                         <span id="nutrientData" class="text-xs font-bold inline-block m-1 w-48"
                               th:text="${calcNutrient.getName()} + '(' + ${calcNutrient.getUnit()} + ')'"></span>
                     </div>
-                    <div>
-                        <div class="text-xs text-black m-1"
-                             th:text="${calcNutrient.getValue()}"></div>
+                    <div class="text-xs m-1 w-16">
+                        <div th:class="${calcNutrient.getValue() < 30 && calcNutrient.getValue() >= -30} ? 'bg-blue-200 pl-3' : 'bg-red-200 pl-3'"
+                             th:text="${calcNutrient.getValue()}">
+                        </div>
                     </div>
+                </div>
+                <div class="flex justify-center mt-2 text-xm">
+                    (나의 권장량 - 오늘 먹은 양 - 지금 먹게되는 양)
                 </div>
 
             </div>
@@ -111,7 +123,7 @@
                     </div>
                 </div>
 
-<!--                <input type="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
+                <!--                <input type="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
 
                 <div class="flex justify-center mt-5">
                     <a href="/cartFoodInfo/total" class="btn btn-primary btn-active mr-5">이전</a>
@@ -122,28 +134,6 @@
         </div>
     </div>
 
-    <script th:inline="javascript">
-        const nutrientColor = document.getElementById('nutrientColor');
-        const nutrientName = '단백질';
-
-        console.log(nutrientName);
-
-        switch (nutrientName) {
-            case '단백질':
-                nutrientColor.style.color = '#E5D85C';
-                break;
-            case '탄수화물':
-                nutrientColor.style.color = '#ABCDEF';
-                break;
-            case '지방':
-                nutrientColor.style.color = '#F0A1B2';
-                break;
-            default:
-                // 다른 경우의 처리
-                break;
-        }
-
-    </script>
 </main>
 </body>
 

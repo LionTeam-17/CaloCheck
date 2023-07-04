@@ -34,15 +34,10 @@ public class CriteriaController {
 
         Criteria byGenderAndAge = criteriaService.findByGenderAndAge(member);
 
-        /*
-        오늘 먹은 양 계산하는 시나리오
-
-        mealHistory에서 createDate를 통해 오늘 먹은 내용들을 조회한다
-         */
-
         List<MealHistory> byMemberAndCreateDate = mealHistoryService.findByMemberAndCreateDate(member);
         Map<String, Integer> calcTodayNutritionMap = mealHistoryService.calcTodayNutrition(byMemberAndCreateDate);
 
+        model.addAttribute("BMR", member.getBmr());
         model.addAttribute("calcMap",calcTodayNutritionMap);
         model.addAttribute("criteria", byGenderAndAge);
 
