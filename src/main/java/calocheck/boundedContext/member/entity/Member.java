@@ -32,6 +32,7 @@ public class Member extends BaseEntity {
     private Double weight;
     private Double muscleMass;
     private Double bodyFat;
+    private Double bmr;
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

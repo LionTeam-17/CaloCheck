@@ -2,8 +2,9 @@ package calocheck.boundedContext.mealHistory.service;
 
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.criteria.entity.Criteria;
+import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
-import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.repository.MealHistoryRepository;
 import calocheck.boundedContext.member.entity.Member;
@@ -24,6 +25,7 @@ public class MealHistoryService {
     private final MealHistoryRepository mealHistoryRepository;
     private final NutrientRepository nutrientRepository;
     private final CartFoodInfoService cartFoodInfoService;
+//    private final CriteriaService criteriaService;
 
     public MealHistory create(Member member, List<DailyMenu> dailyMenuList, String mealType, String mealMemo, int mealScore) {
 
@@ -69,23 +71,30 @@ public class MealHistoryService {
     }
 
     //권장량 - total => (권장량 - 오늘 먹은 양) - 지금 먹을 양
-    public List<Nutrient> calcNutrient(Member member, List<Nutrient> cartNutrientTotal) {
+    public List<Nutrient> calcNutrient(Criteria myCriteria, List<MealHistory> todayMealHistory, List<Nutrient> cartNutrientTotal) {
 
         //1. 권장량
         //2. 오늘 먹은 양
         //3. 지금 먹을 양
         //(권장량 - 오늘먹은 양) - 지금 먹을 양
 
-        //FIXME Sample
-        String[] nutrientName = {"단백질", "탄수화물", "지방"};
+        Map<String, Double> historyTotalMap = new HashMap<>();
 
-        List<Nutrient> calcList = Arrays.stream(nutrientName)
+        //FIXME Sample
+        String[] nameList = {"단백질", "탄수화물", "지방", "식이섬유", "칼슘", "나트륨", "칼륨", "마그네슘"};
+
+        Map<String, Integer> todayNutritionMap = calcTodayNutrition(todayMealHistory);
+
+        List<Nutrient> calcList = Arrays.stream(nameList)
                 .map(name -> cartNutrientTotal.stream()
                         .filter(nutrient -> nutrient.getName().equals(name))
                         .findFirst()
                         .map(nutrient -> Nutrient.builder()
                                 .name(name)
-                                .value(formattingDoubleValue(nutrient.getValue() - 20 - 10)) // FIXME (권장량 - 오늘먹은 양) - 지금 먹을 양
+                                .value(formattingDoubleValue(
+                                        myCriteria.findByStrName(name) -
+                                                todayNutritionMap.get(name) -
+                                                nutrient.getValue())) // 권장량 - 오늘먹은 양 - 지금 먹는 양
                                 .unit(nutrient.getUnit())
                                 .build())
                         .orElse(null))
@@ -107,26 +116,22 @@ public class MealHistoryService {
 
         Map<String, Integer> calcNutritionMap = new HashMap<>();
 
+        int calcProtein = 0;
+        int calcFat = 0;
+        int calcCarbohydrate = 0;
+        int calcFiber = 0;
+        int calcCalcium = 0;
+        int calcMagnesium = 0;
+        int calcPotassium = 0;
+        int calcSodium = 0;
+
         if (todayMealHistory.isEmpty()) {
             System.out.println("오늘의 식단이 존재하지 않습니다!!");
-            return null;
         } else {
-
-            int calcProtein = 0;
-            int calcFat = 0;
-            int calcCarbohydrate = 0;
-            int calcFiber = 0;
-            int calcCalcium = 0;
-            int calcMagnesium = 0;
-            int calcPotassium = 0;
-            int calcSodium = 0;
 
             for (int i = 0; i < todayMealHistory.size(); i++) {
 
-                System.out.printf("%d번 --- \n", i);
                 List<Nutrient> nutrients = todayMealHistory.get(i).getNutrients();
-
-                //fixme 값이 제대로 안들어가는 중
 
                 for (Nutrient nutrient : nutrients) {
 
@@ -158,22 +163,22 @@ public class MealHistoryService {
                     }
                 }
             }
-
-            calcNutritionMap.put("탄수화물", calcCarbohydrate);
-            calcNutritionMap.put("단백질", calcProtein);
-            calcNutritionMap.put("지방", calcFat);
-            calcNutritionMap.put("식이섬유", calcFiber);
-            calcNutritionMap.put("칼슘", calcCalcium);
-            calcNutritionMap.put("마그네슘", calcMagnesium);
-            calcNutritionMap.put("칼륨", calcPotassium);
-            calcNutritionMap.put("나트륨", calcSodium);
-
         }
+
+        calcNutritionMap.put("탄수화물", calcCarbohydrate);
+        calcNutritionMap.put("단백질", calcProtein);
+        calcNutritionMap.put("지방", calcFat);
+        calcNutritionMap.put("식이섬유", calcFiber);
+        calcNutritionMap.put("칼슘", calcCalcium);
+        calcNutritionMap.put("마그네슘", calcMagnesium);
+        calcNutritionMap.put("칼륨", calcPotassium);
+        calcNutritionMap.put("나트륨", calcSodium);
+
         return calcNutritionMap;
     }
 
-        public List<MealHistory> findByMemberAndCreateDate (Member member){
+    public List<MealHistory> findByMemberAndCreateDate(Member member) {
 
-            return mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
-        }
+        return mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
     }
+}

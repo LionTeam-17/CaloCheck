@@ -4,6 +4,8 @@ import calocheck.base.rq.Rq;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.criteria.entity.Criteria;
+import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
@@ -19,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class CartFoodInfoController {
     private final Rq rq;
     private final MealHistoryService mealHistoryService;
     private final DailyMenuService dailyMenuService;
+    private final CriteriaService criteriaService;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -100,14 +104,16 @@ public class CartFoodInfoController {
     public String showAddMenu(Model model) {
 
         Member member = rq.getMember();
-        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
-        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
-        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
 
-        //식사 후 영양정보 계산
-        List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(member, nutrientTotal);
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);      //카트에 담겨있는 리스트
 
-//        model.addAttribute("nutrientTotal", nutrientTotal);     //post 로 넘겨주기 위함(프론트 사용x)
+        Criteria myCriteria = criteriaService.findByGenderAndAge(member);           //나의 권장량
+        List<MealHistory> todayMealHistory = mealHistoryService.findByMemberAndCreateDate(member); //오늘 먹은 내용들
+        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);    //카트 내용의 영양소 총합
+
+        //이걸 먹게되면 영양소가 어떻게 되는가?
+        List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(myCriteria, todayMealHistory, nutrientTotal);
+
         model.addAttribute("calcNutrients", calcNutrients);
         
         return "usr/cartFoodInfo/addMenu";
