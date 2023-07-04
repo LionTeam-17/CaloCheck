@@ -90,8 +90,6 @@
             <div id="myPost" class="hidden flex flex-col">
                 <li th:if="${not #lists.isEmpty(postList)}">
                     <div th:each="post : ${postList}">
-                        <form th:action method="GET" id="postForm">
-                            <input type="hidden" id="page" name="page" th:value="${page}">
                         <div class="mt-5 flex flex-row gap-4">
                             <a th:href="@{|/post/${post.id}|}"
                                class="card flex-shrink-0 w-full shadow-xl bg-base-100"
@@ -110,7 +108,6 @@
                                 </div>
                             </a>
                         </div>
-                        </form>
                     </div>
                 </li>
                 <div>
@@ -143,6 +140,10 @@
                         </li>
                     </ul>
                 </div>
+                <form id="postForm" method="get" th:action="@{/mypage/{id}(id=${id})}">
+                    <input type="hidden" id="page" name="page" value="${page}">
+                    <!-- 다른 필요한 파라미터들도 추가할 수 있습니다. -->
+                </form>
             </div>
         </div>
     </div>
@@ -157,6 +158,7 @@
         Array.from(page_elements).forEach(function (element) {
             element.addEventListener('click', function () {
                 document.getElementById('page').value = this.dataset.page;
+                document.getElementById('postForm').action = `/mypage/${memberId}`;
                 document.getElementById('postForm').submit();
             });
         });
