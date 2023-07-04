@@ -38,60 +38,25 @@ public class PostController {
                                @RequestParam(value = "code", defaultValue = "0") String code,
                                Model model) {
 
+        Page<Post> paging;
         if (!kw.equals("")) {
             if (code.equals("0")) {
-                List<Post> filteringList = postService.findBySubjectLikeOrMemberNicknameLike
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%"
-                        );
-                Page<Post> filteringPaging = postService.findBySubjectLikeOrMemberNicknameLike
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%",
-                                page
-                        );
-
-                model.addAttribute("postList", filteringList);
-                model.addAttribute("paging", filteringPaging);
+                paging = postService.findBySubjectLikeOrMemberNicknameLike
+                        ("%" + kw + "%", "%" + kw + "%", page);
             } else {
-                List<Post> topFilteringList = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%"
-                        );
-                Page<Post> topFilteringPaging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%",
-                                page
-                        );
-
-                model.addAttribute("postList", topFilteringList);
-                model.addAttribute("paging", topFilteringPaging);
+                paging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                        ("%" + kw + "%", "%" + kw + "%", page);
             }
         } else {
-            if (code.equals("0")) {
-                List<Post> postList = postService.findAll();
-                Page<Post> paging = postService.findAll(page);
-
-                model.addAttribute("postList", postList);
-                model.addAttribute("paging", paging);
-
-            } else {
-                List<Post> topPostList = postService.findByOrderByPopularityDesc();
-                Page<Post> paging = postService.findByOrderByPopularityDesc(page);
-
-                model.addAttribute("postList", topPostList);
-                model.addAttribute("paging", paging);
-            }
+            if (code.equals("0")) paging = postService.findAll(page);
+            else paging = postService.findByOrderByPopularityDesc(page);
         }
+        model.addAttribute("paging", paging);
         model.addAttribute("code", code);
         model.addAttribute("kw", kw);
 
         return "usr/post/list";
     }
-
 
     @GetMapping("/{postId}")
     public String showPostPage(Model model, @PathVariable Long postId) {

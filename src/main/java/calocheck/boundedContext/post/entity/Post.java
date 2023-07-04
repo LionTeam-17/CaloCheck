@@ -25,7 +25,7 @@ import java.util.List;
 public class Post extends BaseEntity {
     private String subject;
     private String content;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @Builder.Default
