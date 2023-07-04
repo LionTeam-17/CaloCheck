@@ -208,6 +208,9 @@ public class MemberController {
         model.addAttribute("size", size);
         model.addAttribute("totalPages", totalPages);
 
+        model.addAttribute("member", member);
+        model.addAttribute("id", id);
+
         return "usr/member/mypage";
     }
 }
