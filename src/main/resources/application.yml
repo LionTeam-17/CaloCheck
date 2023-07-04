@@ -47,6 +47,9 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+  test:
+    exclude: '**/*Tests.class'
+
 logging:
   level:
     root: INFO
