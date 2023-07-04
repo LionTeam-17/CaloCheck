@@ -2,7 +2,9 @@ package calocheck.boundedContext.post.service;
 
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.post.form.Viewer;
 import calocheck.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberService memberService;
 
     public RsData<Post> savePost(String subject, String content, String photoUrl, final Member member) {
         Post post = Post.builder()
@@ -136,5 +139,31 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw, pageable);
+    }
+    public Page<Post> findByMember(Long id, Pageable pageable) {
+        return postRepository.findByMember(id, pageable);
+    }
+
+    public RsData<Viewer> showSinglePost(long postId) {
+        Post post = findById(postId).orElse(null);
+
+        if (post == null) {
+            return RsData.of("F-2", "존재하지 않는 포스팅입니다");
+        }
+
+        Member member = memberService.findById(post.getMember().getId()).orElse(null);
+
+
+        Viewer viewer = Viewer.builder()
+                .memberId(post.getMember().getId())
+                .nickname(member.getNickname())
+                .postId(postId)
+                .createDate(post.getCreateDate())
+                .subject(post.getSubject())
+                .content(post.getContent())
+                .popularity(post.getPopularity())
+                .build();
+
+        return RsData.of("S-1", "게시글 페이지 응답", viewer);
     }
 }
