@@ -114,7 +114,7 @@
 
                     <div class="m-3">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
-                                onclick="executeAddCartLogic(/*[[${foodInfo.foodName}]]*/)">추가
+                                th:onclick="executeAddCartLogic(/*[[${foodInfo.id}]]*/)">추가
                         </button>
                         <button class="bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
                                 onclick="closeCustomModal()">취소
@@ -239,6 +239,7 @@
             closeCustomModal();
             addCart(foodId);
         }
+
         function addCart(foodId) {
             let quantity = document.getElementById("quantityLabel").innerText;
             const header = $("meta[name='_csrf_header']").attr("content");
@@ -251,13 +252,15 @@
                     type: "POST",
                     url: "/cartFoodInfo/add", // 좋아요 요청을 보낼 URL
                     data: {
-                        foodId: foodId
+                        foodId: foodId,
+                        quantity: quantity
                     },
                     dataType: "json",
                     success: function (response) {
                         if (response.result === "success") { // 좋아요 데이터가 없음 -> 좋아요 표시
                             console.log("success");
                             closeCustomModal();
+                            toastNotice(response.msg);
                         }
                     },
                     error: function (error) {

@@ -1,5 +1,6 @@
 package calocheck.boundedContext.cartFoodInfo.service;
 
+import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.repository.CartFoodInfoRepository;
 import calocheck.boundedContext.member.entity.Member;
@@ -21,17 +22,19 @@ public class CartFoodInfoService {
     private final NutrientService nutrientService;
     private final NutrientInfoService nutrientInfoService;
 
-    public CartFoodInfo addFoodInfo(Member member, FoodInfo foodInfo) {
+    public RsData<CartFoodInfo> addFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo != null) {
-            long quantity = cartFoodInfo.getQuantity() + 1;
-            return update(cartFoodInfo, member, foodInfo, quantity);
+            long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
+            update(cartFoodInfo, member, foodInfo, updatedQuantity);
+            return RsData.of("success", "이미 장바구니에 있는 항목을 수정하였습니다.");
         }
 
-        cartFoodInfo = create(member, foodInfo);
+        cartFoodInfo = create(member, foodInfo, quantity);
+        cartFoodInfoRepository.save(cartFoodInfo);
 
-        return cartFoodInfoRepository.save(cartFoodInfo);
+        return RsData.of("success", "장바구니 추가 완료");
     }
 
     public boolean removeFoodInfo(Member member, FoodInfo foodInfo) {
@@ -64,11 +67,11 @@ public class CartFoodInfoService {
         return false;
     }
 
-    public CartFoodInfo create(Member member, FoodInfo foodInfo) {
+    public CartFoodInfo create(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = CartFoodInfo.builder()
                 .member(member)
                 .foodInfo(foodInfo)
-                .quantity(1)
+                .quantity(quantity)
                 .build();
 
         return cartFoodInfoRepository.save(cartFoodInfo);
