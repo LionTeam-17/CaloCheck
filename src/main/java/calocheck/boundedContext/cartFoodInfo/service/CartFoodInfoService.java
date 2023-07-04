@@ -28,7 +28,7 @@ public class CartFoodInfoService {
         if (cartFoodInfo != null) {
             long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
             update(cartFoodInfo, member, foodInfo, updatedQuantity);
-            return RsData.of("success", "이미 장바구니에 있는 항목을 수정하였습니다.");
+            return RsData.of("success", "이미 장바구니에 있는 항목을 수정(%d개)하였습니다.".formatted(updatedQuantity));
         }
 
         cartFoodInfo = create(member, foodInfo, quantity);
