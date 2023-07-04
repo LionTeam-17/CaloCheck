@@ -55,7 +55,7 @@
                          th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
                 </div>
                 <div class="text-xs text-black m-1"
-                     th:text="${nutrient.value}"></div>
+                     th:text="${#numbers.formatDecimal(nutrient.value, 1, 2}"></div>
                 <div class="divider"></div>
             </div>
 
