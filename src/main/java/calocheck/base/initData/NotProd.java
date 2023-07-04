@@ -47,14 +47,14 @@ public class NotProd {
     ) {
         return args -> {
             Member[] members = IntStream
-                    .rangeClosed(1, 10)
+                    .rangeClosed(1, 5)
                     .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "male", null,
                                     "닉네임%d".formatted(i), 25, 178.4, 65.0, 30.0, 20.0)
                             .getData())
                     .toArray(Member[]::new);
 
             Post[] posts = IntStream
-                    .rangeClosed(1, 100)
+                    .rangeClosed(1, 5)
                     .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), S3Config.getSampleImg(), members[i % 10])
                             .getData())
                     .toArray(Post[]::new);
@@ -70,7 +70,6 @@ public class NotProd {
             recommendService.createRecommend("고단백&저지방 육류", RecommendConfig.getMeatDescription(), RecommendConfig.getMeatFoodList());
             recommendService.createRecommend("GI지수 높은 음식", RecommendConfig.getHighGIDescription(), RecommendConfig.getHighGIFoodList());
             recommendService.createRecommend("GI지수 낮은 음식", RecommendConfig.getLowGIDescription(), RecommendConfig.getLowGIFoodList());
-
 
             Comment[] comments = IntStream
                     .rangeClosed(1, 5)
@@ -94,8 +93,8 @@ public class NotProd {
                             .getData())
                     .toArray(PostLike[]::new);
 
-            foodDataExtractor.readFile();
-            criteriaDataExtractor.readFile();
+//            foodDataExtractor.readFile();
+//            criteriaDataExtractor.readFile();
 
             //Tracking 샘플 데이터
             LocalDate startDate = LocalDate.now().minusDays(90);
@@ -119,9 +118,6 @@ public class NotProd {
                     date = date.plusDays(random.nextInt(4) + 1);
                 }
             }
-            IntStream.rangeClosed(190, 199)
-                    .mapToObj(i -> foodInfoService.findById((long)i))
-                    .forEach(foodInfo -> cartFoodInfoService.addFoodInfo(members[0], foodInfo));
         };
 
     }
