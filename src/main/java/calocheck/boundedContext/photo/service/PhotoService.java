@@ -210,4 +210,29 @@ public class PhotoService {
         return sb.toString();
     }
 
+    public List<String> getRecommendPhotoData(String[] recommendList){
+
+        String protocol = request.getScheme();
+
+        List<String> imgList = new ArrayList<>();
+
+        for(int i=0; i<recommendList.length; i++){
+
+            StringBuilder sb = new StringBuilder();
+
+            if(protocol.equals("http")){
+                sb.append("http://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
+            }else if(protocol.equals("https")){
+                sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
+            }
+
+            sb.append(recommendList[i]);
+            sb.append(".jpg?type=m&w=120&h=120&quality=90&bgcolor=DBE2EF&ttype=jpg");
+            
+            imgList.add(sb.toString());
+        }
+
+        return imgList;
+    }
+
 }

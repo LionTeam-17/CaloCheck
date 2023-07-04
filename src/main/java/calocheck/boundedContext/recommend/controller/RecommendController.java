@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +35,8 @@ public class RecommendController {
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
+        model.addAttribute("photoService", photoService);
+
         return "/usr/food/recommendList";
     }
 
@@ -43,15 +46,23 @@ public class RecommendController {
             (@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
 
         Object selectedValue = params.get("selectedValue");
-        String s = selectedValue.toString();
+        String selectedNutrition = selectedValue.toString();
 
-        Recommend recommendByName = recommendService.getRecommendByName(s);
+        Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
+
+        List<String> recommendPhotoData = photoService.getRecommendPhotoData(recommendByName.getFoodList());
+
+
+        String s = recommendPhotoData.get(0);
+
+        System.out.println("s = " + s);
 
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("nutritionName", recommendByName.getNutritionName());
         result.put("nutritionDescription", recommendByName.getDescription());
         result.put("nutritionFoodList", recommendByName.getFoodList());
+        result.put("recommendPhotoData", recommendPhotoData);
 
         return ResponseEntity.ok(result);
     }
