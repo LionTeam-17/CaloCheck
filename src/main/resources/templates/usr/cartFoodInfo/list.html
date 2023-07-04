@@ -88,13 +88,13 @@
             </div>
 
             <div class="m-3">
-                <button class="bg-red-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="executeDeleteLogic()">삭제
                 </button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="executeUpdateLogic()">수정
                 </button>
-                <button class="bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="closeCustomModal()">취소
                 </button>
             </div>
@@ -141,13 +141,11 @@
         }
 
         function executeUpdateLogic() {
-            document.getElementById('customModal').classList.add('hidden');
             closeCustomModal();
             updateFoodInfo();
         }
 
         function executeDeleteLogic() {
-            document.getElementById('customModal').classList.add('hidden');
             closeCustomModal();
             deleteFoodInfo();
         }
