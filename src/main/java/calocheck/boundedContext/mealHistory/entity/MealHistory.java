@@ -24,8 +24,8 @@ public class MealHistory extends BaseEntity {
     //회원의 전체 식사 기록을 의미하는 MealHistory 엔티티
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private DailyMenu dailyMenu;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<DailyMenu> dailyMenuList;
     private String mealType;
     private String mealMemo;
     private int mealScore;

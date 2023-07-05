@@ -63,7 +63,11 @@
             </div>
 
             <div class="divider"></div>
-            <form class="flex flex-col gap-6" method="POST" enctype="multipart/form-data">
+            <form id="addMenuForm"
+                  class="flex flex-col gap-6"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  th:action>
                 <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
@@ -131,7 +135,8 @@
                     <a href="/cartFoodInfo/total"
                        class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         이전</a>
-                    <button onclick="openCustomModal()"
+                    <button type="submit"
+                            id="addMenuBtn"
                             class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         식단 추가하기</button>
                 </div>
@@ -190,6 +195,11 @@
         </div>
     </div>
     <script th:inline="javascript">
+        let btn = document.getElementById("addMenuBtn");
+        btn.addEventListener('onsubmit', (event) => {
+            event.preventDefault();
+            openCustomModal();
+        })
         function openCustomModal() {
             document.getElementById('customModal').classList.remove('hidden');
         }

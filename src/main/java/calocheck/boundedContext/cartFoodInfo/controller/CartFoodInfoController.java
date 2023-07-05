@@ -132,7 +132,7 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
-        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, mealType, cartList);
+        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, cartList);
 
         MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
 

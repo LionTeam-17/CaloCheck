@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,33 +30,15 @@ public class MealHistoryService {
     private final DailyMenuService dailyMenuService;
 
     public MealHistory create(Member member, List<DailyMenu> dailyMenuList, String mealType, String mealMemo, int mealScore) {
-
-        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
-        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
-
-        //fixme 여기서 repo를 참조하면 좋지 않음.
-        nutrientRepository.saveAll(nutrientTotal);
-
         MealHistory mealHistory = MealHistory.builder()
                 .member(member)
                 .dailyMenuList(dailyMenuList)
                 .mealType(mealType)
                 .mealMemo(mealMemo)
                 .mealScore(mealScore)
-                .nutrients(nutrientTotal)
                 .build();
 
-        mealHistoryRepository.save(mealHistory);
-
-        for (int i = 0; i < dailyMenuList.size(); i++) {
-            DailyMenu buildMenu = dailyMenuList.get(i).toBuilder()
-                    .mealHistory(mealHistory)
-                    .build();
-
-            dailyMenuService.updateMealHistory(buildMenu);
-        }
-
-        return mealHistory;
+        return mealHistoryRepository.save(mealHistory);
     }
 
     public void delete(MealHistory mealHistory) {
@@ -133,36 +116,39 @@ public class MealHistoryService {
         } else {
 
             for (int i = 0; i < todayMealHistory.size(); i++) {
+                List<DailyMenu> dailyMenuList = todayMealHistory.get(i).getDailyMenuList();
+                for (int j=0; j<dailyMenuList.size(); j++) {
+                    DailyMenu dailyMenu = dailyMenuList.get(j);
+                    List<Nutrient> nutrients = dailyMenu.getFoodInfo().getNutrientInfo().getNutrientList();
 
-                List<Nutrient> nutrients = todayMealHistory.get(i).getNutrients();
+                    for (Nutrient nutrient : nutrients) {
 
-                for (Nutrient nutrient : nutrients) {
-
-                    switch (nutrient.getName()) {
-                        case ("단백질"):
-                            calcProtein = (int) (calcProtein + nutrient.getValue());
-                            break;
-                        case ("지방"):
-                            calcFat = (int) (calcFat + nutrient.getValue());
-                            break;
-                        case ("탄수화물"):
-                            calcCarbohydrate = (int) (calcCarbohydrate + nutrient.getValue());
-                            break;
-                        case ("총식이섬유"):
-                            calcFiber = (int) (calcFiber + nutrient.getValue());
-                            break;
-                        case ("칼슘"):
-                            calcCalcium = (int) (calcCalcium + nutrient.getValue());
-                            break;
-                        case ("마그네슘"):
-                            calcMagnesium = (int) (calcMagnesium + nutrient.getValue());
-                            break;
-                        case ("칼륨"):
-                            calcPotassium = (int) (calcPotassium + nutrient.getValue());
-                            break;
-                        case ("나트륨"):
-                            calcSodium = (int) (calcSodium + nutrient.getValue());
-                            break;
+                        switch (nutrient.getName()) {
+                            case ("단백질"):
+                                calcProtein = (int) (calcProtein + nutrient.getValue());
+                                break;
+                            case ("지방"):
+                                calcFat = (int) (calcFat + nutrient.getValue());
+                                break;
+                            case ("탄수화물"):
+                                calcCarbohydrate = (int) (calcCarbohydrate + nutrient.getValue());
+                                break;
+                            case ("총식이섬유"):
+                                calcFiber = (int) (calcFiber + nutrient.getValue());
+                                break;
+                            case ("칼슘"):
+                                calcCalcium = (int) (calcCalcium + nutrient.getValue());
+                                break;
+                            case ("마그네슘"):
+                                calcMagnesium = (int) (calcMagnesium + nutrient.getValue());
+                                break;
+                            case ("칼륨"):
+                                calcPotassium = (int) (calcPotassium + nutrient.getValue());
+                                break;
+                            case ("나트륨"):
+                                calcSodium = (int) (calcSodium + nutrient.getValue());
+                                break;
+                        }
                     }
                 }
             }
@@ -181,7 +167,8 @@ public class MealHistoryService {
     }
 
     public List<MealHistory> findByMemberAndCreateDate(Member member) {
-
-        return mealHistoryRepository.findByMemberAndCreateDate(member, LocalDate.now());
+        LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        return mealHistoryRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
     }
 }

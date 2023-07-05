@@ -20,27 +20,31 @@ public class DailyMenuService {
     private final DailyMenuRepository dailyMenuRepository;
     private final CartFoodInfoService cartFoodInfoService;
 
-    public DailyMenu create(Member member, FoodInfo foodInfo, Long quantity, String mealType, String mealMemo)
+    @Transactional
+    public DailyMenu create(Member member, FoodInfo foodInfo, Long quantity) {
+        DailyMenu dailyMenu = DailyMenu.builder()
+                .member(member)
+                .foodInfo(foodInfo)
+                .quantity(quantity)
+                .build();
+
+        return dailyMenuRepository.save(dailyMenu);
+    }
 
     @Transactional
-    public List<DailyMenu> create(Member member, String mealType) {
-
-        List<CartFoodInfo> cartByMember = cartFoodInfoService.findAllByMember(member);
+    public List<DailyMenu> create(Member member, List<CartFoodInfo> cartList) {
         List<DailyMenu> dailyMenuList = new ArrayList<>();
 
-        //식단을 추가하게 되면, 카트의 내용들 중 음식명과 양을 가져와서, 저장한다
-        for (int i = 0; i < cartByMember.size(); i++) {
-
-            DailyMenu dailyMenu = DailyMenu.builder()
-                    .member(member)
-                    .foodInfo(cartByMember.get(i).getFoodInfo())
-                    .quantity(cartByMember.get(i).getQuantity())
-                    .mealType(mealType)
-                    .build();
-
-            dailyMenuRepository.save(dailyMenu);
-            dailyMenuList.add(dailyMenu);
-        }
+        cartList.stream()
+                .forEach(
+                        cartFoodInfo -> dailyMenuList.add(
+                                create(
+                                        member,
+                                        cartFoodInfo.getFoodInfo(),
+                                        cartFoodInfo.getQuantity()
+                                )
+                        )
+                );
 
         return dailyMenuList;
     }
