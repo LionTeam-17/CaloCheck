@@ -41,7 +41,7 @@ spring:
             user-name-attribute: response
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

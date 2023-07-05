@@ -23,29 +23,29 @@
 
 <body>
 <main layout:fragment="Content">
-    <div class="flex flex-col w-screen h-auto">
-        <div class="flex flex-col">
-            <div class="m-5 flex justify-around">
-                <div class="text-center font-bold text-black text-lg"
+    <div class="flex flex-col">
+        <div class="m-3 flex flex-col justify-center">
+            <div class="m-5 flex justify-center">
+                <div class="m-2 text-center font-bold text-black text-lg"
                      th:text="${foodInfo.foodName}"></div>
-                <a class="btn text-xs"
-                   th:onclick="addCart(/*[[${foodInfo.id}]]*/)">
+                <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
+                        th:onclick="openCustomModal()">
                     장바구니 등록
                 </a>
-                <a class="btn text-xs"
-                   th:href="@{/cartFoodInfo/list}">
-                    장바구니 항목
+                <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
+                        href="javascript:history.back()">
+                    돌아가기
                 </a>
             </div>
 
-            <div class="m-3 flex">
+            <div class="m-3 flex justify-center">
                 <div class="divider"></div>
                 <div class="flex flex-col">
                     <!-- FoodInfo 정보 출력 시작-->
                     <div class="flex">
                         <div class="flex m-1">
                             <div class="text-xs font-bold m-1">제조사/유통사</div>
-                            <div class="text-xs text-black m-1" th:text="${foodInfo.manufacturer}"></div>
+                            <div class="text-xs text-black m-1 whitespace-normal break-words" th:text="${foodInfo.manufacturer}"></div>
                         </div>
                         <div class="flex m-1">
                             <div class="text-xs font-bold m-1">식품 대분류</div>
@@ -79,7 +79,7 @@
                                  th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
                         </div>
                         <div class="text-xs text-black m-1"
-                             th:text="${nutrient.value}"></div>
+                             th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
                         <div class="divider"></div>
                     </div>
 
@@ -87,7 +87,41 @@
                 </div>
                 <div class="divider my-2" style="height: 1px"></div>
             </div>
+            <div class="flex justify-center">
+                <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
+                        th:href="@{/cartFoodInfo/list}">
+                    장바구니 항목
+                </a>
+            </div>
 
+            <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white px-20 py-40">
+                    <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
+                    <div class="flex">
+                        <div class="text-xs font-bold m-2">제조사/유통사</div>
+                        <div id="manufacturerLabel" class="text-xs text-black m-2"></div>
+                    </div>
+                    <div class="flex">
+                        <div class="text-xs font-bold m-2">수량</div>
+                        <div id="quantityLabel" class="text-xs text-black m-2"></div>
+                        <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                                onclick="quantityUp()">+
+                        </button>
+                        <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                                onclick="quantityDown()">-
+                        </button>
+                    </div>
+
+                    <div class="m-3 flex place-content-end">
+                        <button class="m-2 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
+                                th:onclick="executeAddCartLogic(/*[[${foodInfo.id}]]*/)">추가
+                        </button>
+                        <button class="m-2 bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
+                                onclick="closeCustomModal()">취소
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script th:inline="javascript">
@@ -147,6 +181,11 @@
             loopIndex = /*[[${loop.index}]]*/null;
             label = /*[[${nutrient.name}]]*/null;
             value = /*[[${nutrient.value}]]*/null;
+            unit = /*[[${nutrient.unit}]]*/null;
+            if (unit == "mg") {
+                value = value / 1000;
+            }
+
             back = background[loopIndex];
             hover = hoverBackground[loopIndex];
 
@@ -174,7 +213,40 @@
             options: options
         });
 
+        function openCustomModal() {
+            let foodNameTag = document.getElementById("foodNameLabel");
+            let manufacturerTag = document.getElementById("manufacturerLabel");
+            let quantityTag = document.getElementById("quantityLabel");
+
+            foodNameTag.innerText = /*[[${foodInfo.foodName}]]*/null;
+            manufacturerTag.innerText = /*[[${foodInfo.manufacturer}]]*/null;
+            quantityTag.innerText = "1";
+
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function quantityUp() {
+            let quantityTag = document.getElementById("quantityLabel");
+            quantityTag.innerText = parseInt(quantityTag.innerText) + 1;
+        }
+
+        function quantityDown() {
+            let quantityTag = document.getElementById("quantityLabel");
+            let res = parseInt(quantityTag.innerText) - 1;
+            quantityTag.innerText = res <= 0 ? 1 : res;
+        }
+
+        function executeAddCartLogic(foodId) {
+            closeCustomModal();
+            addCart(foodId);
+        }
+
         function addCart(foodId) {
+            let quantity = document.getElementById("quantityLabel").innerText;
             const header = $("meta[name='_csrf_header']").attr("content");
             const token = $("meta[name='_csrf']").attr("content");
             $(document).ajaxSend(function (e, xhr, options) {
@@ -185,12 +257,15 @@
                     type: "POST",
                     url: "/cartFoodInfo/add", // 좋아요 요청을 보낼 URL
                     data: {
-                        foodId: foodId
+                        foodId: foodId,
+                        quantity: quantity
                     },
                     dataType: "json",
                     success: function (response) {
                         if (response.result === "success") { // 좋아요 데이터가 없음 -> 좋아요 표시
                             console.log("success");
+                            closeCustomModal();
+                            toastNotice(response.msg);
                         }
                     },
                     error: function (error) {
