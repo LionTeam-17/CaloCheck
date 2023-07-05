@@ -20,16 +20,15 @@ import java.util.List;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
 
+    @Transactional(readOnly = true)
     public List<Notification> findByPost_Member(Member member) {
         return notificationRepository.findByPost_Member(member);
     }
 
-    @Transactional
     public RsData<Notification> createPostLikeNotification(PostLike postLike, Post post, Member member, String type) {
         return make(postLike, null, post, member, "POSTLIKE");
     }
 
-    @Transactional
     public RsData<Notification> createCommentNotification(Comment comment, Post post, Member member, String type) {
         return make(null, comment, post, member, "COMMENT");
     }
@@ -49,7 +48,6 @@ public class NotificationService {
         return RsData.of("S-1", "알림 메세지가 생성되었습니다.", notification);
     }
 
-    @Transactional
     public RsData<Notification> updateReadDate(List<Notification> notifications) {
         notifications
                 .stream()
@@ -59,7 +57,6 @@ public class NotificationService {
         return RsData.of("S-1", "읽음 처리 되었습니다.");
     }
 
-    @Transactional
     public RsData<Notification> deleteNotification(List<Notification> notifications) {
         List<Notification> readNotifications = notifications
                 .stream()
