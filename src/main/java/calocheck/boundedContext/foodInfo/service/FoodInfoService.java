@@ -1,5 +1,6 @@
 package calocheck.boundedContext.foodInfo.service;
 
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
@@ -66,5 +67,18 @@ public class FoodInfoService {
 
     public FoodInfo findByFoodName(String foodName){
         return foodInfoRepository.findByFoodName(foodName).orElse(null);
+    }
+
+    public void addTag(FoodInfo foodInfo){
+
+        List<Nutrient> nutrientList = foodInfo.getNutrientInfo().getNutrientList();
+
+        for(int i=0; i<nutrientList.size(); i++){
+
+            String name = nutrientList.get(i).getName();
+            System.out.println("name = " + name);
+
+        }
+
     }
 }

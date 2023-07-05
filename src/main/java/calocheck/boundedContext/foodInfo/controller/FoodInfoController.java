@@ -58,6 +58,8 @@ public class FoodInfoController {
 
         List<Nutrient> nutrients = foodInfo.getNutrientInfo().getNutrientList();
 
+        foodInfoService.addTag(foodInfo);
+
         model.addAttribute("foodInfo", foodInfo);
         model.addAttribute("nutrients", nutrients);
 

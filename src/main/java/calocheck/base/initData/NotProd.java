@@ -10,6 +10,8 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.tag.config.TagConfig;
+import calocheck.boundedContext.tag.service.TagService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.entity.PostLike;
@@ -43,7 +45,8 @@ public class NotProd {
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
             CartFoodInfoService cartFoodInfoService,
-            CriteriaDataExtractor criteriaDataExtractor
+            CriteriaDataExtractor criteriaDataExtractor,
+            TagService tagService
     ) {
         return args -> {
             Member[] members = IntStream
@@ -93,7 +96,7 @@ public class NotProd {
                             .getData())
                     .toArray(PostLike[]::new);
 
-//            foodDataExtractor.readFile();
+            foodDataExtractor.readFile();
 //            criteriaDataExtractor.readFile();
 
             //Tracking 샘플 데이터
@@ -118,6 +121,15 @@ public class NotProd {
                     date = date.plusDays(random.nextInt(4) + 1);
                 }
             }
+
+            tagService.createTag("탄수화물", TagConfig.getCarbohydrateColor(), TagConfig.getCarbohydrateCriteria());
+            tagService.createTag("단백질", TagConfig.getProteinColor(), TagConfig.getProteinCriteria());
+            tagService.createTag("지방", TagConfig.getFatColor(), TagConfig.getFatCriteria());
+            tagService.createTag("칼슘", TagConfig.getCalciumColor(), TagConfig.getCalciumCriteria());
+            tagService.createTag("나트륨", TagConfig.getSodiumColor(), TagConfig.getSodiumCriteria());
+            tagService.createTag("칼륨", TagConfig.getPotassiumColor(), TagConfig.getPotassiumCriteria());
+            tagService.createTag("마그네슘", TagConfig.getMagnesiumColor(), TagConfig.getMagnesiumCriteria());
+
         };
 
     }
