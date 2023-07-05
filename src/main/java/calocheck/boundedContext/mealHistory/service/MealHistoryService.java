@@ -5,6 +5,7 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.criteria.entity.Criteria;
 import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.repository.MealHistoryRepository;
 import calocheck.boundedContext.member.entity.Member;
@@ -25,7 +26,7 @@ public class MealHistoryService {
     private final MealHistoryRepository mealHistoryRepository;
     private final NutrientRepository nutrientRepository;
     private final CartFoodInfoService cartFoodInfoService;
-//    private final CriteriaService criteriaService;
+    private final DailyMenuService dailyMenuService;
 
     public MealHistory create(Member member, List<DailyMenu> dailyMenuList, String mealType, String mealMemo, int mealScore) {
 
@@ -46,10 +47,12 @@ public class MealHistoryService {
 
         mealHistoryRepository.save(mealHistory);
 
-        for (int i = 0; i < nutrientTotal.size(); i++) {
+        for (int i = 0; i < dailyMenuList.size(); i++) {
+            DailyMenu buildMenu = dailyMenuList.get(i).toBuilder()
+                    .mealHistory(mealHistory)
+                    .build();
 
-            System.out.printf("%s = %f", mealHistory.getNutrients().get(i).getName(), mealHistory.getNutrients().get(i).getValue());
-
+            dailyMenuService.updateMealHistory(buildMenu);
         }
 
         return mealHistory;
