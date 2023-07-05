@@ -5,7 +5,6 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
-import calocheck.boundedContext.post.form.Viewer;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
@@ -17,10 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -196,28 +190,26 @@ public class MemberController {
         // 회원 정보를 가져옵니다.
         Member member = memberService.findById(id).orElse(null);
 
-        Sort sortPost = Sort.by(Sort.Direction.DESC, "createDate");
-        Pageable pageablePost = PageRequest.of(page, size, sortPost);
+        // 회원이 작성한 모든 글을 조회합니다.
+        List<Post> allPosts = postService.findByMemberId(rq.getMember().getId());
 
-        Page<Post> postPages = postService.findByMember(id, pageablePost);
+        int totalPosts = allPosts.size();
+        int totalPages = (int) Math.ceil((double) totalPosts / size);
 
-        List<Post> postList = postPages.getContent();
-
-        List<Viewer> postViewerList = new ArrayList<>();
-        for (Post post : postList) {
-            postViewerList.add(postService.showSinglePost(post.getId()).getData());
-        }
+        // 페이징 처리를 위한 글 목록을 구합니다.
+        int startIdx = page * size;
+        int endIdx = Math.min(startIdx + size, allPosts.size());
+        List<Post> pagedPosts = allPosts.subList(startIdx, endIdx);
 
         // 조회된 글 목록을 모델에 추가합니다.
-        model.addAttribute("postPaging", postPages);
-        model.addAttribute("postList", postList);
-        model.addAttribute("postViewerList", postViewerList);
+        model.addAttribute("postList", pagedPosts);
 
         model.addAttribute("page", page);
         model.addAttribute("size", size);
-        model.addAttribute("totalPages", postPages.getTotalPages());
+        model.addAttribute("totalPages", totalPages);
 
         model.addAttribute("member", member);
+        model.addAttribute("id", id);
 
         return "usr/member/mypage";
     }
