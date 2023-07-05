@@ -7,7 +7,6 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <link rel="stylesheet" href="/resource/common/mealHistory.css">
-
 </head>
 <body>
 <th:block layout:fragment="Content">
@@ -58,7 +57,7 @@
 
             </table>
         </div>
-        <input type="hidden" id="memberId" th:value="${member.id}" />
+        <input type="hidden" id="memberId" th:value="${member.id}"/>
         <script>
             // ================================
             // START YOUR APP HERE

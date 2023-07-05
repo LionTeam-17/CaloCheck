@@ -1,6 +1,6 @@
 package calocheck.boundedContext.mealHistory.controller;
 
-import calocheck.base.rq.Rq;
+import calocheck.boundedContext.mealHistory.dto.MealHistoryDto;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.member.entity.Member;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/mealHistory")
@@ -25,7 +25,6 @@ public class MealHistoryController {
 
     private final MealHistoryService mealHistoryService;
     private final MemberService memberService;
-    private Rq rq;
 
     public MealHistoryController(MealHistoryService mealHistoryService, MemberService memberService) {
         this.mealHistoryService = mealHistoryService;
@@ -33,38 +32,24 @@ public class MealHistoryController {
     }
 
     @GetMapping("/{memberId}")
-    public String showMealHistory(@PathVariable Long memberId, Model model) {
+    public ResponseEntity<MealHistoryDto> showMealHistory(@PathVariable Long memberId) {
         Optional<Member> memberOpt = memberService.findById(memberId);
         if (!memberOpt.isPresent()) {
-            return "redirect:/";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
 
         Member member = memberOpt.get();
         MealHistory mealHistory = mealHistoryService.getByMember(member);
 
-        model.addAttribute("mealHistory", mealHistory);
-        model.addAttribute("member", member);
-        return "usr/mealHistory/mealHistory";
+        MealHistoryDto mealHistoryDto = MealHistoryDto.fromEntity(mealHistory);
+
+        // Modify the mealHistoryDto here to include only the necessary fields
+
+        return ResponseEntity.ok(mealHistoryDto);
     }
 
-//    @GetMapping("/mealHistory/{date}")
-//    @PreAuthorize("isAuthenticated()")
-//    public String showMealHistoryByDate(@PathVariable("date") String dateStr, Model model) {
-//
-//        LocalDate date = LocalDate.parse(dateStr); // 날짜 문자열을 LocalDate로 변환
-//
-//        Member member = rq.getMember();
-//
-//        // 선택한 날짜의 식사 이력을 가져옵니다.
-//        List<MealHistory> mealHistoryByDate = mealHistoryService.findByMemberAndDate(member, date);
-//
-//        model.addAttribute("mealHistoryByDate", mealHistoryByDate);
-//
-//        return "usr/mealHistory/showByDate"; // 해당 날짜의 식사 이력을 보여주는 뷰로 이동
-//    }
-
     @GetMapping("/api/{memberId}")
-    public ResponseEntity<List<MealHistory>> getMealHistoryByDate(@PathVariable Long memberId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<List<MealHistoryDto>> findMealHistoryByDate(@PathVariable Long memberId, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         Optional<Member> memberOpt = memberService.findById(memberId);
         if (!memberOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
@@ -73,6 +58,12 @@ public class MealHistoryController {
         Member member = memberOpt.get();
         List<MealHistory> mealHistoryByDate = mealHistoryService.findByMemberAndDate(member, date);
 
-        return ResponseEntity.ok(mealHistoryByDate);
+        List<MealHistoryDto> mealHistoryDtos = mealHistoryByDate.stream()
+                .map(MealHistoryDto::fromEntity)
+                .collect(Collectors.toList());
+
+        // Modify the mealHistoryDtos here to include only the necessary fields
+
+        return ResponseEntity.ok(mealHistoryDtos);
     }
 }
