@@ -122,25 +122,25 @@
                 <div class="flex mx-2 my-5">
                     <ul class="pagination justify-content-center flex justify-center flex-grow btn-group">
                         <li class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=0, size=${size})}">처음</a>
+                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=0)}">처음</a>
                         </li>
                         <li class="btn text-xs page-item" th:classappend="${page == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page -1}, size=${size})}">이전</a>
+                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${page -1})}">이전</a>
                         </li>
                         <li class="btn text-xs page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages -1)}"
                             th:classappend="${pageNum == page} ? 'active'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${pageNum}, size=${size})}"
+                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${pageNum})}"
                                th:text="${pageNum+1}"></a>
                         </li>
                         <li class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${page+1}, size=${size})}">다음</a>
+                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${page+1})}">다음</a>
                         </li>
                         <li class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/mypage/{id}(id=${id}, page=${totalPages -1}, size=${size})}">마지막</a>
+                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${totalPages -1})}">마지막</a>
                         </li>
                     </ul>
                 </div>
-                <form id="postForm" method="get" th:action="@{/mypage/{id}(id=${id})}">
+                <form id="postForm" method="get" th:action="@{/member/mypage/{id}(id=${id})}">
                     <input type="hidden" id="page" name="page" value="${page}">
                     <!-- 다른 필요한 파라미터들도 추가할 수 있습니다. -->
                 </form>

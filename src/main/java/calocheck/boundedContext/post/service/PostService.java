@@ -140,8 +140,8 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw, pageable);
     }
-    public Page<Post> findByMember(Long id, Pageable pageable) {
-        return postRepository.findByMember(id, pageable);
+    public Page<Post> findByMemberId(Long id, Pageable pageable) {
+        return postRepository.findByMemberId(id, pageable);
     }
 
     public RsData<Viewer> showSinglePost(long postId) {
