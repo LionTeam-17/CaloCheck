@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MealHistoryRepository extends JpaRepository<MealHistory, Long> {
-
     Optional<MealHistory> findByMember (Member member);
-
-    List<MealHistory> findByMemberAndCreateDate(Member member, LocalDate createDate);
-
+    List<MealHistory> findByMemberAndCreateDateBetween(Member member, LocalDateTime startDateTime, LocalDateTime endDateTime);
 }

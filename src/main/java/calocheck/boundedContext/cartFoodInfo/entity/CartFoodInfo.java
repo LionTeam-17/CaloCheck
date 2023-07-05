@@ -18,12 +18,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartFoodInfo extends BaseEntity {
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private FoodInfo foodInfo;
-
     private long quantity;
 }
