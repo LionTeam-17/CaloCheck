@@ -4,6 +4,7 @@ import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.repository.DailyMenuRepository;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+// MealHistory (DailyMenu, DailyMenu, DailyMenu)
 @Service
 @RequiredArgsConstructor
 public class DailyMenuService {
 
     private final DailyMenuRepository dailyMenuRepository;
     private final CartFoodInfoService cartFoodInfoService;
+
+    public DailyMenu create(Member member, FoodInfo foodInfo, Long quantity, String mealType, String mealMemo)
 
     @Transactional
     public List<DailyMenu> create(Member member, String mealType) {

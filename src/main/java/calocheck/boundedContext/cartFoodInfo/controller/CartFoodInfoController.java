@@ -118,19 +118,21 @@ public class CartFoodInfoController {
         List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(myCriteria, todayMealHistory, nutrientTotal);
 
         model.addAttribute("calcNutrients", calcNutrients);
+        model.addAttribute("cartList", cartList);
         
         return "usr/cartFoodInfo/addMenu";
     }
 
     @PostMapping("/addMenu")
-    @ResponseBody
     @PreAuthorize("isAuthenticated()")
-    public String addMenu(String mealType, int menuScore, String menuMemo) {
-
+    @ResponseBody
+    public String addMenu(@RequestParam("mealType") String mealType,
+                          @RequestParam("menuMemo") String menuMemo,
+                          @RequestParam("menuScore") int menuScore) {
         Member member = rq.getMember();
 
-        //식단에 추가
-        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, mealType);
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<DailyMenu> dailyMenuList = dailyMenuService.create(member, mealType, cartList);
 
         MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
 
