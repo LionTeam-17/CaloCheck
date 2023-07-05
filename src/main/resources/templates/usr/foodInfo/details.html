@@ -29,11 +29,11 @@
                 <div class="m-2 text-center font-bold text-black text-lg"
                      th:text="${foodInfo.foodName}"></div>
                 <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
-                        th:onclick="openCustomModal()">
+                   th:onclick="openCustomModal()">
                     장바구니 등록
                 </a>
                 <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
-                        href="javascript:history.back()">
+                   href="javascript:history.back()">
                     돌아가기
                 </a>
             </div>
@@ -45,7 +45,8 @@
                     <div class="flex">
                         <div class="flex m-1">
                             <div class="text-xs font-bold m-1">제조사/유통사</div>
-                            <div class="text-xs text-black m-1 whitespace-normal break-words" th:text="${foodInfo.manufacturer}"></div>
+                            <div class="text-xs text-black m-1 whitespace-normal break-words"
+                                 th:text="${foodInfo.manufacturer}"></div>
                         </div>
                         <div class="flex m-1">
                             <div class="text-xs font-bold m-1">식품 대분류</div>
@@ -69,6 +70,13 @@
 
                     <canvas id="nutrientChart"></canvas>
 
+                    <div th:if="${tagList}" th:each="tag : ${tagList}" class="mt-3 flex flex-row justify-center">
+                        <div>
+                            <i class="fa-solid fa-circle" th:style="'color:' + ${tag.getTagColorCode()}"></i>
+                            <p th:text="${tag.getTagName()}" class="ml-2 inline-block"></p>
+                        </div>
+                    </div>
+
                     <div class="divider my-2" style="height: 1px"></div>
                     <!-- nutrientInfo 정보 출력 시작-->
                     <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrients}"
@@ -89,12 +97,13 @@
             </div>
             <div class="flex justify-center">
                 <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
-                        th:href="@{/cartFoodInfo/list}">
+                   th:href="@{/cartFoodInfo/list}">
                     장바구니 항목
                 </a>
             </div>
 
-            <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+            <div id="customModal"
+                 class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
                 <div class="bg-white px-20 py-40">
                     <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
                     <div class="flex">
@@ -164,10 +173,10 @@
             labels: [],
             datasets: [
                 {
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: []
-            }]
+                    data: [],
+                    backgroundColor: [],
+                    hoverBackgroundColor: []
+                }]
         };
 
         let label;
@@ -178,23 +187,23 @@
 
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrients}"]*/
-            loopIndex = /*[[${loop.index}]]*/null;
-            label = /*[[${nutrient.name}]]*/null;
-            value = /*[[${nutrient.value}]]*/null;
-            unit = /*[[${nutrient.unit}]]*/null;
-            if (unit == "mg") {
-                value = value / 1000;
-            }
+        loopIndex = /*[[${loop.index}]]*/null;
+        label = /*[[${nutrient.name}]]*/null;
+        value = /*[[${nutrient.value}]]*/null;
+        unit = /*[[${nutrient.unit}]]*/null;
+        if (unit == "mg") {
+            value = value / 1000;
+        }
 
-            back = background[loopIndex];
-            hover = hoverBackground[loopIndex];
+        back = background[loopIndex];
+        hover = hoverBackground[loopIndex];
 
-            if (value != 0) {
-                nutrientData.labels.push(label);
-                nutrientData.datasets[0].data.push(value);
-                nutrientData.datasets[0].backgroundColor.push(back);
-                nutrientData.datasets[0].hoverBackgroundColor.push(hover);
-            }
+        if (value != 0) {
+            nutrientData.labels.push(label);
+            nutrientData.datasets[0].data.push(value);
+            nutrientData.datasets[0].backgroundColor.push(back);
+            nutrientData.datasets[0].hoverBackgroundColor.push(hover);
+        }
         /*[/]*/
 
         // 원형 그래프의 옵션

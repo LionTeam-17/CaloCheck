@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -99,22 +100,12 @@ public class FoodInfoService {
 
         List<Nutrient> nutrientList = foodInfo.getNutrientInfo().getNutrientList();
         List<Tag> tagList = tagService.findAllTag();
-        List<Tag> returnTagList = new ArrayList<>();
 
-        for (Nutrient nutrient : nutrientList) {
-
-            for (Tag tag : tagList){
-
-                if(nutrient.getName().equals(tag.getTagName())){
-
-                    if(nutrient.getValue() >= tag.getTagCriteria()){
-
-                        returnTagList.add(tag);
-
-                    }
-                }
-            }
-        }
+        List<Tag> returnTagList = nutrientList.stream()
+                .flatMap(nutrient -> tagList.stream()
+                        .filter(tag -> nutrient.getName().equals(tag.getTagName()))
+                        .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
+                .collect(Collectors.toList());
 
         return returnTagList;
     }
