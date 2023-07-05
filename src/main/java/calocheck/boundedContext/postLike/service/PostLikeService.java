@@ -1,5 +1,6 @@
 package calocheck.boundedContext.postLike.service;
 
+import calocheck.base.event.EventAfterCreatePostLike;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.post.entity.Post;
@@ -7,6 +8,7 @@ import calocheck.boundedContext.post.repository.PostRepository;
 import calocheck.boundedContext.postLike.entity.PostLike;
 import calocheck.boundedContext.postLike.repository.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public RsData<PostLike> savePostLike(Long postId, Member member) {
         Optional<Post> oPost = postRepository.findById(postId);
@@ -46,6 +49,8 @@ public class PostLikeService {
                 .build();
 
         postLikeRepository.save(postLike);
+
+        eventPublisher.publishEvent(new EventAfterCreatePostLike(postLike));
 
         return RsData.of("S-1", "추천했습니다.", postLike);
     }
