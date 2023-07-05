@@ -7,6 +7,7 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrient.service.NutrientService;
+import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.nutrientInfo.service.NutrientInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @Service
 @RequiredArgsConstructor
@@ -117,8 +120,7 @@ public class CartFoodInfoService {
 
     public Double calculateTotalKcal(List<CartFoodInfo> cartList) {
         return cartList.stream()
-                .map(cartItem -> cartItem.getFoodInfo().getNutrientInfo().getKcal())
-                .mapToDouble(Double::doubleValue)
+                .mapToDouble(cartItem -> cartItem.getFoodInfo().getNutrientInfo().getKcal() * cartItem.getQuantity())
                 .sum();
     }
 
@@ -141,8 +143,15 @@ public class CartFoodInfoService {
         }};
 
         cartList.stream()
-                .map(cartItem -> cartItem.getFoodInfo().getNutrientInfo())
-                .forEach(nutrient -> nutrientInfoService.addNutrientData(res, nutrient.getNutrientList()));
+                .forEach(cartItem -> {
+                    NutrientInfo nutrientInfo = cartItem.getFoodInfo().getNutrientInfo();
+                    LongStream.range(0, cartItem.getQuantity())
+                            .forEach(i -> nutrientInfoService.addNutrientData(
+                                        res, nutrientInfo.getNutrientList()
+                                    )
+                            );
+                    }
+                );
 
         return res;
     }

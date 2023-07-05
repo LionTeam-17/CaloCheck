@@ -29,11 +29,12 @@
                 <div class="m-2 text-center font-bold text-black text-lg"
                      th:text="${foodInfo.foodName}"></div>
                 <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
-                        th:onclick="openCustomModal()">
+                   th:if="${@rq.isLogin()}"
+                   th:onclick="openCustomModal()">
                     장바구니 등록
                 </a>
                 <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
-                        href="javascript:history.back()">
+                   href="javascript:history.back()">
                     돌아가기
                 </a>
             </div>
@@ -89,7 +90,8 @@
             </div>
             <div class="flex justify-center">
                 <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
-                        th:href="@{/cartFoodInfo/list}">
+                   th:if="${@rq.isLogin()}"
+                   th:href="@{/cartFoodInfo/list}">
                     장바구니 항목
                 </a>
             </div>
