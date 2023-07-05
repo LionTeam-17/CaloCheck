@@ -51,7 +51,7 @@
                             <div id="followingTableBody">
                                 <tr class="hover text-center" th:each="following, loop : ${followingList}">
                                     <td>
-                                        <a th:href="@{'member/mypage/' + ${following.id}}">
+                                        <a th:href="@{'/member/mypage/' + ${following.id}}">
                                             <span th:text="${following.nickname}"></span>
                                         </a>
                                     </td>
