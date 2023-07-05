@@ -11,8 +11,8 @@
                 <div class="flex justify-between flex-grow">
                     <div class="px-4 flex flex-grow">
                         <div class="form-control flex flex-grow">
-                            <div><i class="fa-solid fa-magnifying-glass"></i>
-                                검색
+                            <div class="font-bold"><i class="fa-solid fa-magnifying-glass"></i>
+                                <span>검색</span>
                             </div>
                             <div class="mt-4 flex">
                                 <label class="flex flex-col flex-grow">
@@ -23,10 +23,10 @@
                                            onpaste="setTimeoutZero(() => $(this).keyup());"
                                            placeholder="검색어를 입력하세요." th:value="${kw}"
                                            type="text">
-                                    <a class="btn btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
+                                    <a class="mx-1 w-[8px] text-sm"
                                        href="#"
                                        onclick="event.preventDefault(); location.href = '?code=0&kw=' + $(this).prev().val().trim().replace(/ /g, '');"
-                                       style="background:#112D4E; color:white">
+                                       style="background:rgba(0, 0, 0, 0); color:white">
                                         <span class="flex mt-1 justify-center items-center"></span>
                                     </a>
                                     <script>
@@ -52,14 +52,17 @@
                 <div class="flex">
                     <h1 class="font-bold mb-2">
                         <i class="fa-solid fa-list"></i>
-                        게시글 목록
+                        <span>게시글 목록</span>
                     </h1>
-                    <a class="ml-4" th:href="@{|?code=0&kw=${kw}|}">최신순</a>
-                    <a class="ml-2" th:href="@{|?code=1&kw=${kw}|}">추천순</a>
+                    <a class="ml-4 mt-1 font-bold text-sm" th:href="@{|?code=0&kw=${kw}|}" th:if="${!code.equals('1')}">최신순</a>
+                    <a class="ml-4 mt-1 text-sm" th:href="@{|?code=0&kw=${kw}|}" th:if="${code.equals('1')}">최신순</a>
+                    <a class="ml-2 mt-1 font-bold text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${code.equals('1')}">추천순</a>
+                    <a class="ml-2 mt-1 text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${!code.equals('1')}">추천순</a>
                 </div>
                 <div class="btn btn-sm" style="background:#112D4E">
                     <a href="/post/createForm">
-                        <i class="fa-solid fa-pencil"></i>&nbsp;글쓰기
+                        <i class="fa-solid fa-pencil"></i>
+                        <span>&nbsp;글쓰기</span>
                     </a>
                 </div>
             </div>
@@ -74,10 +77,10 @@
                 </div>
             </div>
             <div class="divider my-2" style="height: 1px"></div>
-            <div class="flex flex-wrap max-w-5xl w-full" th:if="${postList.isEmpty()}">
+            <div class="flex flex-wrap max-w-5xl w-full" th:if="${paging.isEmpty()}">
                 게시물이 없습니다.
             </div>
-            <div class="flex flex-col max-w-5xl w-full" th:if="${!postList.isEmpty()}">
+            <div class="flex flex-col max-w-5xl w-full" th:if="${!paging.isEmpty()}">
                 <div class="flex flex-col" th:each="post, loop: ${paging}">
                     <div class="flex flex-grow justify-between">
                         <!-- 역순 정렬 로직 시작 -->
@@ -114,26 +117,28 @@
         <!--    페이징 처리 시작 -->
         <div class="flex mx-2 my-5">
             <div class="flex flex-grow" th:if="${!paging.isEmpty()}">
-                <ul class="pagination justify-content-center flex justify-center flex-grow btn-group">
-                    <li class="btn text-xs page-item" style="background:#112D4E"
+                <ul class="pagination justify-content-center flex justify-center flex-grow">
+                    <li class="page-item"
                         th:if="${paging.hasPrevious() == true }">
-                        <a class="page-link"
+                        <a class="page-link m-1 btn btn-sm text-xs" style="background:#112D4E;"
                            th:href="@{|?code=${code}&kw=${kw}&page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
                     </li>
-                    <li class="btn text-xs page-item" style="background:#112D4E"
+                    <li class="text-xs page-item"
                         th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
                         th:if="${page >= paging.number - 1 and page <= paging.number+3}">
-                        <a class="page-link" th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
+                        <a class="page-link m-1 btn btn-sm btn-outline text-xs"
+                           th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page != paging.number+1}" th:text="${page}"></a>
-                        <a class="page-link text-sm" style="color:black"
+                        <a class="page-link m-1 btn btn-sm text-sm" style="background:#112D4E;"
                            th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page == paging.number+1}" th:text="${page}"></a>
                     </li>
-                    <li class="btn page-item text-xs" style="background:#112D4E"
+                    <li class="page-item"
                         th:if="${paging.hasNext() == true }">
-                        <a class="page-link" th:href="@{|?code=${code}&kw=${kw}&page=${paging.number+1}|}">
+                        <a class="page-link m-1 btn btn-sm text-xs" style="background:#112D4E;"
+                           th:href="@{|?code=${code}&kw=${kw}&page=${paging.number+1}|}">
                             <span>다음</span>
                         </a>
                     </li>
@@ -143,19 +148,5 @@
         <!--    페이징 처리 종료-->
     </div>
 </main>
-<script>
-    window.onload = function () {
-        let currentURL = window.location.href;
-
-        // 페이지 로드 후에 currentURL 값을 사용하는 부분
-        const paginationLinks = document.querySelectorAll('.pagination .page-link');
-        paginationLinks.forEach(function (link) {
-            const href = link.getAttribute('href');
-            if (href && href.includes('?')) {
-                link.setAttribute('href', href + '&currentURL=' + encodeURIComponent(currentURL));
-            }
-        });
-    };
-</script>
 </body>
 </html>
