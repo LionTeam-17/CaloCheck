@@ -4,6 +4,8 @@ import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
+import calocheck.boundedContext.tag.entity.Tag;
+import calocheck.boundedContext.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +18,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class FoodInfoService {
+
     private final FoodInfoRepository foodInfoRepository;
+    private final TagService tagService;
 
     public FoodInfo create(NutrientInfo nutrientInfo,
                            String foodName, String manufacturer, String category,
@@ -70,18 +74,6 @@ public class FoodInfoService {
         return foodInfoRepository.findByFoodName(foodName).orElse(null);
     }
 
-    public void addTag(FoodInfo foodInfo) {
-
-        List<Nutrient> nutrientList = foodInfo.getNutrientInfo().getNutrientList();
-
-        for (int i = 0; i < nutrientList.size(); i++) {
-
-            String name = nutrientList.get(i).getName();
-            System.out.println("name = " + name);
-
-        }
-    }
-
     public List<List<String>> findTop5ByFoodNameContains(String[] foodNameArr){
 
         List<List<String>> top5Lists = new ArrayList<>();
@@ -101,5 +93,29 @@ public class FoodInfoService {
         }
 
         return top5Lists;
+    }
+
+    public List<Tag> getTagList(FoodInfo foodInfo) {
+
+        List<Nutrient> nutrientList = foodInfo.getNutrientInfo().getNutrientList();
+        List<Tag> tagList = tagService.findAllTag();
+        List<Tag> returnTagList = new ArrayList<>();
+
+        for (Nutrient nutrient : nutrientList) {
+
+            for (Tag tag : tagList){
+
+                if(nutrient.getName().equals(tag.getTagName())){
+
+                    if(nutrient.getValue() >= tag.getTagCriteria()){
+
+                        returnTagList.add(tag);
+
+                    }
+                }
+            }
+        }
+
+        return returnTagList;
     }
 }

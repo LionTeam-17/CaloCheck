@@ -129,7 +129,6 @@ public class NotProd {
             tagService.createTag("나트륨", TagConfig.getSodiumColor(), TagConfig.getSodiumCriteria());
             tagService.createTag("칼륨", TagConfig.getPotassiumColor(), TagConfig.getPotassiumCriteria());
             tagService.createTag("마그네슘", TagConfig.getMagnesiumColor(), TagConfig.getMagnesiumCriteria());
-
         };
 
     }
