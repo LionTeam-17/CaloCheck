@@ -88,7 +88,7 @@
             </div>
 
             <div id="myPost" class="hidden flex flex-col">
-                <li th:if="${not #lists.isEmpty(postList)}">
+                <li th:if="${!postList.isEmpty()}">
                     <div th:each="post : ${postList}">
                         <div class="mt-5 flex flex-row gap-4">
                             <a th:href="@{|/post/${post.id}|}"
@@ -111,7 +111,7 @@
                     </div>
                 </li>
                 <div>
-                    <div th:unless="${not #lists.isEmpty(postList)}">
+                    <div th:if="${postList.isEmpty()}">
                         <div class="flex justify-center font-bold">
                             작성한 글이 없습니다.
                         </div>
