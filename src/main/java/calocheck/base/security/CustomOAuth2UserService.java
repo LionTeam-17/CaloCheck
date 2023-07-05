@@ -34,12 +34,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         String email = "";
+        String gender = "";
 
 
         if (providerTypeCode.equals("KAKAO")) {
 
             Map<String, Object> userInfo = oAuth2User.getAttribute("kakao_account");
             email = extractValue(userInfo, "email");
+            gender = extractValue(userInfo, "gender");
+
+            if (gender.equals("male")) {
+                gender = "M";
+            }
+
+            if (gender.equals("female")) {
+                gender = "W";
+            }
 
             Map<String, Object> profile = extractValue(userInfo, "profile");
 
@@ -53,12 +63,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Map<String, String> userInfo = (Map<String, String>) oAuth2User.getAttributes().get("response");
             oauthId = userInfo.get("id");
             email = userInfo.get("email");
-
+            gender = userInfo.get("gender");
 
         }
 
         if (providerTypeCode.equals("GOOGLE")) {
             email = oAuth2User.getAttribute("email");
+            gender = oAuth2User.getAttribute("gender");
         }
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
@@ -67,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (nickname.length() > 20) nickname = nickname.substring(0, 20);
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, email, nickname, 0, 0.0,0.0, 0.0, 0.0).getData();
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, gender, email, nickname, 0, 0.0,0.0, 0.0, 0.0).getData();
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }

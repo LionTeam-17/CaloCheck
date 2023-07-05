@@ -2,6 +2,8 @@ package calocheck.boundedContext.member.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.friend.entity.Friend;
+import calocheck.boundedContext.friend.service.FriendService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
@@ -16,6 +18,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -33,6 +40,7 @@ public class MemberController {
     private final Rq rq;
     private final PostService postService;
     private final TrackingService trackingService;
+    private final FriendService friendService;
 
     @AllArgsConstructor
     @Getter
@@ -126,9 +134,9 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{memberId}")
-    public String modify(@PathVariable Long memberId, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    public String modify(@PathVariable Long memberId, String gender, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
 
-        RsData modifyRsData = memberService.modify(memberId, age, height, weight, muscleMass, bodyFat, rq.getMember());
+        RsData modifyRsData = memberService.modify(memberId, gender, age, height, weight, muscleMass, bodyFat, rq.getMember());
 
         if (modifyRsData.isFail()) {
             return rq.historyBack(modifyRsData);
@@ -184,29 +192,33 @@ public class MemberController {
     public String showMyPage(
             Model model,
             @PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @PageableDefault(sort = "createDate", direction = DESC, size = 5) Pageable pageable
     ) {
         // 회원 정보를 가져옵니다.
         Member member = memberService.findById(id).orElse(null);
 
         // 회원이 작성한 모든 글을 조회합니다.
-        List<Post> allPosts = postService.findByMemberId(rq.getMember().getId());
-
-        int totalPosts = allPosts.size();
-        int totalPages = (int) Math.ceil((double) totalPosts / size);
-
-        // 페이징 처리를 위한 글 목록을 구합니다.
-        int startIdx = page * size;
-        int endIdx = Math.min(startIdx + size, allPosts.size());
-        List<Post> pagedPosts = allPosts.subList(startIdx, endIdx);
+        Page<Post> allPosts = postService.findByMemberId(id, pageable);
 
         // 조회된 글 목록을 모델에 추가합니다.
-        model.addAttribute("postList", pagedPosts);
+        model.addAttribute("postList", allPosts);
 
-        model.addAttribute("page", page);
-        model.addAttribute("size", size);
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("page", allPosts.getNumber());
+        model.addAttribute("totalPages", allPosts.getTotalPages());
+
+        model.addAttribute("member", member);
+        model.addAttribute("id", id);
+
+        // 친구
+        List<Member> followingList = friendService.findFollowing(id);
+        List<Member> followerList = friendService.findFollower(id);
+        Friend follow = friendService.findByFollowerIdAndFollowingId(rq.getMember().getId(), id).orElse(null);
+
+        model.addAttribute("member", member);
+        model.addAttribute("follow", follow);
+
+        model.addAttribute("followingList", followingList);
+        model.addAttribute("followerList", followerList);
 
         return "usr/member/mypage";
     }

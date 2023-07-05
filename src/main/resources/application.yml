@@ -14,7 +14,7 @@ spring:
       client:
         registration:
           kakao:
-            scope: account_email
+            scope: account_email, gender
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
@@ -47,5 +47,6 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 1000
   test:
     exclude: '**/*Tests.class'

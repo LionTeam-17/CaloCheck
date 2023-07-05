@@ -38,60 +38,25 @@ public class PostController {
                                @RequestParam(value = "code", defaultValue = "0") String code,
                                Model model) {
 
+        Page<Post> paging;
         if (!kw.equals("")) {
             if (code.equals("0")) {
-                List<Post> filteringList = postService.findBySubjectLikeOrMemberNicknameLike
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%"
-                        );
-                Page<Post> filteringPaging = postService.findBySubjectLikeOrMemberNicknameLike
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%",
-                                page
-                        );
-
-                model.addAttribute("postList", filteringList);
-                model.addAttribute("paging", filteringPaging);
+                paging = postService.findBySubjectLikeOrMemberNicknameLike
+                        ("%" + kw + "%", "%" + kw + "%", page);
             } else {
-                List<Post> topFilteringList = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%"
-                        );
-                Page<Post> topFilteringPaging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
-                        (
-                                "%" + kw + "%",
-                                "%" + kw + "%",
-                                page
-                        );
-
-                model.addAttribute("postList", topFilteringList);
-                model.addAttribute("paging", topFilteringPaging);
+                paging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                        ("%" + kw + "%", "%" + kw + "%", page);
             }
         } else {
-            if (code.equals("0")) {
-                List<Post> postList = postService.findAll();
-                Page<Post> paging = postService.findAll(page);
-
-                model.addAttribute("postList", postList);
-                model.addAttribute("paging", paging);
-
-            } else {
-                List<Post> topPostList = postService.findByOrderByPopularityDesc();
-                Page<Post> paging = postService.findByOrderByPopularityDesc(page);
-
-                model.addAttribute("postList", topPostList);
-                model.addAttribute("paging", paging);
-            }
+            if (code.equals("0")) paging = postService.findAll(page);
+            else paging = postService.findByOrderByPopularityDesc(page);
         }
+        model.addAttribute("paging", paging);
         model.addAttribute("code", code);
         model.addAttribute("kw", kw);
 
         return "usr/post/list";
     }
-
 
     @GetMapping("/{postId}")
     public String showPostPage(Model model, @PathVariable Long postId) {
@@ -133,19 +98,19 @@ public class PostController {
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
             photoUrl = photoService.photoUpload(img);
 
-            //업로드된 이미지가 안전한 이미지인지 확인
-            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
-
-            if (isSafeImg.isFail()) {
-                return rq.historyBack(isSafeImg);
-            }
+//            //업로드된 이미지가 안전한 이미지인지 확인
+//            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
+//
+//            if (isSafeImg.isFail()) {
+//                return rq.historyBack(isSafeImg);
+//            }
 
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
+//        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
 
 //        //이미지 수집 동의시, 음식과 연결
 //        if (isFoodImg.isSuccess() && agree) {
