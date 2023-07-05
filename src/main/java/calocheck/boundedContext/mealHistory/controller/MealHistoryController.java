@@ -32,7 +32,7 @@ public class MealHistoryController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<MealHistoryDto> showMealHistory(@PathVariable Long memberId) {
+    public String showMealHistory(@PathVariable Long memberId, Model model) {
         Optional<Member> memberOpt = memberService.findById(memberId);
         if (!memberOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
@@ -43,9 +43,12 @@ public class MealHistoryController {
 
         MealHistoryDto mealHistoryDto = MealHistoryDto.fromEntity(mealHistory);
 
-        // Modify the mealHistoryDto here to include only the necessary fields
+        // Add data to the model to be used in the view
+        model.addAttribute("member", member);
+        model.addAttribute("mealHistory", mealHistoryDto);
 
-        return ResponseEntity.ok(mealHistoryDto);
+        // Return the name of the view (Thymeleaf template) to be rendered
+        return "usr/mealHistory/mealHistory";
     }
 
     @GetMapping("/api/{memberId}")

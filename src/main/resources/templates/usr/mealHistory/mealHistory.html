@@ -27,7 +27,7 @@
                             <button type="button" title="next" class="btn-cal next">
                             </button>
                         </div>
-                        <table class="cal-table menu-table">
+                        <table class="cal-table">
                             <thead>
                             <tr>
                                 <th>S</th>
@@ -45,17 +45,7 @@
                 </div>
                 <!-- // .my-calendar -->
             </div>
-            <table class="menu-table">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Food Name</th>
-                    <th>Quantity</th>
-                    <th>Meal Type</th>
-                </tr>
-                </thead>
-
-            </table>
+            <div id="meal-info"></div>
         </div>
         <input type="hidden" id="memberId" th:value="${member.id}"/>
         <script>
@@ -191,59 +181,44 @@
                     init.activeDTag = e.target;
                     init.activeDate.setDate(day);
                     reloadTodo();
+
+                    const memberId = document.getElementById('memberId').value;
+
+                    let date = `${init.activeDate.getFullYear()}-${init.addZero(init.activeDate.getMonth() + 1)}-${init.addZero(day)}`;
+
+                    fetch(`/mealHistory/api/${memberId}?date=${date}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // 식단 정보 표시
+                            let mealInfo = document.getElementById('meal-info');
+                            mealInfo.innerHTML = ''; // 기존의 정보를 삭제
+
+                            data.forEach(mealHistoryDto => {
+                                let mealType = document.createElement('h3');
+                                mealType.textContent = 'Meal Type: ' + mealHistoryDto.mealType;
+
+                                let mealScore = document.createElement('p');
+                                mealScore.textContent = 'Meal Score: ' + mealHistoryDto.mealScore;
+
+                                let mealMemo = document.createElement('p');
+                                mealMemo.textContent = 'Meal Memo: ' + mealHistoryDto.mealMemo;
+
+                                let dailyMenuList = document.createElement('ul');
+                                mealHistoryDto.dailyMenuList.forEach(dailyMenu => {
+                                    let foodItem = document.createElement('li');
+                                    foodItem.textContent = dailyMenu.foodName + ' (Quantity: ' + dailyMenu.quantity + ')';
+                                    dailyMenuList.appendChild(foodItem);
+                                });
+
+                                mealInfo.appendChild(mealType);
+                                mealInfo.appendChild(mealScore);
+                                mealInfo.appendChild(mealMemo);
+                                mealInfo.appendChild(dailyMenuList);
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
                 }
             });
-            $calBody.addEventListener('click', (e) => {
-                if (e.target.classList.contains('day')) {
-                    if (init.activeDTag) {
-                        init.activeDTag.classList.remove('day-active');
-                    }
-                    let day = Number(e.target.textContent);
-                    loadDate(day, e.target.cellIndex);
-                    e.target.classList.add('day-active');
-                    init.activeDTag = e.target;
-                    init.activeDate.setDate(day);
-
-                    // Load meals for the selected date
-                    let selectedDate = `${init.activeDate.getFullYear()}-${init.addZero(init.activeDate.getMonth() + 1)}-${init.addZero(day)}`;
-                    fetchMealHistory(selectedDate);
-                }
-            });
-
-            function fetchMealHistory(date) {
-                let memberId = document.getElementById('memberId').value;
-                fetch(`/mealHistory/api/${memberId}?date=${date}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => displayMenu(data))
-                    .catch(e => {
-                        console.error('Error: ' + e.message);
-                    });
-            }
-
-            function displayMenu(data) {
-                let html = '';
-                data.forEach(item => {
-                    html += `
-        <tr>
-            <td>${item.date}</td>
-            <td>${item.foodInfo.foodName}</td>
-            <td>${item.quantity}</td>
-            <td>${item.mealScore}</td>
-            <td>${item.mealType}</td>
-            <td>${item.mealMemo}</td>
-        </tr>
-        `;
-                });
-
-                // Add HTML to the menu table
-                let menuTable = document.querySelector('.menu-table');
-                menuTable.innerHTML = html;
-            }
         </script>
     </main>
 </th:block>
