@@ -2,6 +2,8 @@ package calocheck.boundedContext.member.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.friend.entity.Friend;
+import calocheck.boundedContext.friend.service.FriendService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
@@ -38,6 +40,7 @@ public class MemberController {
     private final Rq rq;
     private final PostService postService;
     private final TrackingService trackingService;
+    private final FriendService friendService;
 
     @AllArgsConstructor
     @Getter
@@ -197,14 +200,6 @@ public class MemberController {
         // 회원이 작성한 모든 글을 조회합니다.
         Page<Post> allPosts = postService.findByMemberId(id, pageable);
 
-        /*int totalPosts = allPosts.size();
-        int totalPages = (int) Math.ceil((double) totalPosts / size);
-
-        // 페이징 처리를 위한 글 목록을 구합니다.
-        int startIdx = page * size;
-        int endIdx = Math.min(startIdx + size, allPosts.size());
-        List<Post> pagedPosts = allPosts.subList(startIdx, endIdx);*/
-
         // 조회된 글 목록을 모델에 추가합니다.
         model.addAttribute("postList", allPosts);
 
@@ -213,6 +208,17 @@ public class MemberController {
 
         model.addAttribute("member", member);
         model.addAttribute("id", id);
+
+        // 친구
+        List<Member> followingList = friendService.findFollowing(id);
+        List<Member> followerList = friendService.findFollower(id);
+        Friend follow = friendService.findByFollowerIdAndFollowingId(rq.getMember().getId(), id).orElse(null);
+
+        model.addAttribute("member", member);
+        model.addAttribute("follow", follow);
+
+        model.addAttribute("followingList", followingList);
+        model.addAttribute("followerList", followerList);
 
         return "usr/member/mypage";
     }
