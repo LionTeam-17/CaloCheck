@@ -12,16 +12,16 @@
         <h1 class="text-black">나의 권장량</h1>
         <div class="bg-gray-400">
             <div th:text="'성별 : ' + ${criteria.gender}"></div>
-            <div th:text="'연령 : ' + ${criteria.age}"></div>
-            <div th:text="'열량 : ' + ${criteria.kcal}"></div>
-            <div th:text="'탄수화물 : ' + ${criteria.carbohydrate}"></div>
-            <div th:text="'단백질 : ' + ${criteria.protein}"></div>
-            <div th:text="'지방 : ' + ${criteria.fat}"></div>
-            <div th:text="'식이섬유 : ' + ${criteria.fiber}"></div>
-            <div th:text="'칼슘 : ' + ${criteria.calcium}"></div>
-            <div th:text="'나트륨 : ' + ${criteria.sodium}"></div>
-            <div th:text="'칼륨 : ' + ${criteria.potassium}"></div>
-            <div th:text="'마그네슘 : ' + ${criteria.magnesium}"></div>
+            <div th:text="'나이 : ' + ${criteria.age} + '세'"></div>
+            <div th:text="'기초대사량 : ' + ${BMR} + ' kcal'"></div>
+            <div th:text="'탄수화물 : ' + ${criteria.carbohydrate} + 'g'"></div>
+            <div th:text="'단백질 : ' + ${criteria.protein} + 'g'"></div>
+            <div th:text="'지방 : ' + ${criteria.fat} + 'g'"></div>
+            <div th:text="'식이섬유 : ' + ${criteria.fiber} + 'g'"></div>
+            <div th:text="'칼슘 : ' + ${criteria.calcium} + 'mg'"></div>
+            <div th:text="'나트륨 : ' + ${criteria.sodium} + 'mg'"></div>
+            <div th:text="'칼륨 : ' + ${criteria.potassium} + 'mg'"></div>
+            <div th:text="'마그네슘 : ' + ${criteria.magnesium} + 'mg'"></div>
         </div>
     </div>
 
