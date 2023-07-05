@@ -27,7 +27,7 @@
         <div class="w-full">
             <div class="flex justify-center">
                 <h1 class="font-bold text-black text-sm mb-4">
-                    <i class="fa-solid fa-list"></i>
+                    <i class="fa-solid fa-inbox"></i>
                     총 합계
                 </h1>
             </div>
@@ -50,18 +50,21 @@
             <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrientTotal}"
                  class="flex justify-between">
                 <div class="flex">
-                    <i class="fa-solid fa-list"></i>
-                    <div class="text-xs font-bold m-1"
+                    <i th:id="${loop.index}" class="m-1 fa-solid fa-circle"></i>
+                    <div class="text-xs font-bold m-2"
                          th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
                 </div>
-                <div class="text-xs text-black m-1"
+                <div class="text-xs text-black m-2"
                      th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
-                <div class="divider"></div>
             </div>
 
             <div class="flex justify-center mt-5">
-                <a href="/cartFoodInfo/list" class="btn btn-primary btn-active mr-5">이전</a>
-                <a href="/cartFoodInfo/addMenu" class="btn btn-primary btn-active">다음</a>
+                <a href="/cartFoodInfo/list"
+                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                    이전</a>
+                <a href="/cartFoodInfo/addMenu"
+                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                    다음</a>
             </div>
 
         </div>
@@ -70,23 +73,6 @@
 
     <script th:inline="javascript">
         const background = [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#FF8C00",
-            "#9966FF",
-            "#C0C0C0",
-            "#FFD700",
-            "#3CB371",
-            "#FF4500",
-            "#00BFFF",
-            "#BA55D3",
-            "#008080",
-            "#F08080"
-        ];
-
-        let hoverBackground = [
             "#FF6384",
             "#36A2EB",
             "#FFCE56",
@@ -119,21 +105,24 @@
         let back;
         let hover;
         let loopIndex;
+        let iconTag;
 
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrientTotal}"]*/
-        loopIndex = /*[[${loop.index}]]*/null;
-        label = /*[[${nutrient.name}]]*/null;
-        value = /*[[${nutrient.value}]]*/null;
-        back = background[loopIndex];
-        hover = hoverBackground[loopIndex];
+            loopIndex = /*[[${loop.index}]]*/null;
+            iconTag = document.getElementById(loopIndex);
+            label = /*[[${nutrient.name}]]*/null;
+            value = /*[[${nutrient.value}]]*/null;
+            back = background[loopIndex];
+            hover = background[loopIndex];
 
-        if (value != 0) {
-            nutrientTotalData.labels.push(label);
-            nutrientTotalData.datasets[0].data.push(value);
-            nutrientTotalData.datasets[0].backgroundColor.push(back);
-            nutrientTotalData.datasets[0].hoverBackgroundColor.push(hover);
-        }
+            if (value != 0) {
+                nutrientTotalData.labels.push(label);
+                nutrientTotalData.datasets[0].data.push(value);
+                nutrientTotalData.datasets[0].backgroundColor.push(back);
+                nutrientTotalData.datasets[0].hoverBackgroundColor.push(hover);
+                iconTag.style.color = back;
+            }
         /*[/]*/
 
         // 원형 그래프의 옵션

@@ -76,12 +76,11 @@
                          class="flex justify-between">
                         <div class="flex">
                             <i class="fa-solid fa-list"></i>
-                            <div class="text-xs font-bold m-1"
+                            <div class="text-xs font-bold m-2"
                                  th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
                         </div>
-                        <div class="text-xs text-black m-1"
+                        <div class="text-xs text-black m-2"
                              th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
-                        <div class="divider"></div>
                     </div>
 
                     <!-- nutrientInfo 정보 출력 끝-->
