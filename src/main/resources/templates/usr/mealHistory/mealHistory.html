@@ -1,0 +1,252 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<head>
+    <title>Daily Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <link rel="stylesheet" href="/resource/common/mealHistory.css">
+
+</head>
+<body>
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div class="container">
+                <div class="my-calendar clearfix">
+                    <div class="clicked-date">
+                        <div class="cal-day"></div>
+                        <div class="cal-date"></div>
+                    </div>
+                    <div class="calendar-box">
+                        <div class="ctr-box clearfix">
+                            <button type="button" title="prev" class="btn-cal prev">
+                            </button>
+                            <span class="cal-month"></span>
+                            <span class="cal-year"></span>
+                            <button type="button" title="next" class="btn-cal next">
+                            </button>
+                        </div>
+                        <table class="cal-table menu-table">
+                            <thead>
+                            <tr>
+                                <th>S</th>
+                                <th>M</th>
+                                <th>T</th>
+                                <th>W</th>
+                                <th>T</th>
+                                <th>F</th>
+                                <th>S</th>
+                            </tr>
+                            </thead>
+                            <tbody class="cal-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- // .my-calendar -->
+            </div>
+            <table class="menu-table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Food Name</th>
+                    <th>Quantity</th>
+                    <th>Meal Type</th>
+                </tr>
+                </thead>
+
+            </table>
+        </div>
+        <input type="hidden" id="memberId" th:value="${member.id}" />
+        <script>
+            // ================================
+            // START YOUR APP HERE
+            // ================================
+            const init = {
+                monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                dayList: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                today: new Date(),
+                monForChange: new Date().getMonth(),
+                activeDate: new Date(),
+                getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+                getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+                nextMonth: function () {
+                    let d = new Date();
+                    d.setDate(1);
+                    d.setMonth(++this.monForChange);
+                    this.activeDate = d;
+                    return d;
+                },
+                prevMonth: function () {
+                    let d = new Date();
+                    d.setDate(1);
+                    d.setMonth(--this.monForChange);
+                    this.activeDate = d;
+                    return d;
+                },
+                addZero: (num) => (num < 10) ? '0' + num : num,
+                activeDTag: null,
+                getIndex: function (node) {
+                    let index = 0;
+                    while (node = node.previousElementSibling) {
+                        index++;
+                    }
+                    return index;
+                }
+            };
+
+            const $calBody = document.querySelector('.cal-body');
+            const $btnNext = document.querySelector('.btn-cal.next');
+            const $btnPrev = document.querySelector('.btn-cal.prev');
+
+            /**
+             * @param {number} date
+             * @param {number} dayIn
+             */
+            function loadDate (date, dayIn) {
+                document.querySelector('.cal-date').textContent = date;
+                document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+            }
+
+            /**
+             * @param {date} fullDate
+             */
+            function loadYYMM (fullDate) {
+                let yy = fullDate.getFullYear();
+                let mm = fullDate.getMonth();
+                let firstDay = init.getFirstDay(yy, mm);
+                let lastDay = init.getLastDay(yy, mm);
+                let markToday;  // for marking today date
+
+                if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+                    markToday = init.today.getDate();
+                }
+
+                document.querySelector('.cal-month').textContent = init.monList[mm];
+                document.querySelector('.cal-year').textContent = yy;
+
+                let trtd = '';
+                let startCount;
+                let countDay = 0;
+                for (let i = 0; i < 6; i++) {
+                    trtd += '<tr>';
+                    for (let j = 0; j < 7; j++) {
+                        if (i === 0 && !startCount && j === firstDay.getDay()) {
+                            startCount = 1;
+                        }
+                        if (!startCount) {
+                            trtd += '<td>'
+                        } else {
+                            let fullDate = yy + '.' + init.addZero(mm + 1) + '.' + init.addZero(countDay + 1);
+                            trtd += '<td class="day';
+                            trtd += (markToday && markToday === countDay + 1) ? ' today" ' : '"';
+                            trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}">`;
+                        }
+                        trtd += (startCount) ? ++countDay : '';
+                        if (countDay === lastDay.getDate()) {
+                            startCount = 0;
+                        }
+                        trtd += '</td>';
+                    }
+                    trtd += '</tr>';
+                }
+                $calBody.innerHTML = trtd;
+            }
+
+            /**
+             * @param {string} val
+             */
+            function createNewList (val) {
+                let id = new Date().getTime() + '';
+                let yy = init.activeDate.getFullYear();
+                let mm = init.activeDate.getMonth() + 1;
+                let dd = init.activeDate.getDate();
+                const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+
+                let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+
+                let eventData = {};
+                eventData['date'] = date;
+                eventData['memo'] = val;
+                eventData['complete'] = false;
+                eventData['id'] = id;
+                init.event.push(eventData);
+                $todoList.appendChild(createLi(id, val, date));
+            }
+
+            loadYYMM(init.today);
+            loadDate(init.today.getDate(), init.today.getDay());
+
+            $btnNext.addEventListener('click', () => loadYYMM(init.nextMonth()));
+            $btnPrev.addEventListener('click', () => loadYYMM(init.prevMonth()));
+
+            $calBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('day')) {
+                    if (init.activeDTag) {
+                        init.activeDTag.classList.remove('day-active');
+                    }
+                    let day = Number(e.target.textContent);
+                    loadDate(day, e.target.cellIndex);
+                    e.target.classList.add('day-active');
+                    init.activeDTag = e.target;
+                    init.activeDate.setDate(day);
+                    reloadTodo();
+                }
+            });
+            $calBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('day')) {
+                    if (init.activeDTag) {
+                        init.activeDTag.classList.remove('day-active');
+                    }
+                    let day = Number(e.target.textContent);
+                    loadDate(day, e.target.cellIndex);
+                    e.target.classList.add('day-active');
+                    init.activeDTag = e.target;
+                    init.activeDate.setDate(day);
+
+                    // Load meals for the selected date
+                    let selectedDate = `${init.activeDate.getFullYear()}-${init.addZero(init.activeDate.getMonth() + 1)}-${init.addZero(day)}`;
+                    fetchMealHistory(selectedDate);
+                }
+            });
+
+            function fetchMealHistory(date) {
+                let memberId = document.getElementById('memberId').value;
+                fetch(`/mealHistory/api/${memberId}?date=${date}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => displayMenu(data))
+                    .catch(e => {
+                        console.error('Error: ' + e.message);
+                    });
+            }
+
+            function displayMenu(data) {
+                let html = '';
+                data.forEach(item => {
+                    html += `
+        <tr>
+            <td>${item.date}</td>
+            <td>${item.foodInfo.foodName}</td>
+            <td>${item.quantity}</td>
+            <td>${item.mealScore}</td>
+            <td>${item.mealType}</td>
+            <td>${item.mealMemo}</td>
+        </tr>
+        `;
+                });
+
+                // Add HTML to the menu table
+                let menuTable = document.querySelector('.menu-table');
+                menuTable.innerHTML = html;
+            }
+        </script>
+    </main>
+</th:block>
+</body>
+</html>
