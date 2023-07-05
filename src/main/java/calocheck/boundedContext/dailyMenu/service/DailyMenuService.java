@@ -52,4 +52,10 @@ public class DailyMenuService {
         return dailyMenu.orElse(null);
     }
 
+    @Transactional
+    public void updateMealHistory(DailyMenu dailyMenu){
+
+        dailyMenuRepository.save(dailyMenu);
+    }
+
 }

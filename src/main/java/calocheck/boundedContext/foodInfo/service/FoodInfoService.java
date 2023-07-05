@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,16 +70,36 @@ public class FoodInfoService {
         return foodInfoRepository.findByFoodName(foodName).orElse(null);
     }
 
-    public void addTag(FoodInfo foodInfo){
+    public void addTag(FoodInfo foodInfo) {
 
         List<Nutrient> nutrientList = foodInfo.getNutrientInfo().getNutrientList();
 
-        for(int i=0; i<nutrientList.size(); i++){
+        for (int i = 0; i < nutrientList.size(); i++) {
 
             String name = nutrientList.get(i).getName();
             System.out.println("name = " + name);
 
         }
+    }
 
+    public List<List<String>> findTop5ByFoodNameContains(String[] foodNameArr){
+
+        List<List<String>> top5Lists = new ArrayList<>();
+
+        for (String foodName : foodNameArr) {
+
+            List<FoodInfo> top5ByFoodNameContains = foodInfoRepository.findTop5ByFoodNameContains(foodName);
+
+            List<String> top5FoodNames =new ArrayList<>();
+
+            for (FoodInfo top5ByFoodNameContain : top5ByFoodNameContains) {
+
+                top5FoodNames.add(top5ByFoodNameContain.getFoodName());
+
+            }
+            top5Lists.add(top5FoodNames);
+        }
+
+        return top5Lists;
     }
 }

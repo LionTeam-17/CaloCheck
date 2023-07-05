@@ -1,6 +1,7 @@
 package calocheck.boundedContext.cartFoodInfo.controller;
 
 import calocheck.base.rq.Rq;
+import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
@@ -49,12 +50,13 @@ public class CartFoodInfoController {
     @PostMapping("/add")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    public CartDTO addCartFoodInfo(@RequestParam("foodId") Long foodId) {
+    public CartDTO addCartFoodInfo(@RequestParam("foodId") Long foodId, @RequestParam("quantity") Long quantity) {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        cartFoodInfoService.addFoodInfo(member, foodInfo);
-        return new CartDTO("success");
+        RsData<CartFoodInfo> res = cartFoodInfoService.addFoodInfo(member, foodInfo, quantity);
+
+        return new CartDTO("success", res.getMsg());
     }
 
     @PostMapping("/remove")

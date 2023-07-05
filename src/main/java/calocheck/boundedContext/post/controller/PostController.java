@@ -98,19 +98,19 @@ public class PostController {
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
             photoUrl = photoService.photoUpload(img);
 
-            //업로드된 이미지가 안전한 이미지인지 확인
-            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
-
-            if (isSafeImg.isFail()) {
-                return rq.historyBack(isSafeImg);
-            }
+//            //업로드된 이미지가 안전한 이미지인지 확인
+//            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
+//
+//            if (isSafeImg.isFail()) {
+//                return rq.historyBack(isSafeImg);
+//            }
 
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
+//        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
 
 //        //이미지 수집 동의시, 음식과 연결
 //        if (isFoodImg.isSuccess() && agree) {

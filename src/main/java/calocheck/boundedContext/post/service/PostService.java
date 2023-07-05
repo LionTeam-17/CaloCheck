@@ -2,6 +2,7 @@ package calocheck.boundedContext.post.service;
 
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberService memberService;
 
     public RsData<Post> savePost(String subject, String content, String photoUrl, final Member member) {
         Post post = Post.builder()
@@ -136,5 +138,8 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw, pageable);
+    }
+    public Page<Post> findByMemberId(Long id, Pageable pageable) {
+        return postRepository.findByMemberId(id, pageable);
     }
 }
