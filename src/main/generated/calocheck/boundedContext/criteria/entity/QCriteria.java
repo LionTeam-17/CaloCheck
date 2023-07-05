@@ -33,8 +33,6 @@ public class QCriteria extends EntityPathBase<Criteria> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Integer> kcal = createNumber("kcal", Integer.class);
-
     public final NumberPath<Integer> magnesium = createNumber("magnesium", Integer.class);
 
     public final NumberPath<Integer> potassium = createNumber("potassium", Integer.class);

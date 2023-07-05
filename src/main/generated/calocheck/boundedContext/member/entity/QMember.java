@@ -23,6 +23,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Integer> age = createNumber("age", Integer.class);
 
+    public final NumberPath<Double> bmr = createNumber("bmr", Double.class);
+
     public final NumberPath<Double> bodyFat = createNumber("bodyFat", Double.class);
 
     //inherited
