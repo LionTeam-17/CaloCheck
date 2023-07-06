@@ -30,6 +30,16 @@
                     <a href="/member/me" th:if="${member.id == @rq.member.id}">
                         <i class="fa-solid fa-gear fa-xl"></i>
                     </a>
+                    <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
+                        <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
+                              method="POST">
+                            <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
+                        </form>
+                        <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
+                              method="GET">
+                            <button type="submit" class="btn btn-success btn-sm">친구추가</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
