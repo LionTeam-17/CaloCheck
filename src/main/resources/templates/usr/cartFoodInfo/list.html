@@ -15,8 +15,8 @@
 
 <body>
 <main layout:fragment="Content">
-    <div class="flex flex-col m-4">
-        <div class="w-full">
+    <div class="flex-1 flex flex-col items-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center">
                 <h1 class="font-bold text-black mb-4">
                     장바구니 음식 목록
@@ -27,7 +27,6 @@
                     <span class="font-bold text-xs flex justify-center" style="width:6%">번호</span>
                     <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
                     <span class="font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:20%">1회/총제공량</span>
                     <span class="font-bold text-xs flex justify-center" style="width:8%">수량</span>
                 </div>
             </div>
@@ -52,9 +51,6 @@
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.manufacturer}"></span>
                         <span class="font-bold flex text-xs justify-center"
-                              style="width:20%"
-                              th:text="${cartFoodInfo.foodInfo.portionSize} + '/' + ${cartFoodInfo.foodInfo.totalSize} + '(' + ${cartFoodInfo.foodInfo.unit} + ')'"></span>
-                        <span class="font-bold flex text-xs justify-center"
                               style="width:8%"
                               th:text="${cartFoodInfo.quantity}"></span>
                     </div>
@@ -72,7 +68,7 @@
     </div>
 
     <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white px-20 py-40">
+        <div class="bg-white px-10 py-10 mx-10 my-20">
             <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
             <div class="flex">
                 <div class="text-xs font-bold m-2">제조사/유통사</div>
@@ -89,14 +85,14 @@
                 </button>
             </div>
 
-            <div class="m-3">
-                <button class="bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded"
+            <div class="m-3 flex place-content-end">
+                <button class="m-1 bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="executeDeleteLogic()">삭제
                 </button>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="executeUpdateLogic()">수정
                 </button>
-                <button class="bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded"
                         onclick="closeCustomModal()">취소
                 </button>
             </div>

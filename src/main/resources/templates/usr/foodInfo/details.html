@@ -22,9 +22,9 @@
 </head>
 
 <body>
-<main layout:fragment="Content">
-    <div class="flex flex-col">
-        <div class="m-3 flex flex-col justify-center">
+<th:block layout:fragment="Content">
+    <div class="flex-1 flex flex-col items-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="m-5 flex justify-center">
                 <div class="m-2 text-center font-bold text-black text-lg whitespace-normal break-words"
                      th:text="${foodInfo.foodName}"></div>
@@ -101,13 +101,13 @@
             <div class="flex justify-center">
                 <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
                    th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
-                    장바구니 항목
+                    장바구니 목록
                 </a>
             </div>
 
             <div id="customModal"
                  class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
-                <div class="bg-white px-20 py-40">
+                <div class="bg-white px-10 py-10 mx-10 my-20">
                     <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
                     <div class="flex">
                         <div class="text-xs font-bold m-2">제조사/유통사</div>
@@ -285,6 +285,7 @@
 
     </script>
 </main>
+</th:block>
 </body>
 
 </html>

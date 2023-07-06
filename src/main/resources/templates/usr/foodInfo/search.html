@@ -5,96 +5,98 @@
 
 <body>
 <main layout:fragment="Content">
-    <div class="flex flex-col m-5 h-auto">
-        <div class="form-control">
-            <div class="text-black">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                원하는 음식을 검색
-            </div>
-            <div class="m-5 flex">
-                <form method="GET" id="searchForm">
-                    <label class="flex flex-grow">
-                        <input type="text" name="keyword"
-                               th:value="${keyword}"
-                               class="m-2 p-2 bg-gray-300 text-black rounded-lg "
-                               placeholder="검색할 음식을 입력하세요">
-                        <button type="submit"
-                                class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
-                            <span>검색</span>
-                        </button>
-                    </label>
-                </form>
-            </div>
-        </div>
-        <div class="w-full">
-            <div class="my-1 flex text-black">
-                <i class="mx-2 fa-solid fa-list"></i>
-                <div class="font-bold text-sm">
-                    음식 목록
+    <div class="flex-1 flex flex-col items-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
+            <div class="form-control">
+                <div class="text-black">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    원하는 음식을 검색
+                </div>
+                <div class="m-5 flex">
+                    <form method="GET" id="searchForm">
+                        <label class="flex flex-grow">
+                            <input type="text" name="keyword"
+                                   th:value="${keyword}"
+                                   class="m-2 p-2 bg-gray-300 text-black rounded-lg "
+                                   placeholder="검색할 음식을 입력하세요">
+                            <button type="submit"
+                                    class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                                <span>검색</span>
+                            </button>
+                        </label>
+                    </form>
                 </div>
             </div>
-            <div class="flex flex-col justify-center">
-                <div class="m-2 flex flex-grow justify-between w-full">
-                    <span class="text-black font-bold text-xs flex justify-center" style="width:8%">번호</span>
-                    <span class="text-black font-bold text-xs flex justify-center" style="width:36%">식품명</span>
-                    <span class="text-black font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
+            <div class="w-full">
+                <div class="my-1 flex text-black">
+                    <i class="mx-2 fa-solid fa-list"></i>
+                    <div class="font-bold text-sm">
+                        음식 목록
+                    </div>
                 </div>
-            </div>
-            <div class="my-1 border border-gray-200 border-2"></div>
-            <div class="my-5 flex flex-wrap justify-center w-full" th:if="${foodList.isEmpty()}">
-                검색 결과가 없습니다.
-            </div>
-            <div class="flex flex-col w-full justify-center" th:if="${!foodList.isEmpty()}">
-                <div class="flex flex-col justify-center" th:each="foodInfo, loop: ${paging}">
-                    <div class="m-2 flex flex-grow justify-between">
-                        <!-- 역순 정렬 로직 시작 -->
-                        <span class="font-bold text-xs text-black flex justify-center"
-                              style="width:8%"
-                              th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
-                        <!-- 역순 정렬 로직 종료 -->
-                        <a class="font-bold text-xs text-start text-black flex whitespace-normal break-words"
-                           style="width:36%"
-                           th:href="|/foodInfo/details/${foodInfo.id}|">
-                            <span th:text="${foodInfo.foodName}"></span>
-                        </a>
-                        <span class="font-bold text-xs text-black flex justify-center whitespace-normal break-words"
-                              style="width:36%"
-                              th:text="${foodInfo.manufacturer}"></span>
+                <div class="flex flex-col justify-center">
+                    <div class="m-2 flex flex-grow justify-between w-full">
+                        <span class="text-black font-bold text-xs flex justify-center" style="width:8%">번호</span>
+                        <span class="text-black font-bold text-xs flex justify-center" style="width:36%">식품명</span>
+                        <span class="text-black font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
+                    </div>
+                </div>
+                <div class="my-1 border border-gray-200 border-2"></div>
+                <div class="my-5 flex flex-wrap justify-center w-full" th:if="${foodList.isEmpty()}">
+                    검색 결과가 없습니다.
+                </div>
+                <div class="flex flex-col w-full justify-center" th:if="${!foodList.isEmpty()}">
+                    <div class="flex flex-col justify-center" th:each="foodInfo, loop: ${paging}">
+                        <div class="m-2 flex flex-grow justify-between">
+                            <!-- 역순 정렬 로직 시작 -->
+                            <span class="font-bold text-xs text-black flex justify-center"
+                                  style="width:8%"
+                                  th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
+                            <!-- 역순 정렬 로직 종료 -->
+                            <a class="font-bold text-xs text-start text-black flex whitespace-normal break-words"
+                               style="width:36%"
+                               th:href="|/foodInfo/details/${foodInfo.id}|">
+                                <span th:text="${foodInfo.foodName}"></span>
+                            </a>
+                            <span class="font-bold text-xs text-black flex justify-center whitespace-normal break-words"
+                                  style="width:36%"
+                                  th:text="${foodInfo.manufacturer}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--    페이징 처리 시작 -->
-        <div class="flex justify-center mt-5">
-            <div th:if="${!paging.isEmpty()}" class="flex justify-center my-5">
-                <ul class="pagination justify-content-center flex">
-                    <li th:if="${paging.hasPrevious()}" class="page-item">
-                        <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
-                           th:href="@{|?keyword=${keyword}&page=${paging.number - 1}|}"
-                           th:data-page="${paging.number - 1}">
-                            <span>이전</span>
-                        </a>
-                    </li>
-                    <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
-                        th:if="${page >= paging.number - 2 and page <= paging.number + 2}">
-                        <a th:disabled="${page == paging.number}"
-                           th:text="${page}"
-                           class="page-link m-1 btn-outline text-black text-xs bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
-                           th:href="@{|?keyword=${keyword}&page=${page}}"
-                           th:data-page="${page}"></a>
-                    </li>
-                    <li th:if="${paging.hasNext()}" class="page-item">
-                        <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
-                           th:href="@{|?keyword=${keyword}&page=${paging.number + 1}|}"
-                           th:data-page="${paging.number + 1}">
-                            <span>다음</span>
-                        </a>
-                    </li>
-                </ul>
+            <!--    페이징 처리 시작 -->
+            <div class="flex justify-center mt-5">
+                <div th:if="${!paging.isEmpty()}" class="flex justify-center my-5">
+                    <ul class="pagination justify-content-center flex">
+                        <li th:if="${paging.hasPrevious()}" class="page-item">
+                            <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                               th:href="@{|?keyword=${keyword}&page=${paging.number - 1}|}"
+                               th:data-page="${paging.number - 1}">
+                                <span>이전</span>
+                            </a>
+                        </li>
+                        <li th:each="page : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:if="${page >= paging.number - 2 and page <= paging.number + 2}">
+                            <a th:disabled="${page == paging.number}"
+                               th:text="${page}"
+                               class="page-link m-1 btn-outline text-black text-xs bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
+                               th:href="@{|?keyword=${keyword}&page=${page}}"
+                               th:data-page="${page}"></a>
+                        </li>
+                        <li th:if="${paging.hasNext()}" class="page-item">
+                            <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                               th:href="@{|?keyword=${keyword}&page=${paging.number + 1}|}"
+                               th:data-page="${paging.number + 1}">
+                                <span>다음</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+            <!--    페이징 처리 종료-->
         </div>
-        <!--    페이징 처리 종료-->
     </div>
 </main>
 </body>
