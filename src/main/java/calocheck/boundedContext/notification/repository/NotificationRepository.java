@@ -9,5 +9,5 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByPost_Member(Member member);
 
-    int countByMemberAndReadDateIsNull(Member member);
+    int countByPost_MemberAndReadDateIsNull(Member member);
 }

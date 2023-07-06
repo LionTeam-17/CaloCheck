@@ -69,4 +69,8 @@ public class NotificationService {
 
         return RsData.of("S-1", "알림 삭제");
     }
+
+    public boolean countByPost_MemberAndReadDateIsNull(Member member) {
+        return notificationRepository.countByPost_MemberAndReadDateIsNull(member) > 0;
+    }
 }
