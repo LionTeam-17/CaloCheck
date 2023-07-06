@@ -2,7 +2,6 @@ package calocheck.boundedContext.cartFoodInfo.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
-import calocheck.base.util.CriteriaDataExtractor;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
@@ -23,15 +22,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/cartFoodInfo")
 public class CartFoodInfoController {
+    private final Rq rq;
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
-    private final Rq rq;
     private final MealHistoryService mealHistoryService;
     private final DailyMenuService dailyMenuService;
     private final CriteriaService criteriaService;
@@ -55,7 +53,13 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        RsData<CartFoodInfo> res = cartFoodInfoService.addFoodInfo(member, foodInfo, quantity);
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        } else if(quantity < 1) {
+            return new CartDTO("fail", "요청하신 수량은 올바르지 않습니다.");
+        }
+
+        RsData<CartFoodInfo> res = cartFoodInfoService.addToCart(member, foodInfo, quantity);
 
         return new CartDTO("success", res.getMsg());
     }
@@ -67,7 +71,7 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        cartFoodInfoService.removeFoodInfo(member, foodInfo);
+        cartFoodInfoService.removeToCart(member, foodInfo);
         return new CartDTO("success");
     }
 
@@ -79,11 +83,11 @@ public class CartFoodInfoController {
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
         if (quantity == 0) {
-            cartFoodInfoService.removeFoodInfo(member, foodInfo);
+            cartFoodInfoService.removeToCart(member, foodInfo);
             return new CartDTO("success");
         }
 
-        cartFoodInfoService.updateFoodInfo(member, foodInfo, quantity);
+        cartFoodInfoService.updateCart(member, foodInfo, quantity);
         return new CartDTO("success");
     }
 

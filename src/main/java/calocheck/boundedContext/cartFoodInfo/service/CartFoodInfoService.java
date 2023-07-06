@@ -6,7 +6,6 @@ import calocheck.boundedContext.cartFoodInfo.repository.CartFoodInfoRepository;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
-import calocheck.boundedContext.nutrient.service.NutrientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +19,24 @@ import java.util.stream.LongStream;
 @RequiredArgsConstructor
 public class CartFoodInfoService {
     private final CartFoodInfoRepository cartFoodInfoRepository;
-    private final NutrientService nutrientService;
 
-    public RsData<CartFoodInfo> addFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
+    public RsData<CartFoodInfo> addToCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo != null) {
             long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
             update(cartFoodInfo, member, foodInfo, updatedQuantity);
-            return RsData.of("success", "이미 장바구니에 있는 항목을 수정(%d개)하였습니다.".formatted(updatedQuantity));
+
+            return RsData.of("success", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
         }
 
         cartFoodInfo = create(member, foodInfo, quantity);
         cartFoodInfoRepository.save(cartFoodInfo);
 
-        return RsData.of("success", "장바구니 추가 완료");
+        return RsData.of("success", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
-    public boolean removeFoodInfo(Member member, FoodInfo foodInfo) {
+    public boolean removeToCart(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo != null) {
@@ -48,7 +47,7 @@ public class CartFoodInfoService {
         return false;
     }
 
-    public boolean updateFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
+    public boolean updateCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (quantity == 0) {
