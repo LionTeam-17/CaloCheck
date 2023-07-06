@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,20 +33,22 @@ public class MealHistoryController {
     }
 
     @GetMapping("/{memberId}")
-    public String showMealHistory(@PathVariable Long memberId, Model model) {
+    public String showMealHistoryToday(@PathVariable Long memberId, Model model) {
         Optional<Member> memberOpt = memberService.findById(memberId);
         if (!memberOpt.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
 
         Member member = memberOpt.get();
-        MealHistory mealHistory = mealHistoryService.getByMember(member);
+        List<MealHistory> mealHistoriesToday = mealHistoryService.findByMemberAndCreateDate(member);
 
-        MealHistoryDto mealHistoryDto = MealHistoryDto.fromEntity(mealHistory);
+        List<MealHistoryDto> mealHistoryDtos = mealHistoriesToday.stream()
+                .map(MealHistoryDto::fromEntity)
+                .collect(Collectors.toList());
 
         // Add data to the model to be used in the view
         model.addAttribute("member", member);
-        model.addAttribute("mealHistory", mealHistoryDto);
+        model.addAttribute("mealHistories", mealHistoryDtos);
 
         // Return the name of the view (Thymeleaf template) to be rendered
         return "usr/mealHistory/mealHistory";
