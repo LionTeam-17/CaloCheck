@@ -6,18 +6,12 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Map;
-
+@Getter
+@Setter
 @Configuration
-@ConfigurationProperties(prefix = "sample")
+@ConfigurationProperties(prefix = "cloud.gcp.auth")
 public class GCPConfigProperties {
 
-    @Getter
-    @Setter
-    private String example;
-
-    @Getter
-    @Setter
-    private String example2;
+    private String filePath;
 
 }

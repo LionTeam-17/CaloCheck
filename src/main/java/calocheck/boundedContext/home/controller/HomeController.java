@@ -2,8 +2,8 @@ package calocheck.boundedContext.home.controller;
 
 
 import calocheck.boundedContext.photo.config.GCPConfigProperties;
+import calocheck.boundedContext.photo.config.ObjectStorageConfigProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,17 +13,23 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HomeController {
 
+    private final ObjectStorageConfigProperties objectStorageConfigProperties;
     private final GCPConfigProperties gcpConfigProperties;
 
     @GetMapping("/")
     public String showMain() {
 
-        String example1 = gcpConfigProperties.getExample();
+        System.out.println("credentials = " + objectStorageConfigProperties.getCredentials());
 
-        String example2 = gcpConfigProperties.getExample2();
+        System.out.println(objectStorageConfigProperties.getCdn().get("url"));
 
-        System.out.println("example1 = " + example1);
-        System.out.println("example2 = " + example2);
+        System.out.println(objectStorageConfigProperties.getStack().get("auto"));
+
+        System.out.println(objectStorageConfigProperties.getS3().get("url"));
+
+        System.out.println(objectStorageConfigProperties.getRegion().get("static"));
+
+        System.out.println("gcpConfigProperties = " + gcpConfigProperties.getFilePath());
 
         return "usr/home/main";
     }
