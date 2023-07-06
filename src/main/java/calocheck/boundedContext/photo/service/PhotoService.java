@@ -28,7 +28,7 @@ import java.util.UUID;
 public class PhotoService {
 
     private final S3ConfigProperties s3ConfigProperties;
-    private final ImageAnnotatorClient imageAnnotatorClient;
+    private final ImageAnnotatorSettings visionAPISettings;
     private final AmazonS3 amazonS3;
 
     // upload local file
@@ -74,17 +74,16 @@ public class PhotoService {
 
     }
 
-    //labelDetection + safeSearch
-    public RsData<String> imageCheck(String imageUrl) throws IOException{
+    // labelDetection + safeSearch
+    public RsData<String> imageCheck(String imageUrl) throws IOException {
 
-        try (ImageAnnotatorClient vision = imageAnnotatorClient) {
-
+        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings);) {
             // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
             URL url = new URL(imageUrl);
             try (InputStream in = url.openStream()) {
                 byte[] data = IOUtils.toByteArray(in);
 
-                //URL 을 통해 이미지를 빌드
+                // URL을 통해 이미지를 빌드
                 ByteString imgBytes = ByteString.copyFrom(data);
                 Image img = Image.newBuilder().setContent(imgBytes).build();
                 Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
@@ -128,11 +127,11 @@ public class PhotoService {
                         }
                     }
                 }
-
-                return RsData.of("F-3", "음식 이미지가 아닐 확률이 높습니다. 다른 이미지를 사용해 주세요.");
             }
+            return RsData.of("F-3", "음식 이미지가 아닐 확률이 높습니다. 다른 이미지를 사용해 주세요.");
         }
     }
+
 
     public String getPostDetailPhoto(String photoUrl) {
 

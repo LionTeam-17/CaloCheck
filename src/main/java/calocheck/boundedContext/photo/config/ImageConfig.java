@@ -22,10 +22,11 @@ public class ImageConfig {
     private final GCPConfigProperties gcpConfigProperties;
 
     @Bean
-    public ImageAnnotatorClient imageVision() throws IOException {
+    public ImageAnnotatorSettings visionAPISettings() throws IOException {
         GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(gcpConfigProperties.getFilePath()));
         ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
-        return ImageAnnotatorClient.create(settings);
+
+        return settings;
     }
 
     @Bean
