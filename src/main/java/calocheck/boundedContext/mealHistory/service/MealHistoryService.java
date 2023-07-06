@@ -81,7 +81,6 @@ public class MealHistoryService {
                                         myCriteria.findByStrName(name) -
                                                 todayNutritionMap.get(name) -
                                                 nutrient.getValue())) // 권장량 - 오늘먹은 양 - 지금 먹는 양
-                                .unit(nutrient.getUnit())
                                 .build())
                         .orElse(null))
                 .filter(Objects::nonNull)
@@ -119,7 +118,7 @@ public class MealHistoryService {
                 List<DailyMenu> dailyMenuList = todayMealHistory.get(i).getDailyMenuList();
                 for (int j=0; j<dailyMenuList.size(); j++) {
                     DailyMenu dailyMenu = dailyMenuList.get(j);
-                    List<Nutrient> nutrients = dailyMenu.getFoodInfo().getNutrientInfo().getNutrientList();
+                    List<Nutrient> nutrients = dailyMenu.getFoodInfo().getNutrientList();
 
                     for (Nutrient nutrient : nutrients) {
 

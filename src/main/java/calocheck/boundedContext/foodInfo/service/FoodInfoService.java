@@ -1,12 +1,13 @@
 package calocheck.boundedContext.foodInfo.service;
 
-import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,32 +18,61 @@ import java.util.Optional;
 public class FoodInfoService {
     private final FoodInfoRepository foodInfoRepository;
 
-    public FoodInfo create(NutrientInfo nutrientInfo,
-                           String foodName, String manufacturer, String category,
-                           int portionSize, String unit, int totalSize) {
-
-        FoodInfo foodItem = FoodInfo.builder()
-                .nutrientInfo(nutrientInfo)
-                .foodName(foodName).manufacturer(manufacturer).category(category)
-                .portionSize(portionSize).unit(unit).totalSize(totalSize)
-                .build();
-
-        return foodInfoRepository.save(foodItem);
+    @Transactional
+    public FoodInfo create(FoodInfo foodInfo) {
+        return foodInfoRepository.save(foodInfo);
     }
 
-    public FoodInfo update(FoodInfo foodInfo, NutrientInfo nutrientInfo,
-                           String foodName, String manufacturer, String category,
-                           int portionSize, String unit, int totalSize) {
+    @Transactional
+    public FoodInfo create(String foodName,
+                           String manufacturer,
+                           String category,
+                           int portionSize,
+                           String unit,
+                           int totalSize,
+                           double kcal,
+                           List<Nutrient> nutrientList) {
+
+        FoodInfo foodInfo = FoodInfo.builder()
+                .foodName(foodName)
+                .manufacturer(manufacturer)
+                .category(category)
+                .portionSize(portionSize)
+                .unit(unit)
+                .totalSize(totalSize)
+                .kcal(kcal)
+                .nutrientList(nutrientList)
+                .build();
+
+        return foodInfoRepository.save(foodInfo);
+    }
+
+    @Transactional
+    public FoodInfo update(FoodInfo foodInfo,
+                           String foodName,
+                           String manufacturer,
+                           String category,
+                           int portionSize,
+                           String unit,
+                           int totalSize,
+                           double kcal,
+                           List<Nutrient> nutrientList) {
 
         FoodInfo updated = foodInfo.toBuilder()
-                .nutrientInfo(nutrientInfo)
-                .foodName(foodName).manufacturer(manufacturer).category(category)
-                .portionSize(portionSize).unit(unit).totalSize(totalSize)
+                .foodName(foodName)
+                .manufacturer(manufacturer)
+                .category(category)
+                .portionSize(portionSize)
+                .unit(unit)
+                .totalSize(totalSize)
+                .kcal(kcal)
+                .nutrientList(nutrientList)
                 .build();
 
         return foodInfoRepository.save(updated);
     }
 
+    @Transactional
     public void delete(FoodInfo foodInfo) {
         foodInfoRepository.delete(foodInfo);
     }
@@ -63,6 +93,10 @@ public class FoodInfoService {
 
     public Page<FoodInfo> findByFoodNameContains(Pageable pageable, String foodName) {
         return foodInfoRepository.findByFoodNameContains(foodName, pageable);
+    }
+
+    public FoodInfo findByFoodCode(String foodCode) {
+        return foodInfoRepository.findByFoodCode(foodCode).orElse(null);
     }
 
     public FoodInfo findByFoodName(String foodName){

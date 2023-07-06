@@ -105,7 +105,6 @@ public class CartFoodInfoController {
     @GetMapping("/addMenu")
     @PreAuthorize("isAuthenticated()")
     public String showAddMenu(Model model) {
-
         Member member = rq.getMember();
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);      //카트에 담겨있는 리스트

@@ -16,7 +16,6 @@ public interface FoodInfoRepository extends JpaRepository<FoodInfo, Long> {
     Page<FoodInfo> findAll(Pageable pageable);
     Page<FoodInfo> findByFoodNameContains(@Param("foodName") String foodName, Pageable pageable);
     Optional<FoodInfo> findByFoodName(String foodName);
-
     List<FoodInfo> findTop5ByFoodNameContains(String foodName);
-
+    Optional<FoodInfo> findByFoodCode(String foodCode);
 }
