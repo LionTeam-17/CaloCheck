@@ -72,6 +72,19 @@
                 return;
             }
 
+            var genderSelected = false;
+            var genderRadios = form.querySelectorAll('input[name="gender"]');
+            for (var i = 0; i < genderRadios.length; i++) {
+                if (genderRadios[i].checked) {
+                    genderSelected = true;
+                    break;
+                }
+            }
+            if (!genderSelected) {
+                toastWarning('성별을 선택해주세요.');
+                return;
+            }
+
             form.submit(); // 폼 발송
         }
     </script>
