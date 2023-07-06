@@ -76,7 +76,12 @@ public class CartFoodInfoController {
         }
 
         RsData<CartFoodInfo> res = cartFoodInfoService.removeToCart(member, foodInfo);
-        return new CartDTO("success");
+
+        if (res.isFail()) {
+            return new CartDTO("fail", res.getMsg());
+        }
+
+        return new CartDTO("success", res.getMsg());
     }
 
     @PostMapping("/update")
