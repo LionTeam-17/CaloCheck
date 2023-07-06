@@ -1,31 +1,22 @@
 package calocheck.boundedContext.photo.service;
 
 import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.photo.config.S3Config;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import calocheck.boundedContext.photo.config.GCPConfigProperties;
+import calocheck.boundedContext.photo.config.ObjectStorageConfigProperties;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import com.google.auth.Credentials;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -38,11 +29,8 @@ import java.util.UUID;
 @Service
 public class PhotoService {
 
-    private final HttpServletRequest request;
-    private final ImageAnnotatorClient imageAnnotatorClient;
-    private final AmazonS3 amazonS3;
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    private final GCPConfigProperties gcpConfigProperties;
+    private final ObjectStorageConfigProperties objectStorageConfigProperties;
 
     // upload local file
     @Transactional
@@ -61,10 +49,14 @@ public class PhotoService {
 
         InputStream inputStream = file.getInputStream();
 
-        PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
+        String bucketName = objectStorageConfigProperties.getS3().get("bucket");
+        String endPoint = objectStorageConfigProperties.getS3().get("endpoint");
+
+        PutObjectResult putObjectResult = objectStorageConfigProperties.amazonS3Client()
+                .putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return String.format("https://kr.object.ncloudstorage.com/%s/%s", bucket, key);
+        return endPoint + "/%s/%s".formatted(bucketName, key);
     }
 
     public RsData<String> isImgFile(String fileName) {
@@ -86,7 +78,7 @@ public class PhotoService {
 
     //이미지의 라벨 검출
     public RsData<String> detectLabelsRemote(String imageUrl) throws IOException {
-        try (ImageAnnotatorClient vision = imageAnnotatorClient){
+        try (ImageAnnotatorClient vision = gcpConfigProperties){
 
             // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
             URL url = new URL(imageUrl);
@@ -185,14 +177,7 @@ public class PhotoService {
         String[] split = photoUrl.split("calocheck/");
 
         StringBuilder sb = new StringBuilder();
-        String protocol = request.getScheme();
-
-        if(protocol.equals("http")){
-            sb.append("http://mxpijmgqueja17962851.cdn.ntruss.com/");
-        }else if(protocol.equals("https")){
-            sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/");
-        }
-
+        sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/");
         sb.append(split[1]);
         sb.append("?type=m&w=500&h=500&quality=90&bgcolor=FFFFFF&extopt=3");
 

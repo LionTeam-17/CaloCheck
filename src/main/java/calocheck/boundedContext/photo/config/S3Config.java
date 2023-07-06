@@ -34,12 +34,4 @@ public class S3Config {
     @Value("${cloud.cdn.url}")
     private String cdnUrl;
 
-    @Bean
-    public AmazonS3 amazonS3Client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey,secretKey);
-        return (AmazonS3) AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, region))
-                .build();
-    }
 }

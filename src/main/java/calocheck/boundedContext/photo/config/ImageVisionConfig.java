@@ -17,10 +17,5 @@ public class ImageVisionConfig {
     @Value("${cloud.gcp.auth.filePath}")
     private String filePath;
 
-    @Bean
-    public ImageAnnotatorClient imageVision() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(filePath));
-        ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
-        return ImageAnnotatorClient.create(settings);
-    }
+
 }
