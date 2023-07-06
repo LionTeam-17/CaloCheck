@@ -129,7 +129,7 @@
 
             foodNameTag.innerText = childElements[1].innerText;
             manufacturerTag.innerText = childElements[2].innerText;
-            quantityTag.innerText = childElements[4].innerText;
+            quantityTag.innerText = childElements[3].innerText;
 
             document.getElementById('customModal').classList.remove('hidden');
         }
@@ -203,7 +203,7 @@
                             if (quantity == 0) {
                                 removeElement.remove();
                             } else {
-                                removeElement.children[0].children[4].innerText = quantity;
+                                removeElement.children[0].children[3].innerText = quantity;
                             }
 
                             if (cartInfosTag.children.length == 0) {

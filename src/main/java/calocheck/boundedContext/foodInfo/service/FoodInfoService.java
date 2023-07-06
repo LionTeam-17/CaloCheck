@@ -130,7 +130,6 @@ public class FoodInfoService {
     }
 
     public List<Tag> getTagList(FoodInfo foodInfo) {
-
         List<Nutrient> nutrientList = foodInfo.getNutrientList();
         List<Tag> tagList = tagService.findAllTag();
 

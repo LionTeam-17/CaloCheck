@@ -22,7 +22,6 @@ public class FoodInfoController {
     private final Rq rq;
     private final FoodInfoService foodInfoService;
 
-
     @GetMapping("/search")
     public String searchFoodInfo(Model model,
                              @RequestParam(value = "keyword", defaultValue = "") String keyword,
@@ -55,7 +54,6 @@ public class FoodInfoController {
         }
 
         List<Nutrient> nutrients = foodInfo.getNutrientList();
-
         List<Tag> tagList = foodInfoService.getTagList(foodInfo);
 
         model.addAttribute("foodInfo", foodInfo);
