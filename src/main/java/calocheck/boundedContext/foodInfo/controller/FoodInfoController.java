@@ -6,6 +6,7 @@ import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
+import calocheck.boundedContext.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,8 +59,11 @@ public class FoodInfoController {
 
         List<Nutrient> nutrients = foodInfo.getNutrientInfo().getNutrientList();
 
+        List<Tag> tagList = foodInfoService.getTagList(foodInfo);
+
         model.addAttribute("foodInfo", foodInfo);
         model.addAttribute("nutrients", nutrients);
+        model.addAttribute("tagList", tagList);
 
         return "usr/foodInfo/details";
     }
