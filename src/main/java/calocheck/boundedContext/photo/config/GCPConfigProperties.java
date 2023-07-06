@@ -15,16 +15,10 @@ import java.io.IOException;
 
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "cloud.gcp.auth")
+@ConfigurationProperties(prefix = "image.gcp.auth")
 public class GCPConfigProperties {
 
+    @Getter
     private String filePath;
-
-    @Bean
-    public ImageAnnotatorClient imageVision() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(filePath));
-        ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
-        return ImageAnnotatorClient.create(settings);
-    }
 
 }

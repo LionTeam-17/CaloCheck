@@ -1,41 +1,30 @@
 package calocheck.boundedContext.photo.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
 @Setter
+@Getter
 @Configuration
-@ConfigurationProperties(prefix = "custom.aws")
+@ConfigurationProperties(prefix = "image.aws")
 public class ObjectStorageConfigProperties {
 
-    private Map<String, String> credentials;
+    private String accessKey;
 
-    private Map<String, String> stack;
+    private String secretKey;
 
-    private Map<String, String> region;
+    private String region;
 
-    @Getter
-    private Map<String, String> s3;
+    private String endPoint;
 
-    private Map<String, String> cdn;
+    private String bucket;
 
-    @Bean
-    public AmazonS3 amazonS3Client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(credentials.get("access-key"),credentials.get("secret-key"));
-        return (AmazonS3) AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(s3.get("endpoint"), region.get("static")))
-                .build();
-    }
+    private String sampleImg;
+
+    private String cdnUrl;
 
 }

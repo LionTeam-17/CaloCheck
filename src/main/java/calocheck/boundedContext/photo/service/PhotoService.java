@@ -3,6 +3,7 @@ package calocheck.boundedContext.photo.service;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.photo.config.GCPConfigProperties;
 import calocheck.boundedContext.photo.config.ObjectStorageConfigProperties;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -31,6 +32,8 @@ public class PhotoService {
 
     private final GCPConfigProperties gcpConfigProperties;
     private final ObjectStorageConfigProperties objectStorageConfigProperties;
+    private final ImageAnnotatorClient imageAnnotatorClient;
+    private final AmazonS3 amazonS3;
 
     // upload local file
     @Transactional
@@ -49,12 +52,11 @@ public class PhotoService {
 
         InputStream inputStream = file.getInputStream();
 
-        String bucketName = objectStorageConfigProperties.getS3().get("bucket");
-        String endPoint = objectStorageConfigProperties.getS3().get("endpoint");
+        String bucketName = objectStorageConfigProperties.getBucket();
+        String endPoint = objectStorageConfigProperties.getEndPoint();
 
-        PutObjectResult putObjectResult = objectStorageConfigProperties.amazonS3Client()
-                .putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+        PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
 
         return endPoint + "/%s/%s".formatted(bucketName, key);
     }
@@ -76,9 +78,9 @@ public class PhotoService {
 
     }
 
-    //이미지의 라벨 검출
-    public RsData<String> detectLabelsRemote(String imageUrl) throws IOException {
-        try (ImageAnnotatorClient vision = gcpConfigProperties){
+    public RsData<String> visionAPI(String imageUrl) throws IOException{
+
+        try (ImageAnnotatorClient vision = imageAnnotatorClient) {
 
             // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
             URL url = new URL(imageUrl);
@@ -92,49 +94,6 @@ public class PhotoService {
                 AnnotateImageRequest request =
                         AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
 
-                // Label 검출
-                BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
-                        Collections.singletonList(request));
-                List<AnnotateImageResponse> responses = response.getResponsesList();
-
-                for (AnnotateImageResponse res : responses) {
-                    if (res.hasError()) {
-                        System.out.format("Error: %s%n", res.getError().getMessage());
-                        return RsData.of("F-1", "라벨 검출도중 오류가 발생하였습니다.");
-                    }
-
-                    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-//                        annotation.getAllFields().forEach((k, v) ->
-//                                System.out.format("%s : %s%n", k, v.toString()));
-
-                        //검출 결과 중에서 음식일 확률이 70% 이상이라면 바로 리턴 후 종료 -> true 반환
-                        if (annotation.getDescription().contains("Food") && annotation.getScore() >= 0.7) {
-                            return RsData.of("S-1", "음식 이미지일 확률이 높습니다.");
-                        }
-                    }
-                }
-            }
-        }
-        return RsData.of("F-1", "음식 이미지가 아닙니다.");
-    }
-
-    //이미지 유해성 검사
-    public RsData<String> detectSafeSearchRemote(String imageUrl) throws IOException {
-
-        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
-
-            // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
-            URL url = new URL(imageUrl);
-            try (InputStream in = url.openStream()) {
-                byte[] data = IOUtils.toByteArray(in);
-
-                //URL 을 통해 이미지를 빌드
-                ByteString imgBytes = ByteString.copyFrom(data);
-                Image img = Image.newBuilder().setContent(imgBytes).build();
-                Feature feat = Feature.newBuilder().setType(Feature.Type.SAFE_SEARCH_DETECTION).build();
-                AnnotateImageRequest request =
-                        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
-
                 // 세이프 서치
                 BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
                         Collections.singletonList(request));
@@ -143,36 +102,44 @@ public class PhotoService {
                 for (AnnotateImageResponse res : responses) {
                     if (res.hasError()) {
                         System.out.format("Error: %s%n", res.getError().getMessage());
-                        return RsData.of("F-1", "세이프서치 도중 오류가 발생하였습니다.");
+                        return RsData.of("F-1", "오류가 발생하였습니다.");
                     }
 
                     SafeSearchAnnotation safeSearchAnnotation = res.getSafeSearchAnnotation();
+                    List<EntityAnnotation> labelAnnotations = res.getLabelAnnotationsList();
 
-                    //유해성 등급 => Unknown, Very Unlikely, Unlikely, Possible, Likely, and Very Likely
-                    List<String> resultList = new ArrayList<>();
+                    // 세이프 서치 분석
+                    if (safeSearchAnnotation != null) {
+                        List<String> safeSearchResultList = new ArrayList<>();
+                        safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
+                        safeSearchResultList.add(safeSearchAnnotation.getMedical().toString());
+                        safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
+                        safeSearchResultList.add(safeSearchAnnotation.getViolence().toString());
+                        safeSearchResultList.add(safeSearchAnnotation.getRacy().toString());
 
-                    resultList.add(safeSearchAnnotation.getAdult().toString());
-                    resultList.add(safeSearchAnnotation.getMedical().toString());
-                    resultList.add(safeSearchAnnotation.getAdult().toString());
-                    resultList.add(safeSearchAnnotation.getViolence().toString());
-                    resultList.add(safeSearchAnnotation.getRacy().toString());
+                        for (String result : safeSearchResultList) {
+                            if (result.equals("POSSIBLE")
+                                    || result.equals("LIKELY")
+                                    || result.equals("VERY_LIKELY")) {
+                                return RsData.of("F-2", "유해할 확률이 높은 이미지입니다.");
+                            }
+                        }
+                    }
 
-                    for (String result : resultList) {
-
-                        if (result.equals("POSSIBLE")
-                                || result.equals("LIKELY")
-                                || result.equals("VERY_LIKELY")) {
-
-                            return RsData.of("F-2", "유해할 확률이 높은 이미지 입니다.");
+                    // 라벨 검출
+                    for (EntityAnnotation annotation : labelAnnotations) {
+                        if (annotation.getDescription().contains("Food") && annotation.getScore() >= 0.7) {
+                            return RsData.of("S-1", "음식 이미지일 확률이 높습니다.");
                         }
                     }
                 }
+
+                return RsData.of("F-1", "라벨 검출 및 세이프 서치 결과를 찾을 수 없습니다.");
             }
         }
-        return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
-    public String getPostDetailPhoto(String photoUrl){
+    public String getPostDetailPhoto(String photoUrl) {
 
         String[] split = photoUrl.split("calocheck/");
 
@@ -184,9 +151,7 @@ public class PhotoService {
         return sb.toString();
     }
 
-    public List<String> getRecommendPhotoData(String[] recommendList){
-
-        String protocol = request.getScheme();
+    public List<String> getRecommendPhotoData(String[] recommendList) {
 
         List<String> imgList = new ArrayList<>();
 
@@ -194,11 +159,8 @@ public class PhotoService {
 
             StringBuilder sb = new StringBuilder();
 
-            if (protocol.equals("http")) {
-                sb.append("http://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
-            } else if (protocol.equals("https")) {
-                sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
-            }
+
+            sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
 
             sb.append(s);
             sb.append(".jpg?type=m&w=200&h=200&quality=90&bgcolor=FFFFFF&ttype=jpg&extopt=3");
