@@ -5,13 +5,11 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Map;
-
 @Setter
 @Getter
 @Configuration
 @ConfigurationProperties(prefix = "image.aws")
-public class ObjectStorageConfigProperties {
+public class S3ConfigProperties {
 
     private String accessKey;
 

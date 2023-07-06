@@ -1,16 +1,13 @@
 package calocheck.boundedContext.photo.service;
 
 import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.photo.config.GCPConfigProperties;
-import calocheck.boundedContext.photo.config.ObjectStorageConfigProperties;
+import calocheck.boundedContext.photo.config.S3ConfigProperties;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -30,8 +27,7 @@ import java.util.UUID;
 @Service
 public class PhotoService {
 
-    private final GCPConfigProperties gcpConfigProperties;
-    private final ObjectStorageConfigProperties objectStorageConfigProperties;
+    private final S3ConfigProperties s3ConfigProperties;
     private final ImageAnnotatorClient imageAnnotatorClient;
     private final AmazonS3 amazonS3;
 
@@ -52,11 +48,11 @@ public class PhotoService {
 
         InputStream inputStream = file.getInputStream();
 
-        String bucketName = objectStorageConfigProperties.getBucket();
-        String endPoint = objectStorageConfigProperties.getEndPoint();
+        String bucketName = s3ConfigProperties.getBucket();
+        String endPoint = s3ConfigProperties.getEndPoint();
 
-        PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3.putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
 
         return endPoint + "/%s/%s".formatted(bucketName, key);
     }
@@ -78,7 +74,8 @@ public class PhotoService {
 
     }
 
-    public RsData<String> visionAPI(String imageUrl) throws IOException{
+    //labelDetection + safeSearch
+    public RsData<String> imageCheck(String imageUrl) throws IOException{
 
         try (ImageAnnotatorClient vision = imageAnnotatorClient) {
 
@@ -97,9 +94,9 @@ public class PhotoService {
                 // 세이프 서치
                 BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
                         Collections.singletonList(request));
-                List<AnnotateImageResponse> responses = response.getResponsesList();
+                List<AnnotateImageResponse> responseList = response.getResponsesList();
 
-                for (AnnotateImageResponse res : responses) {
+                for (AnnotateImageResponse res : responseList) {
                     if (res.hasError()) {
                         System.out.format("Error: %s%n", res.getError().getMessage());
                         return RsData.of("F-1", "오류가 발생하였습니다.");
@@ -109,20 +106,18 @@ public class PhotoService {
                     List<EntityAnnotation> labelAnnotations = res.getLabelAnnotationsList();
 
                     // 세이프 서치 분석
-                    if (safeSearchAnnotation != null) {
-                        List<String> safeSearchResultList = new ArrayList<>();
-                        safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
-                        safeSearchResultList.add(safeSearchAnnotation.getMedical().toString());
-                        safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
-                        safeSearchResultList.add(safeSearchAnnotation.getViolence().toString());
-                        safeSearchResultList.add(safeSearchAnnotation.getRacy().toString());
+                    List<String> safeSearchResultList = new ArrayList<>();
+                    safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
+                    safeSearchResultList.add(safeSearchAnnotation.getMedical().toString());
+                    safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
+                    safeSearchResultList.add(safeSearchAnnotation.getViolence().toString());
+                    safeSearchResultList.add(safeSearchAnnotation.getRacy().toString());
 
-                        for (String result : safeSearchResultList) {
-                            if (result.equals("POSSIBLE")
-                                    || result.equals("LIKELY")
-                                    || result.equals("VERY_LIKELY")) {
-                                return RsData.of("F-2", "유해할 확률이 높은 이미지입니다.");
-                            }
+                    for (String result : safeSearchResultList) {
+                        if (result.equals("POSSIBLE")
+                                || result.equals("LIKELY")
+                                || result.equals("VERY_LIKELY")) {
+                            return RsData.of("F-2", "유해할 확률이 높은 이미지입니다.");
                         }
                     }
 
@@ -134,7 +129,7 @@ public class PhotoService {
                     }
                 }
 
-                return RsData.of("F-1", "라벨 검출 및 세이프 서치 결과를 찾을 수 없습니다.");
+                return RsData.of("F-3", "음식 이미지가 아닐 확률이 높습니다. 다른 이미지를 사용해 주세요.");
             }
         }
     }
@@ -144,7 +139,7 @@ public class PhotoService {
         String[] split = photoUrl.split("calocheck/");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/");
+        sb.append(s3ConfigProperties.getCdnUrl());
         sb.append(split[1]);
         sb.append("?type=m&w=500&h=500&quality=90&bgcolor=FFFFFF&extopt=3");
 
@@ -155,14 +150,13 @@ public class PhotoService {
 
         List<String> imgList = new ArrayList<>();
 
-        for (String s : recommendList) {
+        for (String recommend : recommendList) {
 
             StringBuilder sb = new StringBuilder();
 
-
-            sb.append("https://mxpijmgqueja17962851.cdn.ntruss.com/recommendImg/");
-
-            sb.append(s);
+            sb.append(s3ConfigProperties.getCdnUrl());
+            sb.append("recommendImg/");
+            sb.append(recommend);
             sb.append(".jpg?type=m&w=200&h=200&quality=90&bgcolor=FFFFFF&ttype=jpg&extopt=3");
 
             imgList.add(sb.toString());
