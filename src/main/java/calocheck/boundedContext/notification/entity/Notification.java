@@ -26,7 +26,7 @@ public class Notification extends BaseEntity {
     private LocalDateTime readDate;
     @ManyToOne
     @ToString.Exclude
-    private Member member; // 메세지 받는 사람(호감 받는 사람)
+    private Member member;
     @ManyToOne
     @ToString.Exclude
     private Post post;

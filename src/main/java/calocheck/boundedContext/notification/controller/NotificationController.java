@@ -25,9 +25,9 @@ public class NotificationController {
 
         List<Notification> notifications = notificationService.findByPost_Member(rq.getMember());
 
-        // 알림 페이지 방문 시에 ReadDate가 null인 것들 현재시각으로 갱신
+        // ReadDate 갱신
         notificationService.updateReadDate(notifications);
-
+        // 알림 삭제
         notificationService.deleteNotification(notifications);
 
         model.addAttribute("notifications", notifications);
