@@ -71,7 +71,11 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        cartFoodInfoService.removeToCart(member, foodInfo);
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        }
+
+        RsData<CartFoodInfo> res = cartFoodInfoService.removeToCart(member, foodInfo);
         return new CartDTO("success");
     }
 

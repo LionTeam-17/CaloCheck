@@ -30,21 +30,21 @@ public class CartFoodInfoService {
             return RsData.of("success", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
         }
 
-        cartFoodInfo = create(member, foodInfo, quantity);
-        cartFoodInfoRepository.save(cartFoodInfo);
+        create(member, foodInfo, quantity);
 
         return RsData.of("success", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
-    public boolean removeToCart(Member member, FoodInfo foodInfo) {
+    public RsData<CartFoodInfo> removeToCart(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
-        if (cartFoodInfo != null) {
-            cartFoodInfoRepository.delete(cartFoodInfo);
-            return true;
+        if (cartFoodInfo == null) {
+            return RsData.of("fail", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
-        return false;
+        delete(cartFoodInfo);
+
+        return RsData.of("success", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
     }
 
     public boolean updateCart(Member member, FoodInfo foodInfo, Long quantity) {
