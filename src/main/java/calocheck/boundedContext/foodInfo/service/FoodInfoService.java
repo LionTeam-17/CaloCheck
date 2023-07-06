@@ -3,6 +3,8 @@ package calocheck.boundedContext.foodInfo.service;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
+import calocheck.boundedContext.tag.entity.Tag;
+import calocheck.boundedContext.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FoodInfoService {
+
     private final FoodInfoRepository foodInfoRepository;
+    private final TagService tagService;
 
     @Transactional
     public FoodInfo create(FoodInfo foodInfo) {
@@ -122,5 +127,19 @@ public class FoodInfoService {
         }
 
         return top5Lists;
+    }
+
+    public List<Tag> getTagList(FoodInfo foodInfo) {
+
+        List<Nutrient> nutrientList = foodInfo.getNutrientList();
+        List<Tag> tagList = tagService.findAllTag();
+
+        List<Tag> returnTagList = nutrientList.stream()
+                .flatMap(nutrient -> tagList.stream()
+                        .filter(tag -> nutrient.getName().equals(tag.getTagName()))
+                        .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
+                .collect(Collectors.toList());
+
+        return returnTagList;
     }
 }

@@ -170,4 +170,11 @@ public class MealHistoryService {
         LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
         return mealHistoryRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
     }
+
+    public List<MealHistory> findByMemberAndDate(Member member, LocalDate date) {
+        LocalDateTime startDateTime = date.atStartOfDay();
+        LocalDateTime endDateTime = date.atTime(23, 59, 59);
+        return mealHistoryRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
+    }
+
 }

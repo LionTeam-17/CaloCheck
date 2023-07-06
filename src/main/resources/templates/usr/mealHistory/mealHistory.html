@@ -1,0 +1,258 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+<head>
+    <title>Daily Menu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <link rel="stylesheet" href="/resource/common/mealHistory.css">
+</head>
+<body>
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div class="container">
+                <div class="my-calendar clearfix">
+                    <div class="clicked-date">
+                        <div class="cal-day"></div>
+                        <div class="cal-date"></div>
+                    </div>
+                    <div class="calendar-box">
+                        <div class="ctr-box clearfix">
+                            <button type="button" title="prev" class="btn-cal prev">
+                            </button>
+                            <span class="cal-month"></span>
+                            <span class="cal-year"></span>
+                            <button type="button" title="next" class="btn-cal next">
+                            </button>
+                        </div>
+                        <table class="cal-table">
+                            <thead>
+                            <tr>
+                                <th>S</th>
+                                <th>M</th>
+                                <th>T</th>
+                                <th>W</th>
+                                <th>T</th>
+                                <th>F</th>
+                                <th>S</th>
+                            </tr>
+                            </thead>
+                            <tbody class="cal-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- // .my-calendar -->
+            </div>
+            <div id="meal-info" class="meal-container"></div>
+        </div>
+        <input type="hidden" id="memberId" th:value="${member.id}"/>
+        <script>
+            // ================================
+            // START YOUR APP HERE
+            // ================================
+            const init = {
+                monList: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                dayList: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                today: new Date(),
+                monForChange: new Date().getMonth(),
+                activeDate: new Date(),
+                getFirstDay: (yy, mm) => new Date(yy, mm, 1),
+                getLastDay: (yy, mm) => new Date(yy, mm + 1, 0),
+                nextMonth: function () {
+                    let d = new Date();
+                    d.setDate(1);
+                    d.setMonth(++this.monForChange);
+                    this.activeDate = d;
+                    return d;
+                },
+                prevMonth: function () {
+                    let d = new Date();
+                    d.setDate(1);
+                    d.setMonth(--this.monForChange);
+                    this.activeDate = d;
+                    return d;
+                },
+                addZero: (num) => (num < 10) ? '0' + num : num,
+                activeDTag: null,
+                getIndex: function (node) {
+                    let index = 0;
+                    while (node = node.previousElementSibling) {
+                        index++;
+                    }
+                    return index;
+                }
+            };
+
+            const $calBody = document.querySelector('.cal-body');
+            const $btnNext = document.querySelector('.btn-cal.next');
+            const $btnPrev = document.querySelector('.btn-cal.prev');
+
+            /**
+             * @param {number} date
+             * @param {number} dayIn
+             */
+            function loadDate (date, dayIn) {
+                document.querySelector('.cal-date').textContent = date;
+                document.querySelector('.cal-day').textContent = init.dayList[dayIn];
+            }
+
+            /**
+             * @param {date} fullDate
+             */
+            function loadYYMM (fullDate) {
+                let yy = fullDate.getFullYear();
+                let mm = fullDate.getMonth();
+                let firstDay = init.getFirstDay(yy, mm);
+                let lastDay = init.getLastDay(yy, mm);
+                let markToday;  // for marking today date
+
+                if (mm === init.today.getMonth() && yy === init.today.getFullYear()) {
+                    markToday = init.today.getDate();
+                }
+
+                document.querySelector('.cal-month').textContent = init.monList[mm];
+                document.querySelector('.cal-year').textContent = yy;
+
+                let trtd = '';
+                let startCount;
+                let countDay = 0;
+                for (let i = 0; i < 6; i++) {
+                    trtd += '<tr>';
+                    for (let j = 0; j < 7; j++) {
+                        if (i === 0 && !startCount && j === firstDay.getDay()) {
+                            startCount = 1;
+                        }
+                        if (!startCount) {
+                            trtd += '<td>'
+                        } else {
+                            let fullDate = yy + '.' + init.addZero(mm + 1) + '.' + init.addZero(countDay + 1);
+                            trtd += '<td class="day';
+                            trtd += (markToday && markToday === countDay + 1) ? ' today" ' : '"';
+                            trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}">`;
+                        }
+                        trtd += (startCount) ? ++countDay : '';
+                        if (countDay === lastDay.getDate()) {
+                            startCount = 0;
+                        }
+                        trtd += '</td>';
+                    }
+                    trtd += '</tr>';
+                }
+                $calBody.innerHTML = trtd;
+            }
+
+            /**
+             * @param {string} val
+             */
+            function createNewList (val) {
+                let id = new Date().getTime() + '';
+                let yy = init.activeDate.getFullYear();
+                let mm = init.activeDate.getMonth() + 1;
+                let dd = init.activeDate.getDate();
+                const $target = $calBody.querySelector(`.day[data-date="${dd}"]`);
+
+                let date = yy + '.' + init.addZero(mm) + '.' + init.addZero(dd);
+
+                let eventData = {};
+                eventData['date'] = date;
+                eventData['memo'] = val;
+                eventData['complete'] = false;
+                eventData['id'] = id;
+                init.event.push(eventData);
+                $todoList.appendChild(createLi(id, val, date));
+            }
+
+            loadYYMM(init.today);
+            loadDate(init.today.getDate(), init.today.getDay());
+
+            $btnNext.addEventListener('click', () => loadYYMM(init.nextMonth()));
+            $btnPrev.addEventListener('click', () => loadYYMM(init.prevMonth()));
+
+            $calBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('day')) {
+                    if (init.activeDTag) {
+                        init.activeDTag.classList.remove('day-active');
+                    }
+                    let day = Number(e.target.textContent);
+                    loadDate(day, e.target.cellIndex);
+                    e.target.classList.add('day-active');
+                    init.activeDTag = e.target;
+                    init.activeDate.setDate(day);
+
+
+                    const memberId = document.getElementById('memberId').value;
+
+                    let date = `${init.activeDate.getFullYear()}-${init.addZero(init.activeDate.getMonth() + 1)}-${init.addZero(day)}`;
+
+                    fetch(`/mealHistory/api/${memberId}?date=${date}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // 식단 정보 표시
+                            let mealInfo = document.getElementById('meal-info');
+                            mealInfo.innerHTML = ''; // 기존의 정보를 삭제
+
+                            data.forEach(mealHistoryDto => {
+                                let mealSection = document.createElement('a');
+                                mealSection.classList.add('block','p-6','mb-3','bg-white', 'border', 'border-gray-200', 'rounded-lg', 'shadow');
+                                mealSection.href = '#';
+
+                                let mealType = document.createElement('h5');
+                                mealType.classList.add('mb-2', 'text-2xl', 'font-bold', 'tracking-tight', 'text-gray-900');
+
+                                let mealScore = document.createElement('p');
+                                mealScore.textContent = '별점 : ' + mealHistoryDto.mealScore;
+                                mealScore.classList.add('font-normal', 'text-gray-700', 'mb-1');
+
+                                let mealMemo = document.createElement('p');
+                                mealMemo.textContent = '메모 : ' + mealHistoryDto.mealMemo;
+                                mealMemo.classList.add('font-normal', 'text-gray-700', 'mb-1');
+
+                                let dailyMenuList = document.createElement('ul');
+                                dailyMenuList.classList.add('daily-menu-list');
+
+                                mealHistoryDto.dailyMenuList.forEach(dailyMenu => {
+                                    let foodItem = document.createElement('li');
+                                    foodItem.classList.add('food-item');
+
+                                    let foodName = document.createElement('span');
+                                    foodName.textContent = '식품명: ' + dailyMenu.foodName;
+                                    foodName.classList.add('food-name');
+
+                                    let quantity = document.createElement('span');
+                                    quantity.textContent = '수량: ' + dailyMenu.quantity;
+                                    quantity.classList.add('quantity');
+
+                                    foodItem.appendChild(foodName);
+                                    foodItem.appendChild(quantity);
+
+                                    dailyMenuList.appendChild(foodItem);
+                                });
+
+                                if (mealHistoryDto.mealType === 'breakfast') {
+                                    mealType.textContent = '아침';
+                                } else if (mealHistoryDto.mealType === 'lunch') {
+                                    mealType.textContent = '점심';
+                                } else if (mealHistoryDto.mealType === 'dinner') {
+                                    mealType.textContent = '저녁';
+                                } else if (mealHistoryDto.mealType === 'etc') {
+                                    mealType.textContent = '간식';
+                                }
+
+                                mealSection.appendChild(mealType);
+                                mealSection.appendChild(mealScore);
+                                mealSection.appendChild(mealMemo);
+                                mealSection.appendChild(dailyMenuList);
+
+                                mealInfo.appendChild(mealSection);
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        </script>
+    </main>
+</th:block>
+</body>
+</html>
