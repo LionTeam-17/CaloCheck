@@ -96,8 +96,8 @@ public class NotProd {
                             .getData())
                     .toArray(PostLike[]::new);
 
-            foodDataExtractor.readFile();
-            criteriaDataExtractor.readFile();
+//            foodDataExtractor.readFile();
+//            criteriaDataExtractor.readFile();
 
             //Tracking 샘플 데이터
             LocalDate startDate = LocalDate.now().minusDays(90);
