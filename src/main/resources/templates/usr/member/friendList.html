@@ -29,7 +29,7 @@
                                 name="nickname" style="width: 300px;"/>
                         </div>
                         <div sec:authorize="isAuthenticated()">
-                            <button type="submit" class="btn">등록</button>
+                            <button type="submit" class="btn btn-accent">등록</button>
                         </div>
                     </div>
                 </form>
@@ -42,8 +42,8 @@
             </div>
             <div>
                 <div class="divider !my-2"></div>
-                <div class="flex justify-center justify-around my-5" style="width: 800px;">
-                    <div class="grow">
+                <div class="flex justify-center justify-around my-5" style="width: 500px;">
+                    <div class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 250px">
                         <table class="table w-full">
                             <tr class="text-center font-bold text-lg">
                                 <th>팔로잉 <span id="followingCount" th:text="${#lists.size(followingList)}"></span></th>
@@ -60,7 +60,7 @@
                         </table>
                     </div>
                     <div class="divider divider-horizontal grow"></div>
-                    <div class="grow ">
+                    <div class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 250px">
                         <table class="table w-full">
                             <tr class="text-center font-bold text-lg">
                                 <th>팔로워 <span th:text="${#lists.size(followerList)}"></span></th>
