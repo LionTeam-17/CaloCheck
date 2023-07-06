@@ -86,7 +86,7 @@ public class NotProd {
             }};
 
             recommendList.stream().filter(name -> recommendService.getRecommendByName(name) != null)
-                            .forEach(name -> recommendService.createRecommend(name, RecommendConfig.getDescription(name), RecommendConfig.getFoodList(name)));
+                    .forEach(name -> recommendService.createRecommend(name, RecommendConfig.getDescription(name), RecommendConfig.getFoodList(name)));
 
             excelService.processExcel();
 
