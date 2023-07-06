@@ -21,25 +21,27 @@
 
             <div class="flex flex-col justify-center gap-10" style="width: 550px">
                 <div class="flex justify-between gap-10">
-                    <div class="avatar">
+                    <div class="flex gap-3">
+                        <div class="avatar">
                         <div class="w-32 rounded-full">
                             <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
                         </div>
-                    </div>
-                    <div class="flex justify-center items-center gap-4">
-                        <span class="text-2xl font-bold" th:text="${member.nickname}"></span>
-                        <a href="/member/me" th:if="${member.id == @rq.member.id}">
-                            <i class="fa-solid fa-gear fa-xl"></i>
-                        </a>
-                        <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
-                            <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
-                                  method="POST">
-                                <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
-                            </form>
-                            <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
-                                  method="GET">
-                                <button type="submit" class="btn btn-success btn-sm">친구추가</button>
-                            </form>
+                        </div>
+                        <div class="flex justify-center items-center gap-4">
+                            <span class="text-2xl font-bold" th:text="${member.nickname}"></span>
+                            <a href="/member/me" th:if="${member.id == @rq.member.id}">
+                                <i class="fa-solid fa-gear fa-xl"></i>
+                            </a>
+                            <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
+                                <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
+                                    method="POST">
+                                    <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
+                                </form>
+                                <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
+                                    method="GET">
+                                    <button type="submit" class="btn btn-success btn-sm">친구추가</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="flex items-center">
