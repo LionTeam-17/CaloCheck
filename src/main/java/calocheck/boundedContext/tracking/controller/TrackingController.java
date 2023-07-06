@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
@@ -37,7 +38,6 @@ public class TrackingController {
             this.trackingService = trackingService;
             this.memberService = memberService;
     }
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/bodyTracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
@@ -48,10 +48,12 @@ public class TrackingController {
 
         Member member = memberOptional.get();
         List<Tracking> trackingData = trackingService.findTrackingsByMember(member);
-        Collections.reverse(trackingData);
+        List<Tracking> trackingDataReverse = new ArrayList<>(trackingData);
+        Collections.reverse(trackingDataReverse);
 
         model.addAttribute("member", member);
         model.addAttribute("trackingData", trackingData);
+        model.addAttribute("trackingDataReverse", trackingDataReverse);
         model.addAttribute("tracking", new Tracking());
         return "usr/tracking/bodyTracking";
     }

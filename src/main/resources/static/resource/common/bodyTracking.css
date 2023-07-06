@@ -12,7 +12,7 @@
     border-radius: 10px;
 }
 
-#openModal {
+#openRecordModal, #openTrackingModal {
     background-color: #112D4E;
     color: white;
     border-radius: 10px;
@@ -28,7 +28,7 @@
     background-color: #3F72AF;
 }
 
-#openModal:hover, #confirmRecord:hover {
+#openRecordModal:hover, #confirmRecord:hover,#openTrackingModal:hover {
     background-color: #3F72AF;
 }
 
@@ -37,7 +37,7 @@
     color: white;
 }
 
-#openModal.active {
+#openRecordModal.active, #openTrackingModal.active {
     background-color: #3F72AF;
     color: white;
 }
