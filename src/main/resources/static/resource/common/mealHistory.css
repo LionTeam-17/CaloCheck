@@ -132,3 +132,44 @@ html, body {
     height: 4px;
     background: #FFC107;
 }
+.meal-container {
+    display: flex;
+    flex-direction: column;
+}
+.meal-section {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+.meal-type {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.meal-score,
+.meal-memo {
+    margin: 5px 0;
+}
+
+.daily-menu-list {
+
+}
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.food-item .food-name {
+    margin-right: 10px;
+}
+
+.food-item .quantity {
+    margin-right : 10px;
+}
