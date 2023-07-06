@@ -125,7 +125,6 @@ public class CartFoodInfoController {
 
     @PostMapping("/addMenu")
     @PreAuthorize("isAuthenticated()")
-    @ResponseBody
     public String addMenu(@RequestParam("mealType") String mealType,
                           @RequestParam("menuMemo") String menuMemo,
                           @RequestParam("menuScore") int menuScore) {
@@ -140,6 +139,5 @@ public class CartFoodInfoController {
         cartFoodInfoService.deleteAllList(member);
 
         //내 식단 캘린더로 이동
-        return "%s, %d, %s".formatted(mealType, menuScore, menuMemo);
-    }
+        return "redirect:/mealHistory/" + member.getId();    }
 }
