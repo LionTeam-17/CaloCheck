@@ -7,73 +7,39 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 
 @Configuration
 public class S3Config {
-    @Getter
-    private static String accessKey;
 
     @Value("${cloud.aws.credentials.access-key}")
-    public void setAccessKey(String accessKey) {
-        S3Config.accessKey = accessKey;
-    }
-
-    @Getter
-    private static String secretKey;
+    private String accessKey;
 
     @Value("${cloud.aws.credentials.secret-key}")
-    public void setSecretKey(String secretKey){
-        S3Config.secretKey = secretKey;
-    }
-
-    @Getter
-    private static String region;
+    private String secretKey;
 
     @Value("${cloud.aws.region.static}")
-    public void setRegion(String region){
-        S3Config.region = region;
-    }
-
-    @Getter
-    private static String endPoint;
+    private String region;
 
     @Value("${cloud.aws.s3.endpoint}")
-    public void setEndPoint(String endPoint){
-        S3Config.endPoint = endPoint;
-    }
-
-    @Getter
-    private static String bucket;
+    private String endPoint;
 
     @Value("${cloud.aws.s3.bucket}")
-    public void setBucket(String bucket){
-        S3Config.bucket = bucket;
-    }
-
-    @Getter
-    private static String sampleImg;
+    private String bucket;
 
     @Value("${cloud.aws.s3.sampleImg}")
-    public void setSampleImg(String sampleImg){
-        S3Config.sampleImg = sampleImg;
-    }
-
-    @Getter
-    private static String cdnUrl;
+    private String sampleImg;
 
     @Value("${cloud.cdn.url}")
-    public void setCdnUrl(String cdnUrl){
-        S3Config.cdnUrl = cdnUrl;
-    }
+    private String cdnUrl;
 
-    public static AmazonS3 amazonS3Client() {
+    @Bean
+    public AmazonS3 amazonS3Client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey,secretKey);
         return (AmazonS3) AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, region))
                 .build();
     }
-
 }
