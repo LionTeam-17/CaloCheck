@@ -35,11 +35,13 @@
                  th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
                 장바구니 항목이 없습니다.
             </div>
-            <div id="cartInfos" class="flex flex-col w-full justify-center" th:if="${!cartList.isEmpty()}">
+            <div id="cartInfos"
+                 class="flex flex-col w-full justify-center"
+                 th:if="${!cartList.isEmpty()}">
                 <div class="flex flex-col justify-center"
                      th:id="${cartFoodInfo.foodInfo.id}"
-                     th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
-                     th:each="cartFoodInfo, loop: ${cartList}">
+                     th:each="cartFoodInfo, loop: ${cartList}"
+                     th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)">
                     <div class="flex flex-grow justify-between">
                         <span class="font-bold text-xs text-black flex justify-center"
                               style="width:6%"
@@ -100,9 +102,9 @@
     </div>
 
     <script th:inline="javascript">
-        var cartInfosTag = document.getElementById("cartInfos");
-        var removeElement;
-        var removeFoodId;
+        let cartInfosTag = document.getElementById("cartInfos");
+        let removeElement;
+        let removeFoodId;
 
         function updateFoodInfoConfirm(foodId, element) {
             removeFoodId = foodId;
@@ -164,13 +166,17 @@
                     },
                     dataType: "json",
                     success: function (response) {
+                        console.log(JSON.stringify(response));
+                        console.log(response.msg);
                         if (response.result === "success") {
-                            console.log("success");
                             removeElement.remove();
 
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
                             }
+                            toastNotice(response.msg);
+                        } else if(response.result === "fail") {
+                            toastWarning(response.msg);
                         }
                     },
                     error: function (error) {
@@ -199,8 +205,8 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.result === "success") {
-                            console.log("success");
                             if (quantity == 0) {
+                                console.log(removeFoodId);
                                 removeElement.remove();
                             } else {
                                 removeElement.children[0].children[3].innerText = quantity;
@@ -209,6 +215,10 @@
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
                             }
+
+                            toastNotice(response.msg);
+                        } else if (response.result === "fail") {
+                            toastWarning(response.msg);
                         }
                     },
                     error: function (error) {

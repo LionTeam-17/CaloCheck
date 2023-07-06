@@ -27,43 +27,36 @@ public class CartFoodInfoService {
             long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
             update(cartFoodInfo, member, foodInfo, updatedQuantity);
 
-            return RsData.of("success", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
+            return RsData.of("S-2", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
         }
 
         create(member, foodInfo, quantity);
 
-        return RsData.of("success", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
+        return RsData.of("S-1", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
     public RsData<CartFoodInfo> removeToCart(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo == null) {
-            return RsData.of("fail", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
+            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
         delete(cartFoodInfo);
 
-        return RsData.of("success", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
+        return RsData.of("S-1", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
     }
 
-    public boolean updateCart(Member member, FoodInfo foodInfo, Long quantity) {
+    public RsData<CartFoodInfo> updateCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
-        if (quantity == 0) {
-
+        if (cartFoodInfo == null) {
+            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
-        if (cartFoodInfo != null) {
-            CartFoodInfo updated = cartFoodInfo.toBuilder()
-                    .quantity(quantity)
-                    .build();
+        update(cartFoodInfo, member, foodInfo, quantity);
 
-            cartFoodInfoRepository.save(updated);
-            return true;
-        }
-
-        return false;
+        return RsData.of("S-1", "장바구니 수정 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
     public CartFoodInfo create(Member member, FoodInfo foodInfo, Long quantity) {

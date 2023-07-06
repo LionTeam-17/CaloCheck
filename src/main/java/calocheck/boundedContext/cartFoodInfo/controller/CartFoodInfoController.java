@@ -55,7 +55,8 @@ public class CartFoodInfoController {
 
         if (foodInfo == null) {
             return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
-        } else if(quantity < 1) {
+        }
+        else if(quantity < 1) {
             return new CartDTO("fail", "요청하신 수량은 올바르지 않습니다.");
         }
 
@@ -81,7 +82,7 @@ public class CartFoodInfoController {
             return new CartDTO("fail", res.getMsg());
         }
 
-        return new CartDTO("success", res.getMsg());
+        return new CartDTO("success", res.getMsg(), foodId);
     }
 
     @PostMapping("/update")
@@ -91,13 +92,26 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        if (quantity == 0) {
-            cartFoodInfoService.removeToCart(member, foodInfo);
-            return new CartDTO("success");
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        }
+        else if(quantity < 0) {
+            return new CartDTO("fail", "요청하신 수량은 올바르지 않습니다.");
         }
 
-        cartFoodInfoService.updateCart(member, foodInfo, quantity);
-        return new CartDTO("success");
+        if (quantity == 0) {
+            RsData<CartFoodInfo> delRes = cartFoodInfoService.removeToCart(member, foodInfo);
+
+            if (delRes.isFail()) {
+                return new CartDTO("fail", delRes.getMsg());
+            }
+
+            return new CartDTO("success", delRes.getMsg(), foodId);
+        }
+
+        RsData<CartFoodInfo> updateRes = cartFoodInfoService.updateCart(member, foodInfo, quantity);
+
+        return new CartDTO("success", updateRes.getMsg());
     }
 
 
