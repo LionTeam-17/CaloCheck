@@ -184,4 +184,59 @@ public class RecommendConfig {
         RecommendConfig.lowGIDescription = lowGIDescription;
     }
 
+    public static String getDescription(String nutrition) {
+        switch (nutrition) {
+            case "탄수화물":
+                return carbohydrateDescription;
+            case "단백질":
+                return proteinDescription;
+            case "지방":
+                return fatDescription;
+            case "칼슘":
+                return calciumDescription;
+            case "나트륨":
+                return sodiumDescription;
+            case "칼륨":
+                return potassiumDescription;
+            case "비타민A":
+                return vitaminADescription;
+            case "비타민C":
+                return vitaminCDescription;
+            case "고단백&저지방":
+                return meatDescription;
+            case "GI지수 높은 음식":
+                return highGIDescription;
+            case "GI지수 낮은 음식":
+                return lowGIDescription;
+        }
+        return null;
+    }
+
+    public static String[] getFoodList(String nutrition) {
+        switch (nutrition) {
+            case "탄수화물":
+                return carbohydrateFoodList;
+            case "단백질":
+                return proteinFoodList;
+            case "지방":
+                return fatFoodList;
+            case "칼슘":
+                return calciumFoodList;
+            case "나트륨":
+                return sodiumFoodList;
+            case "칼륨":
+                return potassiumFoodList;
+            case "비타민A":
+                return vitaminAFoodList;
+            case "비타민C":
+                return vitaminCFoodList;
+            case "고단백&저지방":
+                return meatFoodList;
+            case "GI지수 높은 음식":
+                return lowGIFoodList;
+            case "GI지수 낮은 음식":
+                return highGIFoodList;
+        }
+        return null;
+    }
 }

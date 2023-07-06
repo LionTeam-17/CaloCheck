@@ -31,7 +31,7 @@
             </div>
             <div class="m-5 flex justify-center">
                 <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
-                   th:onclick="openCustomModal()">
+                   th:if="${@rq.isLogin()}" th:onclick="openCustomModal()">
                     장바구니 등록
                 </a>
                 <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
@@ -88,7 +88,7 @@
                         <div class="flex">
                             <i class="fa-solid fa-list"></i>
                             <div class="text-xs font-bold m-2"
-                                 th:text="${nutrient.name} + '(' + ${nutrient.unit} + ')'"></div>
+                                 th:text="${nutrient.name} + '(g)'"></div>
                         </div>
                         <div class="text-xs text-black m-2"
                              th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
@@ -193,10 +193,6 @@
         loopIndex = /*[[${loop.index}]]*/null;
         label = /*[[${nutrient.name}]]*/null;
         value = /*[[${nutrient.value}]]*/null;
-        unit = /*[[${nutrient.unit}]]*/null;
-        if (unit == "mg") {
-            value = value / 1000;
-        }
 
         back = background[loopIndex];
         hover = hoverBackground[loopIndex];
