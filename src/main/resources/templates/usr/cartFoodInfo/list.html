@@ -61,8 +61,13 @@
             </div>
 
             <div class="flex justify-center mt-5">
-                <a href="/cartFoodInfo/total"
-                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                <a href="/foodInfo/search"
+                   class="m-3 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-full">
+                    식품 추가</a>
+                <a id="nextBtn"
+                   href="/cartFoodInfo/total"
+                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full"
+                   th:classappend="${!cartList.isEmpty()} ? '' : 'hidden'">
                     다음</a>
             </div>
         </div>
@@ -173,6 +178,7 @@
 
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                                document.getElementById("nextBtn").classList.add("hidden");
                             }
                             toastNotice(response.msg);
                         } else if(response.result === "fail") {
@@ -214,6 +220,7 @@
 
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                                document.getElementById("nextBtn").classList.add("hidden");
                             }
 
                             toastNotice(response.msg);

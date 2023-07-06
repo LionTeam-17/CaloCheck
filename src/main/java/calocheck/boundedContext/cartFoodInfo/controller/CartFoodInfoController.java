@@ -120,6 +120,11 @@ public class CartFoodInfoController {
     public String showCartTotal(Model model) {
         Member member = rq.getMember();
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+
+        if (cartList != null) {
+
+        }
+
         List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
         Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
 
