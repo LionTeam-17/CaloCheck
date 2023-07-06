@@ -20,6 +20,8 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+
 
 @Controller
 @RequestMapping("/tracking")
@@ -46,6 +48,8 @@ public class TrackingController {
 
         Member member = memberOptional.get();
         List<Tracking> trackingData = trackingService.findTrackingsByMember(member);
+        Collections.reverse(trackingData);
+
         model.addAttribute("member", member);
         model.addAttribute("trackingData", trackingData);
         model.addAttribute("tracking", new Tracking());

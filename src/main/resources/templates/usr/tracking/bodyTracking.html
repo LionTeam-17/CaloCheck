@@ -109,8 +109,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- trackingData를 이용하여 테이블 행을 반복적으로 생성 -->
-                        <tr th:each="tracking : ${trackingData}" class="border-b text-black">
+                        <tr th:each="tracking, iterStat : ${trackingData}" class="border-b text-black" th:if="${iterStat.index < 5}">
                             <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>
                             <td class="px-4 py-2" th:text="${tracking.weight} + 'kg'"></td>
                             <td class="px-4 py-2" th:text="${tracking.bodyFat} + 'kg'"></td>
