@@ -14,4 +14,7 @@ public interface TrackingRepository extends JpaRepository<Tracking, Long> {
     Optional<Tracking> findByMemberAndDateTime(Member member, LocalDate date);
 
     Tracking findTopByMemberOrderByDateTimeDesc(Member member);
+
+    Tracking findTopByMemberAndDateTimeLessThanOrderByDateTimeDesc(Member member, LocalDate date);
+
 }

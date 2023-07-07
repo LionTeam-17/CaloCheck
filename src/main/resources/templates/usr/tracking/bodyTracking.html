@@ -18,6 +18,22 @@
 <th:block layout:fragment="Content">
     <main class="flex-1 flex justify-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div class="user-info">
+                <div class="user-details">
+                    <div class="user-detail-item">
+                        <span class="detail-title">이름 :</span>
+                        <span class="detail-value" th:text="${member.username} + '님'"></span>
+                    </div>
+                    <div class="user-detail-item">
+                        <span class="detail-title">나이 :</span>
+                        <span class="detail-value" th:text="${member.age} + '세'"></span>
+                    </div>
+                    <div class="user-detail-item">
+                        <span class="detail-title">키 :</span>
+                        <span class="detail-value" th:text="${member.height} + 'cm'"></span>
+                    </div>
+                </div>
+            </div>
             <div>
                 <div class="tab_button flex">
                     <button class="tablink m-3 mt-1 mr-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="WeightTab" data-tab="Weight" onclick="openData('Weight')"> 체중 </button>
@@ -125,45 +141,28 @@
                 </div>
             </div>
 
-
             <canvas id="Weight" class="chart" style="max-width: 800px;"></canvas>
             <canvas id="Body Fat" class="chart" style="max-width: 800px;"></canvas>
             <canvas id="Muscle Mass" class="chart" style="max-width: 800px;"></canvas>
-
-            <div style="width: 200px; border: 1px solid #ccc; border-radius: 10px; padding: 20px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); margin: 30px auto;">
-                <h2 style="margin-bottom: 20px; font-size: 20px; color: #333;">유저 정보</h2>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="font-weight: bold; color: #666;">이름 :</span>
-                    <span th:text="${member.username} + '님'"></span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="font-weight: bold; color: #666;">나이 :</span>
-                    <span th:text="${member.age} + '세'"></span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="font-weight: bold; color: #666;">키 :</span>
-                    <span th:text="${member.height} + 'cm'"></span>
-                </div>
-            </div>
 
             <div class="card-container">
                 <div th:each="tracking, iterStat : ${trackingDataReverse}" th:if="${iterStat.index < 5}" class="card">
                     <h2 th:text="${tracking.dateTime}" class="card-header"></h2>
                     <div class="card-body">
                         <p>
-                            <strong>체중:</strong>
+                            <strong>체중</strong>
                             <span th:text="${tracking.weight} + 'kg' + (${tracking.weightChange} &gt; 0 ? '(+' + ${tracking.weightChange} + 'kg)' : '(' + ${tracking.weightChange} + 'kg)')"></span>
                         </p>
                         <p>
-                            <strong>체지방량:</strong>
+                            <strong>체지방량</strong>
                             <span th:text="${tracking.bodyFat} + 'kg' + (${tracking.bodyFatChange} &gt; 0 ? '(+' + ${tracking.bodyFatChange} + 'kg)' : '(' + ${tracking.bodyFatChange} + 'kg)')"></span>
                         </p>
                         <p>
-                            <strong>골격근량:</strong>
+                            <strong>골격근량</strong>
                             <span th:text="${tracking.muscleMass} + 'kg' + (${tracking.muscleMassChange} &gt; 0 ? '(+' + ${tracking.muscleMassChange} + 'kg)' : '(' + ${tracking.muscleMassChange} + 'kg)')"></span>
                         </p>
-                        <p><strong>bmi:</strong> <span th:text="${tracking.bmi}"></span></p>
-                        <p><strong>체지방률:</strong> <span th:text="${tracking.bodyFatPercentage} + '%'"></span></p>
+                        <p><strong>bmi</strong> <span th:text="${tracking.bmi}"></span></p>
+                        <p><strong>체지방률</strong> <span th:text="${tracking.bodyFatPercentage} + '%'"></span></p>
                     </div>
                 </div>
             </div>

@@ -125,7 +125,7 @@ public class TrackingController {
 
             trackingService.calculateBMI(trackingToUpdate);
             trackingService.calculateBodyFatPercentage(trackingToUpdate);
-            trackingService.calculateChanges(trackingToUpdate, existingTracking.get());
+            trackingService.calculateChanges(trackingToUpdate);
 
             savedTracking = trackingService.updateTracking(trackingToUpdate);
         } else {
@@ -135,7 +135,7 @@ public class TrackingController {
 
             trackingService.calculateBMI(tracking);
             trackingService.calculateBodyFatPercentage(tracking);
-            trackingService.calculateChanges(tracking, null);
+            trackingService.calculateChanges(tracking);
 
             savedTracking = trackingService.createTracking(tracking);
         }
