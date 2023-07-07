@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,12 @@ public class TagService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public Tag createTag(String tagName, String tagColor, int tagCriteria){
+    public void createTag(String tagName, String tagColor, int tagCriteria){
+
+        //중복 생성 방지
+        if(findByTagName(tagName).isPresent()){
+            return;
+        }
 
         StringBuilder sb = new StringBuilder();
 
@@ -31,13 +37,14 @@ public class TagService {
                 .build();
 
         tagRepository.save(tag);
-
-        return tag;
     }
 
     public List<Tag> findAllTag(){
-
         return tagRepository.findAll();
+    }
+
+    public Optional<Tag> findByTagName(String tagName){
+        return tagRepository.findByTagName(tagName);
     }
 
 }
