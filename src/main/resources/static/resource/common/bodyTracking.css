@@ -1,40 +1,40 @@
-.tablink{
-    background-color: #112D4E;
-    color: white;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 10px 13px;
-    transition: 0.3s;
-    font-size: 15px;
-    margin-right: 5px;
-    border-radius: 10px;
-}
+/*.tablink{*/
+/*    background-color: #112D4E;*/
+/*    color: white;*/
+/*    float: left;*/
+/*    border: none;*/
+/*    outline: none;*/
+/*    cursor: pointer;*/
+/*    padding: 10px 13px;*/
+/*    transition: 0.3s;*/
+/*    font-size: 15px;*/
+/*    margin-right: 5px;*/
+/*    border-radius: 10px;*/
+/*}*/
+
+/*.tablink:hover {*/
+/*    background-color: #3F72AF;*/
+/*}*/
+
+/*.tablink.active {*/
+/*    background-color: #3F72AF;*/
+/*    color: white;*/
+/*}*/
 
 #openRecordModal, #openTrackingModal {
-    background-color: #112D4E;
-    color: white;
-    border-radius: 10px;
-    padding: 10px 13px;
-    font-size: 15px;
+    /*background-color: #112D4E;*/
+    /*color: white;*/
+    /*border-radius: 10px;*/
+    /*padding: 10px 13px;*/
+    /*font-size: 15px;*/
 }
 
 #confirmRecord {
     background-color: #112D4E;
 }
 
-.tablink:hover {
-    background-color: #3F72AF;
-}
-
 #openRecordModal:hover, #confirmRecord:hover,#openTrackingModal:hover {
     background-color: #3F72AF;
-}
-
-.tablink.active {
-    background-color: #3F72AF;
-    color: white;
 }
 
 #openRecordModal.active, #openTrackingModal.active {
