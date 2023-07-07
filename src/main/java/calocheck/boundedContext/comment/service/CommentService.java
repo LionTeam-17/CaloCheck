@@ -1,11 +1,13 @@
 package calocheck.boundedContext.comment.service;
 
+import calocheck.base.event.EventAfterCreateComment;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.repository.CommentRepository;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.post.entity.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public RsData<Comment> saveComment(String content, Post post, final Member member) {
         Comment comment = Comment.builder()
@@ -24,6 +27,8 @@ public class CommentService {
                 .content(content)
                 .post(post)
                 .build();
+
+        eventPublisher.publishEvent(new EventAfterCreateComment(comment));
 
         commentRepository.save(comment);
 

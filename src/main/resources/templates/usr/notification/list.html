@@ -1,0 +1,94 @@
+<html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
+<head>
+    <title>알림</title>
+</head>
+
+<body>
+<main class="flex-grow flex items-center justify-center" layout:fragment="Content">
+    <div class="max-w-5xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-regular fa-bell"></i>
+            알림
+        </h1>
+        <div class="text-center mt-10" th:if="${#lists.isEmpty(notifications)}">
+            <i class="fa-regular fa-face-laugh"></i> 최근에 받은 알림이 없습니다.
+        </div>
+        <div class="flex flex-col gap-4 mb-5" th:if="${!#lists.isEmpty(notifications)}">
+            <li class="flex flex-col gap-4" th:each="notification:${notifications}">
+                <div class="card bg-base-100 shadow-xl"
+                     th:if="${notification.noticeType == 'COMMENT'
+                && notification.comment.member.id != @rq.member.id && notification.isRead() == false}">
+                    <div class="card-body">
+                        <div class="flex flex-col gap-2">
+                            <div>
+                                <i class="fa-regular fa-clock"></i>
+                                댓글알림
+                            </div>
+                            <div>
+                                <span class="badge badge-primary"
+                                      th:text="${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}"></span>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex flex-col gap-2">
+                            <div>
+                                <i class="fa-regular fa-message"></i>
+                                내용
+                            </div>
+                            <div class="flex">
+                                <div class="badge badge-primary">
+                                    <span th:text="${notification.post.subject}"></span>
+                                </div>
+                                <span>&nbsp;글에&nbsp;</span>
+                            </div>
+                            <div class="flex">
+                                <div class="badge badge-primary">
+                                    <span th:text="${notification.comment.member.nickname}"></span>
+                                </div>
+                                <span>&nbsp;님이 댓글을 남겼습니다.</span>
+                            </div>
+                            <div class="flex" style="word-break: break-all">
+                                <span th:text="${notification.comment.content}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl"
+                     th:if="${notification.noticeType == 'POSTLIKE'
+                && notification.postLike.member.id != @rq.member.id && notification.isRead() == false}">
+                    <div class="card-body">
+                        <div class="flex flex-col gap-2">
+                            <div>
+                                <i class="fa-regular fa-clock"></i>
+                                추천알림
+                            </div>
+                            <div>
+                                <span class="badge badge-primary"
+                                      th:text="${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}"></span>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex flex-col gap-2">
+                            <div>
+                                <i class="fa-regular fa-message"></i>
+                                내용
+                            </div>
+                            <div class="flex">
+                                <div class="badge badge-primary">
+                                    <span th:text="${notification.post.subject}"></span>
+                                </div>
+                                <span>&nbsp;글에&nbsp;</span>
+                            </div>
+                            <div class="flex">
+                                <div class="badge badge-primary">
+                                    <span th:text="${notification.postLike.member.nickname}"></span>
+                                </div>
+                                <span>&nbsp;님이 추천했습니다.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </div>
+    </div>
+</main>
+</body>
+</html>

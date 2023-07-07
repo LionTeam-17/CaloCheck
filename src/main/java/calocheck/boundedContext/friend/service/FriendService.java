@@ -34,7 +34,7 @@ public class FriendService {
                 .build();
 
         friendRepository.save(newFriend);
-        return RsData.of("S-1", "%s님을 팔로우합니다.".formatted(followingMember.getNickname()), newFriend);
+        return RsData.of("S-1", "%s님이 친구추가되었습니다.".formatted(followingMember.getNickname()), newFriend);
     }
 
     @Transactional
@@ -53,7 +53,7 @@ public class FriendService {
                 .build();
 
         friendRepository.save(newFriend);
-        return RsData.of("S-1", "%s님을 팔로우합니다.".formatted(followingMember.getNickname()), newFriend);
+        return RsData.of("S-1", "%s님이 친구추가되었습니다.".formatted(followingMember.getNickname()), newFriend);
     }
 
     private RsData<Friend> canFollow(Long followerId, Member followingMember) {
@@ -63,28 +63,28 @@ public class FriendService {
         }
 
         if (followingMember.getId() == followerId) {
-            return RsData.of("F-2", "나를 팔로우할 수 없습니다.");
+            return RsData.of("F-2", "나를 친구추가할 수 없습니다.");
         }
 
         Friend friend = findByFollowerIdAndFollowingId(followerId, followingMember.getId()).orElse(null);
 
         if (friend != null) {
-            return RsData.of("F-3", "이미 팔로우한 사용자입니다.");
+            return RsData.of("F-3", "이미 친구추가한 사용자입니다.");
         }
 
-        return RsData.of("S-1", "팔로우 가능합니다.");
+        return RsData.of("S-1", "친구추가가 가능합니다.");
     }
 
     @Transactional
     public RsData<Friend> unfollow(Friend friend) {
 
         if (friend == null) {
-            return RsData.of("F-1", "존재하지 않는 팔로우입니다.");
+            return RsData.of("F-1", "존재하지 않는 친구입니다.");
         }
 
         friendRepository.delete(friend);
 
-        return RsData.of("S-1", "언팔로우 되었습니다.", friend);
+        return RsData.of("S-1", "친구삭제 되었습니다.", friend);
     }
 
     public Optional<Friend> findById(Long id) {
