@@ -30,11 +30,18 @@
 
             form.submit();
         }
+
+        function cancelForm() {
+            // 취소 버튼 클릭 시 수행할 동작을 여기에 작성합니다.
+            // 예: 폼 초기화, 페이지 이동 등
+            window.location.href = "/post/list";
+        }
     </script>
 
     <div class="flex flex-col max-w-5xl w-full justify-center">
         <section class="mb-5 max-w-5xl w-full">
-            <form class="flex flex-col gap-6" method="POST" onsubmit="ModifyPost__submit(this); return false;"
+            <form class="flex flex-col gap-6" enctype="multipart/form-data" method="POST"
+                  onsubmit="ModifyPost__submit(this); return false;"
                   th:action>
                 <div class="flex flex-grow max-w-5xl w-full justify-center">
                     <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
@@ -53,7 +60,8 @@
                                 <!-- 제목 입력 -->
                                 <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
                                     <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
-                                           id="id-input" name="iModifySubject" placeholder="제목을 입력하세요."
+                                           id="id-input" name="iModifySubject"
+                                           th:placeholder="${@postService.findById(postId).get().subject}"
                                            type="text"/>
                                 </div>
                                 <!-- 내용 -->
@@ -64,25 +72,50 @@
                                 <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
                             <textarea
                                     class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
-                                    cols="45" name="iModifyContent" placeholder="내용을 입력하세요."
+                                    cols="45" name="iModifyContent"
+                                    th:placeholder="${@postService.findById(postId).get().content}"
                                     rows="15"></textarea>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- 등록, 취소버튼 -->
-                        <div class="flex max-w-5xl w-full justify-end">
-                            <div class="flex max-w-5xl w-full justify-end">
-                                <div class="flex mt-6">
-                                    <button class="btn btn-sm w-20 mr-2" style="background: gray;border: gray">
-                                        <a th:href="@{|/post/${postId}}">취소</a>
-                                    </button>
+                                <div class="mt-6 text-gray-500 font-semi-bold mr-2">
+                                    식단 선택
                                 </div>
-                            </div>
-                            <div class="submit-button flex justify-end">
-                                <div class="flex mt-6 mr-2">
-                                    <button class="btn btn-sm w-20" style="background:#112D4E">
-                                        <span class="text-center">수정</span>
-                                    </button>
+
+                                <div>
+                                    <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
+                                        <option disabled selected>어떤 음식에 대한 사진인가요?</option>
+                                        <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
+                                        <option>아침 - 사과</option>
+                                        <option>아침 - 바나나</option>
+                                        <option>점심 - 조미김</option>
+                                        <option>저녁 - 김치찌개</option>
+                                        <option>저녁 - 닭가슴살</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex flex-grow flex-col max-w-5xl w-full mt-2 mr-2">
+                                    <div class="flex">
+                                        <input class="file-input file-input-bordered file-input mt-5 justify-center"
+                                               id="iModifyImg" name="iModifyImg"
+                                               type="file"/>
+                                    </div>
+                                </div>
+                                <!-- 등록, 취소버튼 -->
+                                <div class="flex max-w-5xl w-full justify-end">
+                                    <div class="flex max-w-5xl w-full justify-end">
+                                        <div class="flex mt-6">
+                                            <button class="btn btn-sm w-20 mr-2 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded-full"
+                                                    onclick="cancelForm()">
+                                                <a th:href="@{|/post/${postId}}">취소</a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="submit-button flex justify-end">
+                                        <div class="flex mt-6 mr-2">
+                                            <button class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
+                                                <span class="text-center">수정</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

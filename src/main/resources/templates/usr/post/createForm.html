@@ -30,11 +30,18 @@
 
             form.submit();
         }
+
+        function cancelForm() {
+            // 취소 버튼 클릭 시 수행할 동작을 여기에 작성합니다.
+            // 예: 폼 초기화, 페이지 이동 등
+            window.location.href = "/post/list";
+        }
     </script>
 
     <div class="flex flex-col max-w-5xl w-full justify-center">
         <section class="mb-5 max-w-5xl w-full">
-            <form class="flex flex-col gap-6" method="POST" enctype="multipart/form-data" onsubmit="SavePost__submit(this); return false;"
+            <form class="flex flex-col gap-6" enctype="multipart/form-data" method="POST"
+                  onsubmit="SavePost__submit(this); return false;"
                   th:action>
                 <div class="flex flex-grow max-w-5xl w-full justify-center">
                     <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
@@ -96,7 +103,8 @@
                                             <span class="label-text mx-3">이미지 수집 동의</span>
                                         </label>
 
-                                        <label for="my_modal_6" class="btn btn" style="background:#112D4E">이미지 수집 안내</label>
+                                        <label class="btn btn" for="my_modal_6" style="background:#112D4E">이미지 수집
+                                            안내</label>
                                     </div>
                                     <!-- Put this part before </body> tag -->
                                     <input type="checkbox" id="my_modal_6" class="modal-toggle"/>
@@ -120,14 +128,15 @@
                         <div class="flex max-w-5xl w-full justify-end">
                             <div class="flex max-w-5xl w-full justify-end">
                                 <div class="flex mt-6">
-                                    <button class="btn btn-sm w-20 mr-2" style="background: gray;border: gray">
+                                    <button class="btn btn-sm w-20 mr-2 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded-full"
+                                            onclick="cancelForm()">
                                         <a href="/post/list">취소</a>
                                     </button>
                                 </div>
                             </div>
                             <div class="submit-button flex justify-end">
                                 <div class="flex mt-6 mr-2">
-                                    <button class="btn btn-sm w-20" style="background:#112D4E">
+                                    <button class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
                                         <span class="text-center">등록</span>
                                     </button>
                                 </div>
