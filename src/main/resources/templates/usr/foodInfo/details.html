@@ -29,6 +29,9 @@
                 <div class="m-2 text-center font-bold text-black text-lg whitespace-normal break-words"
                      th:text="${foodInfo.foodName}"></div>
             </div>
+            <div th:if="${foodInfo.photoUrl}">
+                <img th:src="${foodInfo.photoUrl}" alt="foodImg">
+            </div>
             <div class="m-5 flex justify-center">
                 <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
                    th:if="${@rq.isLogin()}" th:onclick="openCustomModal()">

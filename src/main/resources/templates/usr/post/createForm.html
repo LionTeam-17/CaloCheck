@@ -75,12 +75,11 @@
                                 <div>
                                     <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
                                         <option disabled selected>어떤 음식에 대한 사진인가요?</option>
-                                        <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
-                                        <option>아침 - 사과</option>
-                                        <option>아침 - 바나나</option>
-                                        <option>점심 - 조미김</option>
-                                        <option>저녁 - 김치찌개</option>
-                                        <option>저녁 - 닭가슴살</option>
+                                        <div th:if="todayFoodNameList" th:each="foodName : ${todayFoodNameList}">
+                                            <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
+                                            <option th:text="${foodName}"></option>
+                                        </div>
+
                                     </select>
                                 </div>
 
@@ -88,30 +87,6 @@
                                     <div class="flex">
                                         <input id="img" name="img" type="file"
                                                class="file-input file-input-bordered file-input mt-5 justify-center"/>
-                                    </div>
-
-                                    <div class="flex flex-row mt-3 justify-end">
-                                        <label class="cursor-pointer label">
-                                            <input name="agree" type="checkbox" class="checkbox checkbox-info"/>
-                                            <span class="label-text mx-3">이미지 수집 동의</span>
-                                        </label>
-
-                                        <label for="my_modal_6" class="btn btn" style="background:#112D4E">이미지 수집 안내</label>
-                                    </div>
-                                    <!-- Put this part before </body> tag -->
-                                    <input type="checkbox" id="my_modal_6" class="modal-toggle"/>
-                                    <div class="modal">
-                                        <div class="modal-box">
-                                            <h3 class="font-bold text-lg">이미지 수집 동의 안내</h3>
-                                            <p class="py-4">유해하지 않은 음식 이미지에 한해 저희 사이트의 대표 음식 이미지가 될 수 있습니다.</p>
-                                            <p class="py-4">여러분이 제공해주시는 이미지가 저희 사이트에 큰 힘이 됩니다.</p>
-                                            <p class="py-4">뭐 약간... 이런 느낌</p>
-                                            <p class="py-4 text-red">단, 저작권에 위배되거나 유해한 사진을 업로드 하시는 경우 이용에 제약이 있을 수
-                                                있습니다.</p>
-                                            <div class="modal-action">
-                                                <label for="my_modal_6" class="btn">닫기</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

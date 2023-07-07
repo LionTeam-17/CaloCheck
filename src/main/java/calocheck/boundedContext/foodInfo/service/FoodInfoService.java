@@ -104,11 +104,11 @@ public class FoodInfoService {
         return foodInfoRepository.findByFoodCode(foodCode).orElse(null);
     }
 
-    public FoodInfo findByFoodName(String foodName){
+    public FoodInfo findByFoodName(String foodName) {
         return foodInfoRepository.findByFoodName(foodName).orElse(null);
     }
 
-    public List<List<String>> findTop5ByFoodNameContains(String[] foodNameArr){
+    public List<List<String>> findTop5ByFoodNameContains(String[] foodNameArr) {
 
         List<List<String>> top5Lists = new ArrayList<>();
 
@@ -116,7 +116,7 @@ public class FoodInfoService {
 
             List<FoodInfo> top5ByFoodNameContains = foodInfoRepository.findTop5ByFoodNameContains(foodName);
 
-            List<String> top5FoodNames =new ArrayList<>();
+            List<String> top5FoodNames = new ArrayList<>();
 
             for (FoodInfo top5ByFoodNameContain : top5ByFoodNameContains) {
 
@@ -140,5 +140,15 @@ public class FoodInfoService {
                 .collect(Collectors.toList());
 
         return returnTagList;
+    }
+
+    @Transactional
+    public void updatePhotoUrl(FoodInfo foodInfo, String photoUrl) {
+
+        FoodInfo updatedFoodInfo = foodInfo.toBuilder()
+                .photoUrl(photoUrl)
+                .build();
+
+        foodInfoRepository.save(updatedFoodInfo);
     }
 }

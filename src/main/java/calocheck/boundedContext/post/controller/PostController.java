@@ -4,12 +4,13 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.photo.service.PhotoService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,9 +32,7 @@ public class PostController {
     private final CommentService commentService;
     private final PhotoService photoService;
     private final FoodInfoService foodInfoService;
-
-    @Value("${image.aws.sampleImg}")
-    private String sampleImg;
+    private final DailyMenuService dailyMenuService;
 
     @GetMapping("/list")
     public String showPostList(@RequestParam(defaultValue = "0") int page,
@@ -63,10 +62,12 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public String showPostPage(Model model, @PathVariable Long postId) {
+
         Optional<Post> oPost = postService.findById(postId);
         oPost.ifPresent(post -> model.addAttribute("post", post));
 
         List<Comment> commentList = commentService.findAllByPostId(postId);
+
         model.addAttribute("commentList", commentList);
 
         return "usr/post/postDetail";
@@ -74,7 +75,12 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createForm")
-    public String savePost() {
+    public String savePost(Model model) {
+
+        List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
+
+        model.addAttribute("todayFoodNameList", todayFoodNameList);
+
         return "usr/post/createForm";
     }
 
@@ -82,7 +88,7 @@ public class PostController {
     @PostMapping("/createForm")
     public String savePost(String iSubject, String iContent,
                            @RequestParam(required = false) MultipartFile img,
-                           String selectedFood, boolean agree) throws IOException {
+                           String selectedFood) throws IOException {
 
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
@@ -91,25 +97,33 @@ public class PostController {
             return rq.historyBack("내용을 입력해주세요.");
         }
 
-        //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우(default 이미지 적용)
+        //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
         RsData<String> isImgRsData = photoService.isImgFile(img.getOriginalFilename());
 
-        String photoUrl = sampleImg;
+        String photoUrl = null;
+        RsData<String> imgCheckRsData = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
             photoUrl = photoService.photoUpload(img);
+            imgCheckRsData = photoService.imageCheck(photoUrl);
 
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<String> imgCheckRsData = photoService.imageCheck(photoUrl);
-
-        if(imgCheckRsData.isFail()){
+        if(imgCheckRsData != null && imgCheckRsData.isFail() && selectedFood != null){
             return rq.historyBack(imgCheckRsData);
+        }
+
+        if(imgCheckRsData != null && imgCheckRsData.isSuccess() && selectedFood != null){
+            FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
+
+            if(byFoodName.getPhotoUrl() == null){
+                foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
+            }
         }
 
         RsData<Post> postRsData =
