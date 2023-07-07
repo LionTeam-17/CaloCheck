@@ -86,14 +86,8 @@ public class CartFoodInfoService {
         cartFoodInfoRepository.delete(cartFoodInfo);
     }
 
-    public void deleteAllList(Member member){
-
-        List<CartFoodInfo> allByMember = findAllByMember(member);
-
-        for (CartFoodInfo cartFoodInfo : allByMember) {
-            delete(cartFoodInfo);
-        }
-
+    public void deleteAll(List<CartFoodInfo> cartList) {
+        cartFoodInfoRepository.deleteAll(cartList);
     }
 
     public CartFoodInfo findById(Long id) {
@@ -146,12 +140,12 @@ public class CartFoodInfoService {
 
                     LongStream.range(0, cartItem.getQuantity())
                         .forEach(i -> {
-                                    IntStream.range(0, total.size()).forEach(j -> {
-                                        total.get(j).addValue(nutrientList.get(j));
-                                    });
-                                }
-                            );
-                        }
+                                IntStream.range(0, total.size()).forEach(j -> {
+                                    total.get(j).addValue(nutrientList.get(j));
+                                });
+                            }
+                        );
+                    }
                 );
 
         return total;

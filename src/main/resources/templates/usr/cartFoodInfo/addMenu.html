@@ -49,39 +49,44 @@
                               th:text="${calcNutrient.getName()} + '(g)'"></span>
                     </div>
                     <div class="flex text-sm">
-                        <div th:if="${calcNutrient.getName().equals('단백질') ||
+                        <div class="flex" th:if="${calcNutrient.getName().equals('단백질') ||
                                       calcNutrient.getName().equals('탄수화물') ||
                                       calcNutrient.getName().equals('지방')}">
                             <i th:if="${-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10}"
                                class="text-lg fa-solid fa-square-check text-green-600"></i>
                             <i th:if="${!(-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10)}"
                                class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 1)}"></div>
                         </div>
-                        <div th:if="${calcNutrient.getName().equals('칼슘')}">
+                        <div class="flex" th:if="${calcNutrient.getName().equals('칼슘')}">
                             <i th:if="${-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2}"
                                class="text-lg fa-solid fa-square-check text-green-600"></i>
                             <i th:if="${!(-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2)}"
                                class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
-                        <div th:if="${calcNutrient.getName().equals('나트륨')}">
+                        <div class="flex" th:if="${calcNutrient.getName().equals('나트륨')}">
                             <i th:if="${-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3}"
                                class="text-lg fa-solid fa-square-check text-green-600"></i>
                             <i th:if="${!(-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3)}"
                                class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
-                        <div th:if="${calcNutrient.getName().equals('칼륨')}">
+                        <div class="flex" th:if="${calcNutrient.getName().equals('칼륨')}">
                             <i th:if="${-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5}"
                                class="text-lg fa-solid fa-square-check text-green-600"></i>
                             <i th:if="${!(-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5)}"
                                class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
-                        <div th:if="${calcNutrient.getName().equals('마그네슘')}">
+                        <div class="flex" th:if="${calcNutrient.getName().equals('마그네슘')}">
                             <i th:if="${-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08}"
                                class="text-lg fa-solid fa-square-check text-green-600"></i>
                             <i th:if="${!(-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08)}"
                                class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 3)}"></div>
                         </div>
-                        <div class="m-2" th:text="${calcNutrient.getValue()}"></div>
+
                     </div>
                 </div>
                 <div class="flex justify-center mt-2 text-xm">
@@ -95,7 +100,7 @@
                   class="flex flex-col gap-6"
                   method="POST"
                   enctype="multipart/form-data"
-                  th:action>
+                  th:action="@{/cartFoodInfo/addMenu}">
                 <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
@@ -106,8 +111,7 @@
 
                         <div class="btn-group flex flex-row justify-center">
                             <input type="radio" name="mealType" data-title="아침" value="breakfast"
-                                   class="btn btn-secondary"
-                                   checked/>
+                                   class="btn btn-secondary"/>
                             <input type="radio" name="mealType" data-title="점심" value="lunch"
                                    class="btn btn-secondary"/>
                             <input type="radio" name="mealType" data-title="저녁" value="dinner"
@@ -128,11 +132,10 @@
 
                         <div class="flex justify-center rating rating-lg">
                             <input type="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"
-                                   checked/>
+                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400"/>
+                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400" checked/>
                         </div>
 
                     </div>
@@ -174,19 +177,19 @@
     </div>
 
 
-    <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white px-20 py-40">
-            <div class="text-center font-bold text-black text-lg">식단 추가</div>
-            <div class="my-1 border border-gray-200 border-2"></div>
+    <div id="customModal"
+         class="w-full fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="w-2/3 bg-white px-10 py-10 mx-15 my-20">
+            <div class="text-center font-bold text-black text-lg bg-gray-200 py-3">식품 리스트</div>
             <div class="flex flex-col justify-center">
                 <div class="p-3 flex flex-grow justify-between">
                     <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
                     <span class="font-bold text-xs flex justify-center" style="width:8%">수량</span>
                 </div>
             </div>
-            <div class="divider m-2"></div>
-            <div id="cartInfos" class="flex flex-col w-full justify-center" th:if="${!cartList.isEmpty()}">
-                <div class="flex flex-col justify-center"
+            <div class="divider my-1"></div>
+            <div id="cartInfos" class="border-2 p-3 flex flex-col w-full overflow-y-scroll h-1/4" th:if="${!cartList.isEmpty()}">
+                <div class="flex flex-col"
                      th:id="${cartFoodInfo.foodInfo.id}"
                      th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
                      th:each="cartFoodInfo, loop: ${cartList}">
@@ -198,35 +201,47 @@
                               style="width:8%"
                               th:text="${cartFoodInfo.quantity}"></span>
                     </div>
-                    <div class="divider my-2" style="height: 1px"></div>
+                    <div class="divider my-1"></div>
                 </div>
             </div>
-            <div class="text-center font-bold text-black text-lg">식단 추가</div>
-            <div class="flex">
-                <div class="text-xs font-bold m-2">식품명</div>
-                <div class="text-xs text-black m-2"></div>
-            </div>
-            <div class="flex">
-                <div class="text-xs font-bold m-2">수량</div>
-                <div class="text-xs text-black m-2"></div>
+            <div class="m-3 flex">
+                <div class="text-sm font-bold m-1">현재 날짜</div>
+                <div class="text-sm font-bold m-1 bg-gray-100" th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"></div>
             </div>
 
+            <div class="m-3 flex">
+                <div class="text-sm font-bold m-1">위의 정보로 오늘 식단이 기록됩니다. 추가하시겠습니까?</div>
+            </div>
+
+
+
             <div class="m-3 flex place-content-end">
-                <button class="m-2 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded"
-                        th:onclick="">추가
+                <button id="submitBtn"
+                        class="m-2 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
+                    추가
                 </button>
                 <button class="m-2 bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
-                        onclick="closeCustomModal()">취소
+                        onclick="closeCustomModal()">
+                    취소
                 </button>
             </div>
         </div>
     </div>
     <script th:inline="javascript">
-        let btn = document.getElementById("addMenuBtn");
-        btn.addEventListener('onsubmit', (event) => {
-            event.preventDefault();
-            openCustomModal();
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.getElementById("addMenuForm");
+            let submitBtn = document.getElementById("submitBtn");
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                openCustomModal();
+            })
+
+            submitBtn.addEventListener('click', function () {
+                form.submit();
+            })
         })
+
         function openCustomModal() {
             document.getElementById('customModal').classList.remove('hidden');
         }
@@ -235,24 +250,12 @@
             document.getElementById('customModal').classList.add('hidden');
         }
 
-        function quantityUp() {
-            let quantityTag = document.getElementById("quantityLabel");
-            quantityTag.innerText = parseInt(quantityTag.innerText) + 1;
-        }
-
-        function quantityDown() {
-            let quantityTag = document.getElementById("quantityLabel");
-            let res = parseInt(quantityTag.innerText) - 1;
-            quantityTag.innerText = res <= 0 ? 1 : res;
-        }
-
-        function executeAddCartLogic(foodId) {
+        function executeAddDailyMenuLogic() {
             closeCustomModal();
-            addCart(foodId);
+            addDailyMenu();
         }
 
-        function addCart(foodId) {
-            let quantity = document.getElementById("quantityLabel").innerText;
+        function addDailyMenu() {
             const header = $("meta[name='_csrf_header']").attr("content");
             const token = $("meta[name='_csrf']").attr("content");
             $(document).ajaxSend(function (e, xhr, options) {
@@ -261,7 +264,7 @@
             if (foodId) {
                 $.ajax({
                     type: "POST",
-                    url: "/cartFoodInfo/add", // 좋아요 요청을 보낼 URL
+                    url: "/cartFoodInfo/addMenu", // 좋아요 요청을 보낼 URL
                     data: {
                         foodId: foodId,
                         quantity: quantity

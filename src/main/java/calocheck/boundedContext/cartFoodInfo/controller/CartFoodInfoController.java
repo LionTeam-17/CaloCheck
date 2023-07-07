@@ -161,10 +161,17 @@ public class CartFoodInfoController {
 
     @PostMapping("/addMenu")
     @PreAuthorize("isAuthenticated()")
-    public String addMenu(@RequestParam("mealType") String mealType,
-                          @RequestParam("menuMemo") String menuMemo,
-                          @RequestParam("menuScore") int menuScore) {
+    public String addMenu(@RequestParam(name = "mealType", defaultValue = "") String mealType,
+                          @RequestParam(name = "menuMemo", defaultValue = "") String menuMemo,
+                          @RequestParam(name = "menuScore", defaultValue = "-1") int menuScore) {
         Member member = rq.getMember();
+
+        if (mealType.equals("")) {
+            return rq.historyBack("식단 분류를 입력하지 않았습니다.");
+        }
+        else if (menuScore == -1) {
+            return rq.historyBack("식단 점수가 올바르지 않습니다.");
+        }
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<DailyMenu> dailyMenuList = dailyMenuService.create(member, cartList);
@@ -172,8 +179,9 @@ public class CartFoodInfoController {
         MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
 
         //장바구니 삭제
-        cartFoodInfoService.deleteAllList(member);
+        cartFoodInfoService.deleteAll(cartList);
 
         //내 식단 캘린더로 이동
-        return "redirect:/mealHistory/" + member.getId();    }
+        return "redirect:/mealHistory/" + member.getId();
+    }
 }
