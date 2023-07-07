@@ -8,7 +8,6 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
-import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tag.config.TagConfig;
 import calocheck.boundedContext.tag.service.TagService;
@@ -19,6 +18,7 @@ import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.service.TrackingService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +34,9 @@ import java.util.stream.IntStream;
 @Configuration
 @Profile({"dev", "test"})
 public class NotProd {
+    @Value("${image.aws.sampleImg}")
+    private String sampleImg;
+
     @Bean
     @Transactional
     public CommandLineRunner initData(
