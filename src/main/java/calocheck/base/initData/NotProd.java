@@ -8,7 +8,6 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
-import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tag.config.TagConfig;
 import calocheck.boundedContext.tag.service.TagService;
@@ -34,7 +33,7 @@ import java.util.stream.IntStream;
 @Profile({"dev", "test"})
 public class NotProd {
 
-    @Value("${cloud.aws.s3.sampleImg}")
+    @Value("${image.aws.sampleImg}")
     private String sampleImg;
 
     @Bean

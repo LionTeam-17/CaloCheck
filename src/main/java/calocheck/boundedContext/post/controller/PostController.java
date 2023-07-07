@@ -5,7 +5,6 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.photo.config.S3Config;
 import calocheck.boundedContext.photo.service.PhotoService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
@@ -33,7 +32,7 @@ public class PostController {
     private final PhotoService photoService;
     private final FoodInfoService foodInfoService;
 
-    @Value("${cloud.aws.s3.sampleImg}")
+    @Value("${image.aws.sampleImg}")
     private String sampleImg;
 
     @GetMapping("/list")
@@ -102,31 +101,16 @@ public class PostController {
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
             photoUrl = photoService.photoUpload(img);
 
-            //업로드된 이미지가 안전한 이미지인지 확인
-            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
-
-            if (isSafeImg.isFail()) {
-                return rq.historyBack(isSafeImg);
-            }
-
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<String> isFoodImg = photoService.detectLabelsRemote(photoUrl);
+        RsData<String> imgCheckRsData = photoService.imageCheck(photoUrl);
 
-//        //이미지 수집 동의시, 음식과 연결
-//        if (isFoodImg.isSuccess() && agree) {
-//
-//            //TODO 음식 이미지이며, 안전한 것이 확인되었으므로 food info db에 주소 추가(장바구니 구현 후 추가 예정)
-//            FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
-//
-//            if(byFoodName!=null && byFoodName.photoUrl != null){
-//                byFoodName.updatePhotoUrl(photoUrl)
-//            }
-//
-//        }
+        if(imgCheckRsData.isFail()){
+            return rq.historyBack(imgCheckRsData);
+        }
 
         RsData<Post> postRsData =
                 postService.savePost(
