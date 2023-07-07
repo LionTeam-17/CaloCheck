@@ -11,14 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final GCPConfigProperties gcpConfigProperties;
-
     @GetMapping("/")
     public String showMain() {
-
-        String filePath = gcpConfigProperties.getFilePath();
-
-        System.out.println(filePath);
 
         return "usr/home/main";
     }
