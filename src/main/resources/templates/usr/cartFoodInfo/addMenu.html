@@ -49,10 +49,38 @@
                               th:text="${calcNutrient.getName()} + '(g)'"></span>
                     </div>
                     <div class="flex text-sm">
-                        <i th:if="${-30 <= calcNutrient.getValue() && calcNutrient.getValue() <= 30}"
-                           class="text-lg fa-solid fa-square-check text-green-600"></i>
-                        <i th:if="${!(-30 <= calcNutrient.getValue() && calcNutrient.getValue() <= 30)}"
-                           class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        <div th:if="${calcNutrient.getName().equals('단백질') ||
+                                      calcNutrient.getName().equals('탄수화물') ||
+                                      calcNutrient.getName().equals('지방')}">
+                            <i th:if="${-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10}"
+                               class="text-lg fa-solid fa-square-check text-green-600"></i>
+                            <i th:if="${!(-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10)}"
+                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        </div>
+                        <div th:if="${calcNutrient.getName().equals('칼슘')}">
+                            <i th:if="${-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2}"
+                               class="text-lg fa-solid fa-square-check text-green-600"></i>
+                            <i th:if="${!(-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2)}"
+                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        </div>
+                        <div th:if="${calcNutrient.getName().equals('나트륨')}">
+                            <i th:if="${-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3}"
+                               class="text-lg fa-solid fa-square-check text-green-600"></i>
+                            <i th:if="${!(-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3)}"
+                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        </div>
+                        <div th:if="${calcNutrient.getName().equals('칼륨')}">
+                            <i th:if="${-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5}"
+                               class="text-lg fa-solid fa-square-check text-green-600"></i>
+                            <i th:if="${!(-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5)}"
+                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        </div>
+                        <div th:if="${calcNutrient.getName().equals('마그네슘')}">
+                            <i th:if="${-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08}"
+                               class="text-lg fa-solid fa-square-check text-green-600"></i>
+                            <i th:if="${!(-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08)}"
+                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
+                        </div>
                         <div class="m-2" th:text="${calcNutrient.getValue()}"></div>
                     </div>
                 </div>
