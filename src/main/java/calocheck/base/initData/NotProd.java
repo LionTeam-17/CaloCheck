@@ -8,6 +8,7 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.photo.config.S3ConfigProperties;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tag.config.TagConfig;
 import calocheck.boundedContext.tag.service.TagService;
@@ -34,8 +35,6 @@ import java.util.stream.IntStream;
 @Configuration
 @Profile({"dev", "test"})
 public class NotProd {
-    @Value("${image.aws.sampleImg}")
-    private String sampleImg;
 
     @Bean
     @Transactional
@@ -50,7 +49,8 @@ public class NotProd {
             FoodInfoService foodInfoService,
             CartFoodInfoService cartFoodInfoService,
             CriteriaDataExtractor criteriaDataExtractor,
-            TagService tagService
+            TagService tagService,
+            S3ConfigProperties s3ConfigProperties
     ) {
         return args -> {
             int MEMBER_SIZE = 6;
@@ -67,11 +67,11 @@ public class NotProd {
             Post[] posts = IntStream
                     .rangeClosed(1, POST_SIZE)
                     .filter(i -> postService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), S3Config.getSampleImg(), members[i % MEMBER_SIZE])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), s3ConfigProperties.getSampleImg(), members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
 
-            List<String> nameList = new ArrayList<>() {{
+            List<String> recommendList = new ArrayList<>() {{
                 add("탄수화물");
                 add("단백질");
                 add("지방");
@@ -85,7 +85,7 @@ public class NotProd {
                 add("GI지수 낮은 음식");
             }};
 
-            nameList.stream().filter(name -> recommendService.getRecommendByName(name) != null)
+            recommendList.stream().filter(name -> recommendService.getRecommendByName(name) != null)
                             .forEach(name -> recommendService.createRecommend(name, RecommendConfig.getDescription(name), RecommendConfig.getFoodList(name)));
 
             excelService.processExcel();
@@ -138,16 +138,16 @@ public class NotProd {
 //                    date = date.plusDays(random.nextInt(4) + 1);
 //                }
 //            }
-//
-//            tagService.createTag("탄수화물", TagConfig.getCarbohydrateColor(), TagConfig.getCarbohydrateCriteria());
-//            tagService.createTag("단백질", TagConfig.getProteinColor(), TagConfig.getProteinCriteria());
-//            tagService.createTag("지방", TagConfig.getFatColor(), TagConfig.getFatCriteria());
-//            tagService.createTag("칼슘", TagConfig.getCalciumColor(), TagConfig.getCalciumCriteria());
-//            tagService.createTag("나트륨", TagConfig.getSodiumColor(), TagConfig.getSodiumCriteria());
-//            tagService.createTag("칼륨", TagConfig.getPotassiumColor(), TagConfig.getPotassiumCriteria());
-//            tagService.createTag("마그네슘", TagConfig.getMagnesiumColor(), TagConfig.getMagnesiumCriteria());
-//
-//            criteriaDataExtractor.readFile();
+
+            tagService.createTag("탄수화물", TagConfig.getCarbohydrateColor(), TagConfig.getCarbohydrateCriteria());
+            tagService.createTag("단백질", TagConfig.getProteinColor(), TagConfig.getProteinCriteria());
+            tagService.createTag("지방", TagConfig.getFatColor(), TagConfig.getFatCriteria());
+            tagService.createTag("칼슘", TagConfig.getCalciumColor(), TagConfig.getCalciumCriteria());
+            tagService.createTag("나트륨", TagConfig.getSodiumColor(), TagConfig.getSodiumCriteria());
+            tagService.createTag("칼륨", TagConfig.getPotassiumColor(), TagConfig.getPotassiumCriteria());
+            tagService.createTag("마그네슘", TagConfig.getMagnesiumColor(), TagConfig.getMagnesiumCriteria());
+
+            criteriaDataExtractor.readFile();
         };
 
     }
