@@ -69,7 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (providerTypeCode.equals("GOOGLE")) {
             email = oAuth2User.getAttribute("email");
-            gender = oAuth2User.getAttribute("gender");
+            gender = "M";
         }
 
         String username = providerTypeCode + "__%s".formatted(oauthId);

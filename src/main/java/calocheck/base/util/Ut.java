@@ -42,12 +42,24 @@ public class Ut {
 
 
     public static class time {
-        public static Boolean diffTime(LocalDateTime time1, LocalDateTime time2) {
+        public static Boolean isToday(LocalDateTime time1, LocalDateTime time2) {
             // 두개의 시간의 차이를 초로 환산
             long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
             long diffDays = diff / (60 * 60 * 24);
 
             return diffDays < 1;
+        }
+
+        public static Boolean isRead(LocalDateTime time1, LocalDateTime time2) {
+            // 두개의 시간의 차이를 초로 환산
+            long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
+            long diffMinutes = diff / (60) % 60; // 분 부분만
+            long diffHours = diff / (60 * 60) % 24; // 시간 부분만
+            long diffDays = diff / (60 * 60 * 24); // 나머지는 일 부분으로
+            if (diffMinutes > 10) return true;
+            if (diffHours > 0) return true;
+
+            return diffDays > 0;
         }
     }
 
