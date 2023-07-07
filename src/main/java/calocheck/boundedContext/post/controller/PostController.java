@@ -154,7 +154,7 @@ public class PostController {
 
         RsData<String> isImgRsData = photoService.isImgFile(iModifyImg.getOriginalFilename());
 
-        String photoUrl = S3Config.getSampleImg();
+        String photoUrl = sampleImg;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
