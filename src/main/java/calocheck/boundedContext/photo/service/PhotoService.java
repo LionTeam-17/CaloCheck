@@ -114,7 +114,7 @@ public class PhotoService {
                 }
             }
         }
-        return RsData.of("F-1", "음식 이미지가 아닙니다.");
+        return RsData.of("F-1", "음식 이미지가 아닐 확률이 높습니다.");
     }
 
     //이미지 유해성 검사

@@ -102,40 +102,36 @@ public class PostController {
 
         //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
         String photoUrl = null;
-        RsData<String> detectedLabelRsData = null;
-        RsData<String> safeSearchRsData = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
             photoUrl = photoService.photoUpload(img);
-            detectedLabelRsData = photoService.detectLabelsRemote(photoUrl);
-            safeSearchRsData = photoService.detectSafeSearchRemote(photoUrl);
+            RsData<String> detectedLabelRsData = photoService.detectLabelsRemote(photoUrl);
+            RsData<String> safeSearchRsData = photoService.detectSafeSearchRemote(photoUrl);
 
-        } else if (isImgRsData.isFail()) {
-            return rq.historyBack(isImgRsData);
-        }
-
-        //음식 이미지로 등록하려는 과정에서 검사에서 탈락한 경우
-        if((detectedLabelRsData != null && safeSearchRsData != null && selectedFood != null)
-                && (safeSearchRsData.isFail() ||detectedLabelRsData.isFail())){
-
-            if(safeSearchRsData.isFail()){
+            //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
+            if(safeSearchRsData != null && safeSearchRsData.isFail()){
                 return rq.historyBack(safeSearchRsData);
-            } else if(detectedLabelRsData.isFail()){
+            }
+
+            //음식을 선택 했지만, 음식 이미지가 아닌 경우
+            if(detectedLabelRsData != null  && detectedLabelRsData.isFail() && selectedFood != null ){
                 return rq.historyBack(detectedLabelRsData);
             }
 
-        }
+            //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
+            if(detectedLabelRsData != null && safeSearchRsData != null
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null){
+                FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
 
-        //음식 이미지로 등록 가능한 경우
-        if(detectedLabelRsData != null && safeSearchRsData != null
-                && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null){
-            FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
-
-            if(byFoodName.getPhotoUrl() == null){
-                foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
+                if(byFoodName.getPhotoUrl() == null){
+                    foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
+                }
             }
+
+        } else if (isImgRsData.isFail()) {
+            return rq.historyBack(isImgRsData);
         }
 
         RsData<Post> postRsData =
