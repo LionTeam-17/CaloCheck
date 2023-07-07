@@ -23,7 +23,9 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 public class Post extends BaseEntity {
+    @Column(length = 30)
     private String subject;
+    @Column(columnDefinition = "TEXT")
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))

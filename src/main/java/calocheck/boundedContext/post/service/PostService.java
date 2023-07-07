@@ -37,7 +37,7 @@ public class PostService {
         return RsData.of("S-1", "게시물이 등록되었습니다.", post);
     }
 
-    public RsData<Post> modifyPost(final Long id, String subject, String content, Member member) {
+    public RsData<Post> modifyPost(final Long id, String subject, String content, Member member, String photoUrl) {
         Optional<Post> oPost = postRepository.findById(id);
 
         if (oPost.isEmpty()) {
@@ -53,6 +53,7 @@ public class PostService {
         Post modifyPost = post.toBuilder()
                 .subject(subject)
                 .content(content)
+                .photoUrl(photoUrl)
                 .build();
 
         postRepository.save(modifyPost);

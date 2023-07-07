@@ -29,10 +29,10 @@
                           th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                 </div>
                 <div>
-                    <a class="btn btn-sm w-[40px]" style="background:#112D4E" th:href="@{|/post/${postId}/modify|}"
+                    <a class="btn btn-sm w-[40px] bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                       th:href="@{|/post/${postId}/modify|}"
                        th:if="${@rq.login && post.member.id == @rq.member.id}">수정</a>
-                    <button class="btn btn-sm mx-1 w-[40px]"
-                            style="background:#112D4E"
+                    <button class="btn btn-sm mx-1 w-[40px] bg-red-500 hover:bg-red-400 text-white font-bold rounded-full"
                             onclick="$(this).next().submit();"
                             th:attr="data-post-id=${postId}"
                             th:id="dBtn_+${postId}"
@@ -43,31 +43,38 @@
                           th:action="@{|/post/${postId}/delete|}">
                         <input name="_method" type="hidden" value="PATCH">
                     </form>
-                    <a class="btn btn-sm w-[40px]" href="/post/list" style="background:#112D4E">목록</a>
+                    <a class="btn btn-sm w-[40px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-full"
+                       href="/post/list">목록</a>
                 </div>
             </div>
         </div>
         <div class="divider my-1"></div>
         <div class="flex justify-center">
-            <img th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+            <img th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
+                 th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
         </div>
-        <div class="mb-6" th:text="${post.content}"></div>
+        <div class="mb-6 h-[400px]" style="word-break: break-all"
+             th:if="${post.photoUrl == null || post.photoUrl.equals(@s3Config.sampleImg)}"
+             th:text="${post.content}"></div>
+        <div class="mb-6" style="word-break: break-all"
+             th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
+             th:text="${post.content}"></div>
         <div class="flex justify-center">
-            <form class="btn btn-sm w-20" style="background:#112D4E"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
                   method="POST" th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.login && @postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
                 <button class="link-button" name="submit" type="submit" value="value">
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
-            <form class="btn btn-sm w-20" method="POST"
-                  style="background:#112D4E" th:action="@{|/post/${postId}/postLike|}"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full" method="POST"
+                  th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.logout}">
                 <button class="link-button" name="submit" type="submit" value="value">
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
-            <form class="btn btn-sm w-20" style="background:#112D4E"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
                   method="POST" th:action="@{|/post/${postId}/postLike/delete|}"
                   th:if="${@rq.login && !@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
                 <button class="link-button" name="submit" type="submit" value="value">
@@ -122,7 +129,7 @@
                             <!-- 등록 버튼 -->
                             <div class="submit-button flex">
                                 <div class="flex">
-                                    <button class="btn btn-sm ml-2 w-20" style="background:#112D4E">
+                                    <button class="btn btn-sm ml-2 w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
                                         <span class="text-center">등록</span>
                                     </button>
                                 </div>
