@@ -67,7 +67,8 @@
                     </li>
 
                     <li>
-                        <a th:href="@{|/member/mypage/${@rq.member.id}|}" sec:authorize="isAuthenticated()" class="text-gray-600 hover:text-gray-800">
+                        <a class="text-gray-600 hover:text-gray-800" sec:authorize="isAuthenticated()"
+                           th:href="@{|/member/mypage/${@rq.member.id}|}">
                             <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -100,6 +101,13 @@
             <a th:href="@{/}" class="text-lg font-bold text-white">Calo Check</a>
         </div>
         <div class="navbar-end px-4" style="margin-top: 10px;">
+            <a class="btn btn-ghost btn-circle" href="/notification/list" th:if="${@rq.login}">
+                <div class="indicator mb-4 mr-3">
+                    <i class="fa-regular fa-bell" style="color:white"></i>
+                    <span class="badge badge-xs badge-primary indicator-item" data-test="hasUnreadNotifications"
+                          th:if="${@rq.hasUnreadNotifications()}"></span>
+                </div>
+            </a>
             <div>
                 <a th:href="@{/member/login}" sec:authorize="isAnonymous()"
                    class="text-white hover:text-gray-800">Login</a>

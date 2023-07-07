@@ -38,6 +38,6 @@ public class Post extends BaseEntity {
     private String photoUrl;
 
     public Boolean isToday() {
-        return Ut.time.diffTime(LocalDateTime.now(), getCreateDate());
+        return Ut.time.isToday(LocalDateTime.now(), getCreateDate());
     }
 }
