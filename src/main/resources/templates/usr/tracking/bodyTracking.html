@@ -20,13 +20,63 @@
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
             <div>
                 <div class="tab_button flex">
-                    <button class="tablink" id="WeightTab" data-tab="Weight" onclick="openData('Weight')">체중</button>
-                    <button class="tablink" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
-                    <button class="tablink" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">근육량</button>
-                    <button id="openModal" class="ml-auto px-4 py-2">기록하기</button>
+                    <button class="tablink m-3 mt-1 mr-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="WeightTab" data-tab="Weight" onclick="openData('Weight')"> 체중 </button>
+                    <button class="tablink m-3 mt-1 mr-1 ml-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
+                    <button class="tablink m-3 mt-1 ml-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">골격근량</button>
+                    <div class="ml-auto">
+                        <button id="openTrackingModal" class="mr-1 mt-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full">기록보기</button>
+                        <button id="openRecordModal" class="ml-1 mt-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full">기록하기</button>
+                    </div>
+                </div>
+                <div>
+                    <div id="trackingModal" class="displayModal fixed z-50 inset-0 overflow-y-auto" aria-labelledby="tracking-modal-title" role="dialog" aria-modal="true">
+                        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                            <div class="displayModal inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-full md:max-w-2xl lg:max-w-3xl xl:max-w-4xl sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-1">
+                                <div class="flex justify-center">
+                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-5" id="tracking-modal-title">
+                                            전체 기록 보기
+                                        </h3>
+                                        <div class="max-h-[400px] overflow-y-auto">
+                                            <table class="table-auto w-full bg-white border">
+                                                <thead>
+                                                <tr class = "table_head">
+                                                    <th class="px-4 py-2 border-b">날짜</th>
+                                                    <th class="px-4 py-2 border-b">체중</th>
+                                                    <th class="px-4 py-2 border-b">체지방량</th>
+                                                    <th class="px-4 py-2 border-b">골격근량</th>
+                                                    <th class="px-4 py-2 border-b">bmi</th>
+                                                    <th class="px-4 py-2 border-b">체지방률</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="tracking : ${trackingData}" class="border-b text-black">
+                                                        <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>
+                                                        <td class="px-4 py-2" th:text="${tracking.weight} + 'kg'"></td>
+                                                        <td class="px-4 py-2" th:text="${tracking.bodyFat} + 'kg'"></td>
+                                                        <td class="px-4 py-2" th:text="${tracking.muscleMass} + 'kg'"></td>
+                                                        <td class="px-4 py-2" th:text="${tracking.bmi}"></td>
+                                                        <td class="px-4 py-2" th:text="${tracking.bodyFatPercentage} + '%'"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white px-4 pb-3 flex justify-center">
+                                <button id="closeTrackingModal" type="button" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    닫기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="displayModal fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div id="recordModal" class="displayModal fixed z-50 inset-0 overflow-y-auto" aria-labelledby="record-modal-title" role="dialog" aria-modal="true">
                     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         <div class="displayModal inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
                         <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -34,7 +84,7 @@
                             <div class="bg-white px-4 pt-5 pb-1">
                                 <div class="flex justify-center">
                                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-5" id="modal-title">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-5" id="record-modal-title">
                                             내 신체정보 기록하기
                                         </h3>
                                         <div class="mt-2 flex justify-center">
@@ -65,12 +115,13 @@
                                 <button id="confirmRecord" type="submit" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
                                     기록하기
                                 </button>
-                                <button id="closeModal" type="button" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                <button id="closeRecordModal" type="button" class="mt-3 mx-2 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
                                     취소하기
                                 </button>
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
 
@@ -95,44 +146,75 @@
                 </div>
             </div>
 
-            <div id="bodyInfo" class="flex justify-center mt-4">
-                <div class="max-h-[400px] overflow-y-auto">
-                    <table class="table-auto w-full bg-white border">
-                        <thead>
-                        <tr class = "table_head">
-                            <th class="px-4 py-2 border-b">날짜</th>
-                            <th class="px-4 py-2 border-b">체중</th>
-                            <th class="px-4 py-2 border-b">체지방량</th>
-                            <th class="px-4 py-2 border-b">골격근량</th>
-                            <th class="px-4 py-2 border-b">bmi</th>
-                            <th class="px-4 py-2 border-b">체지방률</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- trackingData를 이용하여 테이블 행을 반복적으로 생성 -->
-                        <tr th:each="tracking : ${trackingData}" class="border-b text-black">
-                            <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>
-                            <td class="px-4 py-2" th:text="${tracking.weight} + 'kg'"></td>
-                            <td class="px-4 py-2" th:text="${tracking.bodyFat} + 'kg'"></td>
-                            <td class="px-4 py-2" th:text="${tracking.muscleMass} + 'kg'"></td>
-                            <td class="px-4 py-2" th:text="${tracking.bmi}"></td>
-                            <td class="px-4 py-2" th:text="${tracking.bodyFatPercentage} + '%'"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <div class="card-container">
+                <div th:each="tracking, iterStat : ${trackingDataReverse}" th:if="${iterStat.index < 5}" class="card">
+                    <h2 th:text="${tracking.dateTime}" class="card-header"></h2>
+                    <div class="card-body">
+                        <p>
+                            <strong>체중:</strong>
+                            <span th:text="${tracking.weight} + 'kg' + (${tracking.weightChange} &gt; 0 ? '(+' + ${tracking.weightChange} + 'kg)' : '(' + ${tracking.weightChange} + 'kg)')"></span>
+                        </p>
+                        <p>
+                            <strong>체지방량:</strong>
+                            <span th:text="${tracking.bodyFat} + 'kg' + (${tracking.bodyFatChange} &gt; 0 ? '(+' + ${tracking.bodyFatChange} + 'kg)' : '(' + ${tracking.bodyFatChange} + 'kg)')"></span>
+                        </p>
+                        <p>
+                            <strong>골격근량:</strong>
+                            <span th:text="${tracking.muscleMass} + 'kg' + (${tracking.muscleMassChange} &gt; 0 ? '(+' + ${tracking.muscleMassChange} + 'kg)' : '(' + ${tracking.muscleMassChange} + 'kg)')"></span>
+                        </p>
+                        <p><strong>bmi:</strong> <span th:text="${tracking.bmi}"></span></p>
+                        <p><strong>체지방률:</strong> <span th:text="${tracking.bodyFatPercentage} + '%'"></span></p>
+                    </div>
                 </div>
             </div>
 
 
+            <!--            <div id="bodyInfo" class="flex justify-center mt-4">-->
+<!--                <div class="max-h-[400px] overflow-y-auto">-->
+<!--                    <table class="table-auto w-full bg-white border">-->
+<!--                        <thead>-->
+<!--                        <tr class = "table_head">-->
+<!--                            <th class="px-4 py-2 border-b">날짜</th>-->
+<!--                            <th class="px-4 py-2 border-b">체중</th>-->
+<!--                            <th class="px-4 py-2 border-b">체지방량</th>-->
+<!--                            <th class="px-4 py-2 border-b">골격근량</th>-->
+<!--                            <th class="px-4 py-2 border-b">bmi</th>-->
+<!--                            <th class="px-4 py-2 border-b">체지방률</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="tracking, iterStat : ${trackingDataReverse}" class="border-b text-black" th:if="${iterStat.index < 5}">-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.weight} + 'kg'"></td>-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.bodyFat} + 'kg'"></td>-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.muscleMass} + 'kg'"></td>-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.bmi}"></td>-->
+<!--                            <td class="px-4 py-2" th:text="${tracking.bodyFatPercentage} + '%'"></td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
             <script th:inline="javascript">
-                $(document).ready(function(){
-                    $("#openModal").click(function(){
-                        $(".displayModal").show();
+                $(document).ready(function() {
+                    $("#openTrackingModal").click(function() {
+                        $("#trackingModal").show();
                     });
 
-                    $("#closeModal").click(function(){
-                        $(".displayModal").hide();
+                    $("#openRecordModal").click(function() {
+                        $("#recordModal").show();
                     });
+
+                    $("#closeTrackingModal").click(function() {
+                        $("#trackingModal").hide();
+                    });
+
+                    $("#closeRecordModal").click(function() {
+                        $("#recordModal").hide();
+                    });
+
                     openData('Weight');
 
                     $("#confirmRecord").click(function() {
@@ -141,7 +223,6 @@
                         const selectedTab = $(".tablink.active").attr("data-tab");
                         displayBodyInfo(selectedTab);
                     });
-
                 });
 
                 function openData(type) {
