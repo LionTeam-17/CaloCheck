@@ -17,7 +17,7 @@
                 </label>
                 <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow rounded-box w-52">
                     <li>
-                        <a href="/" class="text-gray-600 hover:text-gray-800">
+                        <a href="/" class="text-gray-600 hover:text-gray-800 focus:text-gray-900">
                             <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -48,6 +48,14 @@
                         </a>
                     </li>
                     <li>
+                        <a th:href="@{|/mealHistory/${@rq.member.id}|}" sec:authorize="isAuthenticated()" class="text-gray-600 hover:text-gray-800">
+                            <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                <path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"/></svg>
+                            DailyMenu
+                        </a>
+                    </li>
+                    <li>
                         <a href="/post/list" class="text-gray-600 hover:text-gray-800">
                             <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -59,7 +67,8 @@
                     </li>
 
                     <li>
-                        <a th:href="@{|/member/mypage/${@rq.member.id}|}" sec:authorize="isAuthenticated()" class="text-gray-600 hover:text-gray-800">
+                        <a class="text-gray-600 hover:text-gray-800" sec:authorize="isAuthenticated()"
+                           th:href="@{|/member/mypage/${@rq.member.id}|}">
                             <svg class="w-[13px] h-[13px] text-gray-800 dark:text-black" aria-hidden="true"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -92,6 +101,13 @@
             <a th:href="@{/}" class="text-lg font-bold text-white">Calo Check</a>
         </div>
         <div class="navbar-end px-4" style="margin-top: 10px;">
+            <a class="btn btn-ghost btn-circle" href="/notification/list" th:if="${@rq.login}">
+                <div class="indicator mb-4 mr-3">
+                    <i class="fa-regular fa-bell" style="color:white"></i>
+                    <span class="badge badge-xs badge-primary indicator-item" data-test="hasUnreadNotifications"
+                          th:if="${@rq.hasUnreadNotifications()}"></span>
+                </div>
+            </a>
             <div>
                 <a th:href="@{/member/login}" sec:authorize="isAnonymous()"
                    class="text-white hover:text-gray-800">Login</a>

@@ -16,8 +16,8 @@
 
 <body>
 <main layout:fragment="Content">
-    <div class="flex flex-col m-7">
-        <div class="w-full">
+    <div class="flex-1 flex flex-col items-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center flex-col">
                 <div class="flex justify-center">
                     <h1 class="font-bold text-black text-sm mb-4">
@@ -28,7 +28,7 @@
                     챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
                 </div>
 
-                <div class="flex flex-row justify-between" th:each="calcNutrient : ${calcNutrients}">
+                <div class="flex m-2 mx-3 flex-row justify-between" th:each="calcNutrient : ${calcNutrients}">
                     <div>
                         <i class="fa-solid fa-circle" style="color:#b2c615"
                            th:if="${calcNutrient.getName().equals('단백질')}"></i>
@@ -46,7 +46,7 @@
                            th:if="${calcNutrient.getName().equals('마그네슘')}"></i>
 
                         <span id="nutrientData" class="text-xs font-bold inline-block m-2 w-48"
-                              th:text="${calcNutrient.getName()} + '(' + ${calcNutrient.getUnit()} + ')'"></span>
+                              th:text="${calcNutrient.getName()} + '(g)'"></span>
                     </div>
                     <div class="flex text-sm">
                         <i th:if="${-30 <= calcNutrient.getValue() && calcNutrient.getValue() <= 30}"
@@ -148,7 +148,6 @@
 
     <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white px-20 py-40">
-
             <div class="text-center font-bold text-black text-lg">식단 추가</div>
             <div class="my-1 border border-gray-200 border-2"></div>
             <div class="flex flex-col justify-center">

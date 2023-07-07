@@ -7,8 +7,6 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrient.service.NutrientService;
-import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
-import calocheck.boundedContext.nutrientInfo.service.NutrientInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,6 @@ import java.util.stream.LongStream;
 public class CartFoodInfoService {
     private final CartFoodInfoRepository cartFoodInfoRepository;
     private final NutrientService nutrientService;
-    private final NutrientInfoService nutrientInfoService;
 
     public RsData<CartFoodInfo> addFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
@@ -120,39 +117,41 @@ public class CartFoodInfoService {
 
     public Double calculateTotalKcal(List<CartFoodInfo> cartList) {
         return cartList.stream()
-                .mapToDouble(cartItem -> cartItem.getFoodInfo().getNutrientInfo().getKcal() * cartItem.getQuantity())
+                .mapToDouble(cartItem -> cartItem.getFoodInfo().getKcal() * cartItem.getQuantity())
                 .sum();
     }
 
     public List<Nutrient> calculateTotalNutrient(List<CartFoodInfo> cartList) {
-        List<Nutrient> res = new ArrayList<>() {{
-            add(new Nutrient("단백질", 0.0, "g"));
-            add(new Nutrient("지방", 0.0, "g"));
-            add(new Nutrient("탄수화물", 0.0, "g"));
-            add(new Nutrient("총당류", 0.0, "g"));
-            add(new Nutrient("총식이섬유", 0.0, "g"));
-            add(new Nutrient("칼슘", 0.0, "mg"));
-            add(new Nutrient("철", 0.0, "mg"));
-            add(new Nutrient("마그네슘", 0.0, "mg"));
-            add(new Nutrient("칼륨", 0.0, "mg"));
-            add(new Nutrient("나트륨", 0.0, "mg"));
-            add(new Nutrient("콜레스테롤", 0.0, "g"));
-            add(new Nutrient("포화지방산", 0.0, "g"));
-            add(new Nutrient("트랜스지방산", 0.0, "g"));
-            add(new Nutrient("불포화지방산", 0.0, "g"));
+        List<Nutrient> total = new ArrayList<>() {{
+            add(new Nutrient(null, "단백질", 0.0));
+            add(new Nutrient(null, "지방", 0.0));
+            add(new Nutrient(null, "탄수화물", 0.0));
+            add(new Nutrient(null, "총당류", 0.0));
+            add(new Nutrient(null, "총식이섬유", 0.0));
+            add(new Nutrient(null, "칼슘", 0.0));
+            add(new Nutrient(null, "철", 0.0));
+            add(new Nutrient(null, "마그네슘", 0.0));
+            add(new Nutrient(null, "칼륨", 0.0));
+            add(new Nutrient(null, "나트륨", 0.0));
+            add(new Nutrient(null, "콜레스테롤", 0.0));
+            add(new Nutrient(null, "포화지방산", 0.0));
+            add(new Nutrient(null, "트랜스지방산", 0.0));
+            add(new Nutrient(null, "불포화지방산", 0.0));
         }};
 
         cartList.stream()
                 .forEach(cartItem -> {
-                    NutrientInfo nutrientInfo = cartItem.getFoodInfo().getNutrientInfo();
+                    List<Nutrient> nutrientList = cartItem.getFoodInfo().getNutrientList();
                     LongStream.range(0, cartItem.getQuantity())
-                            .forEach(i -> nutrientInfoService.addNutrientData(
-                                        res, nutrientInfo.getNutrientList()
-                                    )
+                        .forEach(i -> {
+                                    IntStream.range(0, total.size()).forEach(j -> {
+                                        total.get(j).addValue(nutrientList.get(j));
+                                    });
+                                }
                             );
-                    }
+                        }
                 );
 
-        return res;
+        return total;
     }
 }

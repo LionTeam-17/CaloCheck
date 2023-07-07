@@ -1,6 +1,5 @@
 package calocheck.base.util.s3.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
-@RequiredArgsConstructor
 public class S3Service {
     public InputStream getFileFromS3(String region, String bucketName, String objectKey) throws IOException {
         S3Client s3Client = S3Client.builder()

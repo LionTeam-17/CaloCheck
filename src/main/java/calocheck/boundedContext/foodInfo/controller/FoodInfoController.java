@@ -1,11 +1,9 @@
 package calocheck.boundedContext.foodInfo.controller;
 
 import calocheck.base.rq.Rq;
-import calocheck.base.util.FoodDataExtractor;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
-import calocheck.boundedContext.nutrientInfo.entity.NutrientInfo;
 import calocheck.boundedContext.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,8 +21,6 @@ import java.util.List;
 public class FoodInfoController {
     private final Rq rq;
     private final FoodInfoService foodInfoService;
-    private final FoodDataExtractor foodDataExtractor;
-
 
     @GetMapping("/search")
     public String searchFoodInfo(Model model,
@@ -57,8 +53,7 @@ public class FoodInfoController {
             return rq.historyBack("해당 음식 정보가 존재하지 않습니다.");
         }
 
-        List<Nutrient> nutrients = foodInfo.getNutrientInfo().getNutrientList();
-
+        List<Nutrient> nutrients = foodInfo.getNutrientList();
         List<Tag> tagList = foodInfoService.getTagList(foodInfo);
 
         model.addAttribute("foodInfo", foodInfo);
@@ -66,16 +61,5 @@ public class FoodInfoController {
         model.addAttribute("tagList", tagList);
 
         return "usr/foodInfo/details";
-    }
-
-    @GetMapping("/excel-data-save")
-    @ResponseBody
-    public String excelDataSave() {
-        try {
-            foodDataExtractor.readFile();
-            return "success";
-        } catch (Exception e) {
-            return "failed";
-        }
     }
 }

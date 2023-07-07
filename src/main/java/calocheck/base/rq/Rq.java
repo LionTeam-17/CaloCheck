@@ -4,6 +4,7 @@ import calocheck.base.rsData.RsData;
 import calocheck.base.util.Ut;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
+import calocheck.boundedContext.notification.service.NotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RequestScope
 public class Rq {
     private final MemberService memberService;
+    private final NotificationService notificationService;
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;
     private Locale locale;
@@ -33,8 +35,9 @@ public class Rq {
     private final User user;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
-    public Rq(MemberService memberService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+    public Rq(MemberService memberService, NotificationService notificationService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.memberService = memberService;
+        this.notificationService = notificationService;
         this.messageSource = messageSource;
         this.localeResolver = localeResolver;
         this.req = req;
@@ -148,5 +151,13 @@ public class Rq {
         Map<String, String[]> parameterMap = req.getParameterMap();
 
         return Ut.json.toStr(parameterMap);
+    }
+
+    public boolean hasUnreadNotifications() {
+        if (isLogout()) return false;
+
+        Member actor = getMember();
+
+        return notificationService.countByPost_MemberAndReadDateIsNull(getMember());
     }
 }

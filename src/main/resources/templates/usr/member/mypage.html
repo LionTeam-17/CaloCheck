@@ -19,29 +19,72 @@
                 마이페이지
             </h2>
 
-            <div class="flex flex-col justify-center gap-10" style="width: 900px">
-                <div class="avatar flex justify-center">
-                    <div class="w-48 rounded-full">
-                        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
+            <div class="flex flex-col justify-center gap-10" style="width: 550px">
+                <div class="flex justify-between gap-10">
+                    <div class="flex gap-3">
+                        <div class="avatar">
+                        <div class="w-32 rounded-full">
+                            <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
+                        </div>
+                        </div>
+                        <div class="flex justify-center items-center gap-4">
+                            <span class="text-2xl font-bold" th:text="${member.nickname}"></span>
+                            <a href="/member/me" th:if="${member.id == @rq.member.id}">
+                                <i class="fa-solid fa-gear fa-xl"></i>
+                            </a>
+                            <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
+                                <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
+                                    method="POST">
+                                    <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
+                                </form>
+                                <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
+                                    method="GET">
+                                    <button type="submit" class="btn btn-success btn-sm">친구추가</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="flex gap-4" th:if="${member.id != @rq.member.id}">
+                            <div class="flex flex-col justify-center items-center gap-4 font-bold">
+                                팔로잉
+                                <div><span th:text="${#lists.size(followingList)}"></span></div>
+                            </div>
+                            <div class="divider divider-horizontal !mx-1"></div>
+                            <div class="flex flex-col justify-center items-center gap-4 font-bold">
+                                팔로워
+                                <div><span th:text="${#lists.size(followerList)}"></span></div>
+                            </div>
+                        </div>
+                        <div class="flex gap-4" th:if="${member.id == @rq.member.id}">
+                            <div class="hover:bg-blue-50 p-2">
+                                <a href="/friend/list" class="flex flex-col justify-center items-center gap-4 font-bold">
+                                    팔로잉
+                                    <div><span th:text="${#lists.size(followingList)}"></span></div>
+                                </a>
+                            </div>
+                            <div class="divider divider-horizontal !mx-1"></div>
+                            <div class="hover:bg-blue-50 p-2">
+                                <a href="/friend/list" class="flex flex-col justify-center items-center gap-4 font-bold">
+                                    팔로워
+                                    <div><span th:text="${#lists.size(followerList)}"></span></div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="flex justify-center gap-4">
-                    <span class="text-2xl font-bold" th:text="${member.nickname}"></span>
-                    <a href="/member/me" th:if="${member.id == @rq.member.id}">
-                        <i class="fa-solid fa-gear fa-xl"></i>
-                    </a>
-                </div>
+                <div class="divider !my-1"></div>
             </div>
 
             <div class="flex flex-col justify-center mt-5 gap-1" >
                 <div class="flex">
-                    <div class="mx-2 text-2xl font-bold">
+                    <div class="mx-2 text-2xl font-bold btn">
                         <button id="myInformationBtn">
                             <span>내 정보</span>
                         </button>
                     </div>
                     <div class="divider divider-horizontal !mx-2"></div>
-                    <div class="mx-2 text-2xl font-bold">
+                    <div class="mx-2 text-2xl font-bold btn">
                         <button id="myPostBtn">
                             <span>내 포스트</span>
                         </button>
@@ -87,8 +130,8 @@
                 </div>
             </div>
 
-            <div id="myPost" class="hidden flex flex-col gap-5">
-                <li th:if="${not #lists.isEmpty(postList)}">
+            <div id="myPost" class="hidden flex flex-col">
+                <li th:if="${!postList.isEmpty()}">
                     <div th:each="post : ${postList}">
                         <div class="mt-5 flex flex-row gap-4">
                             <a th:href="@{|/post/${post.id}|}"
@@ -111,7 +154,7 @@
                     </div>
                 </li>
                 <div>
-                    <div th:unless="${not #lists.isEmpty(postList)}">
+                    <div th:if="${postList.isEmpty()}">
                         <div class="flex justify-center font-bold">
                             작성한 글이 없습니다.
                         </div>
