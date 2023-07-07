@@ -30,3 +30,4 @@ public class MealHistory extends BaseEntity {
     private String mealMemo;
     private int mealScore;
 }
+
