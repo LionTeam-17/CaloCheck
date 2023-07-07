@@ -100,25 +100,37 @@ public class PostController {
         //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
         RsData<String> isImgRsData = photoService.isImgFile(img.getOriginalFilename());
 
+        //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
         String photoUrl = null;
-        RsData<String> imgCheckRsData = null;
+        RsData<String> detectedLabelRsData = null;
+        RsData<String> safeSearchRsData = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
-            //S3 Bucket 에 이미지 업로드 및 경로 재대입
+            //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
             photoUrl = photoService.photoUpload(img);
-            imgCheckRsData = photoService.imageCheck(photoUrl);
+            detectedLabelRsData = photoService.detectLabelsRemote(photoUrl);
+            safeSearchRsData = photoService.detectSafeSearchRemote(photoUrl);
 
         } else if (isImgRsData.isFail()) {
-            //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        if(imgCheckRsData != null && imgCheckRsData.isFail() && selectedFood != null){
-            return rq.historyBack(imgCheckRsData);
+        //음식 이미지로 등록하려는 과정에서 검사에서 탈락한 경우
+        if((detectedLabelRsData != null && safeSearchRsData != null && selectedFood != null)
+                && (safeSearchRsData.isFail() ||detectedLabelRsData.isFail())){
+
+            if(safeSearchRsData.isFail()){
+                return rq.historyBack(safeSearchRsData);
+            } else if(detectedLabelRsData.isFail()){
+                return rq.historyBack(detectedLabelRsData);
+            }
+
         }
 
-        if(imgCheckRsData != null && imgCheckRsData.isSuccess() && selectedFood != null){
+        //음식 이미지로 등록 가능한 경우
+        if(detectedLabelRsData != null && safeSearchRsData != null
+                && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null){
             FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
 
             if(byFoodName.getPhotoUrl() == null){

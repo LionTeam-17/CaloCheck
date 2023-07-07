@@ -76,10 +76,8 @@
                                     <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
                                         <option disabled selected>어떤 음식에 대한 사진인가요?</option>
                                         <div th:if="todayFoodNameList" th:each="foodName : ${todayFoodNameList}">
-                                            <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
                                             <option th:text="${foodName}"></option>
                                         </div>
-
                                     </select>
                                 </div>
 

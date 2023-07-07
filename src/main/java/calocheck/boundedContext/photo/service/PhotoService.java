@@ -74,64 +74,102 @@ public class PhotoService {
 
     }
 
-    // labelDetection + safeSearch
-    public RsData<String> imageCheck(String imageUrl) throws IOException {
+    //detected Labels
+    public RsData<String> detectLabelsRemote(String imageUrl) throws IOException {
 
-        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings);) {
+        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings)) {
+
             // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
             URL url = new URL(imageUrl);
             try (InputStream in = url.openStream()) {
                 byte[] data = IOUtils.toByteArray(in);
 
-                // URL을 통해 이미지를 빌드
+                //URL 을 통해 이미지를 빌드
                 ByteString imgBytes = ByteString.copyFrom(data);
                 Image img = Image.newBuilder().setContent(imgBytes).build();
                 Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
                 AnnotateImageRequest request =
                         AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
 
-                // 세이프 서치
+                // Label 검출
                 BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
                         Collections.singletonList(request));
-                List<AnnotateImageResponse> responseList = response.getResponsesList();
+                List<AnnotateImageResponse> responses = response.getResponsesList();
 
-                for (AnnotateImageResponse res : responseList) {
+                for (AnnotateImageResponse res : responses) {
                     if (res.hasError()) {
                         System.out.format("Error: %s%n", res.getError().getMessage());
-                        return RsData.of("F-1", "오류가 발생하였습니다.");
+                        return RsData.of("F-1", "라벨 검출도중 오류가 발생하였습니다.");
                     }
 
-                    SafeSearchAnnotation safeSearchAnnotation = res.getSafeSearchAnnotation();
-                    List<EntityAnnotation> labelAnnotations = res.getLabelAnnotationsList();
+                    for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
+//                        annotation.getAllFields().forEach((k, v) ->
+//                                System.out.format("%s : %s%n", k, v.toString()));
 
-                    // 세이프 서치 분석
-                    List<String> safeSearchResultList = new ArrayList<>();
-                    safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
-                    safeSearchResultList.add(safeSearchAnnotation.getMedical().toString());
-                    safeSearchResultList.add(safeSearchAnnotation.getAdult().toString());
-                    safeSearchResultList.add(safeSearchAnnotation.getViolence().toString());
-                    safeSearchResultList.add(safeSearchAnnotation.getRacy().toString());
-
-                    for (String result : safeSearchResultList) {
-                        if (result.equals("POSSIBLE")
-                                || result.equals("LIKELY")
-                                || result.equals("VERY_LIKELY")) {
-                            return RsData.of("F-2", "유해할 확률이 높은 이미지입니다.");
-                        }
-                    }
-
-                    // 라벨 검출
-                    for (EntityAnnotation annotation : labelAnnotations) {
+                        //검출 결과 중에서 음식일 확률이 70% 이상이라면 바로 리턴 후 종료 -> true 반환
                         if (annotation.getDescription().contains("Food") && annotation.getScore() >= 0.7) {
                             return RsData.of("S-1", "음식 이미지일 확률이 높습니다.");
                         }
                     }
                 }
             }
-            return RsData.of("F-3", "음식 이미지가 아닐 확률이 높습니다. 다른 이미지를 사용해 주세요.");
         }
+        return RsData.of("F-1", "음식 이미지가 아닙니다.");
     }
 
+    //이미지 유해성 검사
+    public RsData<String> detectSafeSearchRemote(String imageUrl) throws IOException {
+
+        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings)) {
+
+            // 원격 저장소(NCP Object Storage)의 URL 사용하여 이미지 데이터를 읽어옴
+            URL url = new URL(imageUrl);
+            try (InputStream in = url.openStream()) {
+                byte[] data = IOUtils.toByteArray(in);
+
+                //URL 을 통해 이미지를 빌드
+                ByteString imgBytes = ByteString.copyFrom(data);
+                Image img = Image.newBuilder().setContent(imgBytes).build();
+                Feature feat = Feature.newBuilder().setType(Feature.Type.SAFE_SEARCH_DETECTION).build();
+                AnnotateImageRequest request =
+                        AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+
+                // 세이프 서치
+                BatchAnnotateImagesResponse response = vision.batchAnnotateImages(
+                        Collections.singletonList(request));
+                List<AnnotateImageResponse> responses = response.getResponsesList();
+
+                for (AnnotateImageResponse res : responses) {
+                    if (res.hasError()) {
+                        System.out.format("Error: %s%n", res.getError().getMessage());
+                        return RsData.of("F-1", "세이프서치 도중 오류가 발생하였습니다.");
+                    }
+
+                    SafeSearchAnnotation safeSearchAnnotation = res.getSafeSearchAnnotation();
+
+                    //유해성 등급 => Unknown, Very Unlikely, Unlikely, Possible, Likely, and Very Likely
+                    List<String> resultList = new ArrayList<>();
+
+                    resultList.add(safeSearchAnnotation.getAdult().toString());
+                    resultList.add(safeSearchAnnotation.getMedical().toString());
+                    resultList.add(safeSearchAnnotation.getAdult().toString());
+                    resultList.add(safeSearchAnnotation.getViolence().toString());
+                    resultList.add(safeSearchAnnotation.getRacy().toString());
+
+                    for (String result : resultList) {
+
+                        if (result.equals("POSSIBLE")
+                                || result.equals("LIKELY")
+                                || result.equals("VERY_LIKELY")) {
+
+                            return RsData.of("F-2", "유해할 확률이 높은 이미지 입니다.");
+                        }
+                    }
+                }
+            }
+        }
+        return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
+    }
 
     public String getPostDetailPhoto(String photoUrl) {
 
