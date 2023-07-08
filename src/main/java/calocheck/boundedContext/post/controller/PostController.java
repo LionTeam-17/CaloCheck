@@ -176,7 +176,7 @@ public class PostController {
 
         RsData<String> isImgRsData = photoService.isImgFile(iModifyImg.getOriginalFilename());
 
-        String photoUrl = sampleImg;
+        String photoUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
