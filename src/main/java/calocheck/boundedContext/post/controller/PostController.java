@@ -7,6 +7,8 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
@@ -18,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -67,8 +70,10 @@ public class PostController {
         oPost.ifPresent(post -> model.addAttribute("post", post));
 
         List<Comment> commentList = commentService.findAllByPostId(postId);
-
         model.addAttribute("commentList", commentList);
+
+        Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.POST_IMAGE, postId);
+        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageData));
 
         return "usr/post/postDetail";
     }
@@ -90,12 +95,14 @@ public class PostController {
                            @RequestParam(required = false) MultipartFile img,
                            String selectedFood) throws IOException {
 
+        //TODO 서비스로 따로 빼기
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
         }
         if (iContent == null || iContent.length() == 0) {
             return rq.historyBack("내용을 입력해주세요.");
         }
+
 
         //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
         RsData<String> isImgRsData = imageDataService.isImgFile(img.getOriginalFilename());
@@ -111,39 +118,41 @@ public class PostController {
             RsData<String> safeSearchRsData = imageDataService.detectSafeSearchRemote(imageUrl);
 
             //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
-            if(safeSearchRsData != null && safeSearchRsData.isFail()){
+            if (safeSearchRsData != null && safeSearchRsData.isFail()) {
                 return rq.historyBack(safeSearchRsData);
             }
 
             //음식을 선택 했지만, 음식 이미지가 아닌 경우
-            if(detectedLabelRsData != null  && detectedLabelRsData.isFail() && selectedFood != null ){
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFood != null) {
                 return rq.historyBack(detectedLabelRsData);
             }
 
             //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
-            if(detectedLabelRsData != null && safeSearchRsData != null
-                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null){
-                FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
+            if (detectedLabelRsData != null && safeSearchRsData != null
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null) {
 
-                //TODO 사진이 있는지 찾는 메소드
-//                if(byFoodName.getImageUrl() == null){
-//                    foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
-//                }
+                Long foodId = foodInfoService.findByFoodName(selectedFood).getId();
+
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
+
+                if (oFoodImage.isEmpty()) {
+                    imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+                }
+
             }
 
         } else if (isImgRsData.isFail()) {
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<Post> postRsData =
-                postService.savePost(
-                        iSubject,
-                        iContent,
-                        rq.getMember()
-                );
+        RsData<Post> postRsData = postService.savePost(iSubject, iContent, rq.getMember());
 
         if (postRsData.isFail()) {
             return rq.historyBack(postRsData);
+        }
+
+        if(imageUrl != null){
+            imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, postRsData.getData().getId());
         }
 
         return rq.redirectWithMsg("/post/list", postRsData);

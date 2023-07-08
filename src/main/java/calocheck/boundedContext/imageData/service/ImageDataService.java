@@ -21,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -36,11 +33,11 @@ public class ImageDataService {
     private final ImageDataRepository imageDataRepository;
 
     @Transactional
-    public ImageData createImageData(ImageTarget imageTarget, String photoUrl, Long targetId){
+    public ImageData createImageData(ImageTarget imageTarget, String imageUrl, Long targetId){
 
         ImageData newImageData = ImageData.builder()
                 .imageTarget(imageTarget)
-                .photoUrl(photoUrl)
+                .imageUrl(imageUrl)
                 .targetId(targetId)
                 .build();
 
@@ -189,9 +186,9 @@ public class ImageDataService {
         return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
-    public String getPostDetailImage(String photoUrl) {
+    public String getPostDetailImage(String imageUrl) {
 
-        String[] split = photoUrl.split("calocheck/");
+        String[] split = imageUrl.split("calocheck/");
 
         StringBuilder sb = new StringBuilder();
         sb.append(s3ConfigProperties.getCdnUrl());
@@ -218,6 +215,11 @@ public class ImageDataService {
         }
 
         return imgList;
+    }
+
+    public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId){
+
+        return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
     }
 
 }

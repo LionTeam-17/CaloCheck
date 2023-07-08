@@ -23,7 +23,7 @@ public class ImageData {
     @Enumerated(EnumType.STRING)
     private ImageTarget imageTarget;
 
-    private String photoUrl;
+    private String imageUrl;
 
     private Long targetId;
 

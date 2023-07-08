@@ -98,13 +98,13 @@
 
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="joinFormSubmit(this); return false;">
             <div>
-                <input imageTarget="text" name="username" maxlength="20" size="40" placeholder="아이디" class="input input-bordered">
+                <input type="text" name="username" maxlength="20" size="40" placeholder="아이디" class="input input-bordered">
             </div>
             <div>
-                <input imageTarget="password" name="password" maxlength="20" size="40" placeholder="비밀번호" class="input input-bordered">
+                <input type="password" name="password" maxlength="20" size="40" placeholder="비밀번호" class="input input-bordered">
             </div>
             <div>
-                <input imageTarget="text" name="email" maxlength="30" size="40" placeholder="이메일" class="input input-bordered">
+                <input type="text" name="email" maxlength="30" size="40" placeholder="이메일" class="input input-bordered">
             </div>
 
             <div class="flex justify-center gap-3">
@@ -113,11 +113,11 @@
                 </div>
                 <div>
                     <label>
-                        <input imageTarget="radio" name="gender" value="M">
+                        <input type="radio" name="gender" value="M">
                         남성
                     </label>
                     <label>
-                        <input imageTarget="radio" name="gender" value="W">
+                        <input type="radio" name="gender" value="W">
                         여성
                     </label>
                 </div>
@@ -126,38 +126,38 @@
             <div class="flex justify-between">
                 <div class="flex flex-col gap-4">
                     <div>
-                        <input imageTarget="text" name="nickname" maxlength="20" size="15" placeholder="닉네임" class="input input-bordered">
+                        <input type="text" name="nickname" maxlength="20" size="15" placeholder="닉네임" class="input input-bordered">
                     </div>
                     <div>
-                        <input imageTarget="text" name="height" size="15" placeholder="키(선택)" class="input input-bordered">
+                        <input type="text" name="height" size="15" placeholder="키(선택)" class="input input-bordered">
                     </div>
                     <div>
-                        <input imageTarget="text" name="weight" size="15" placeholder="몸무게(선택)" class="input input-bordered">
+                        <input type="text" name="weight" size="15" placeholder="몸무게(선택)" class="input input-bordered">
                     </div>
                 </div>
                 <div class="flex flex-col gap-4">
                     <div>
-                        <input imageTarget="text" name="age" size="15" placeholder="나이(선택)" class="input input-bordered">
+                        <input type="text" name="age" size="15" placeholder="나이(선택)" class="input input-bordered">
                     </div>
                     <div>
-                        <input imageTarget="text" name="muscleMass" size="15" placeholder="골격근량(선택)" class="input input-bordered">
+                        <input type="text" name="muscleMass" size="15" placeholder="골격근량(선택)" class="input input-bordered">
                     </div>
                     <div>
-                        <input imageTarget="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
+                        <input type="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
                     </div>
                 </div>
             </div>
 
             <div class="flex flex-row mt-3 justify-end">
                 <label class="cursor-pointer label">
-                    <input name="agree" imageTarget="checkbox" class="checkbox checkbox-info"/>
+                    <input name="agree" type="checkbox" class="checkbox checkbox-info"/>
                     <span class="label-text mx-3">이미지 수집 동의</span>
                 </label>
 
                 <label for="my_modal_6" class="btn btn" style="background:#112D4E">이미지 수집 안내</label>
             </div>
             <!-- Put this part before </body> tag -->
-            <input imageTarget="checkbox" id="my_modal_6" class="modal-toggle"/>
+            <input type="checkbox" id="my_modal_6" class="modal-toggle"/>
             <div class="modal">
                 <div class="modal-box">
                     <h3 class="font-bold text-lg">이미지 수집 동의 안내</h3>
@@ -173,7 +173,7 @@
             </div>
 
             <div class="form-control">
-                <input imageTarget="submit" value="회원가입" size="30" class="btn btn-accent">
+                <input type="submit" value="회원가입" size="30" class="btn btn-accent">
             </div>
 
         </form>

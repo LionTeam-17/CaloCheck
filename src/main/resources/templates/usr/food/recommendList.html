@@ -20,49 +20,49 @@
                 <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-42">
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="탄수화물"
+                            <input type="radio" name="nutritionType" value="탄수화물"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">탄수화물</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="단백질"
+                            <input type="radio" name="nutritionType" value="단백질"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">단백질</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="지방"
+                            <input type="radio" name="nutritionType" value="지방"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">지방</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="칼슘"
+                            <input type="radio" name="nutritionType" value="칼슘"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">칼슘</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="나트륨"
+                            <input type="radio" name="nutritionType" value="나트륨"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">나트륨</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="칼륨"
+                            <input type="radio" name="nutritionType" value="칼륨"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">칼륨</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="비타민A"
+                            <input type="radio" name="nutritionType" value="비타민A"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">비타민A</span>
                         </label>
@@ -70,7 +70,7 @@
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="비타민C"
+                            <input type="radio" name="nutritionType" value="비타민C"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">비타민C</span>
                         </label>
@@ -78,21 +78,21 @@
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="GI지수 높은 음식"
+                            <input type="radio" name="nutritionType" value="GI지수 높은 음식"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">GI지수 높은 음식</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="GI지수 낮은 음식"
+                            <input type="radio" name="nutritionType" value="GI지수 낮은 음식"
                                    class="radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">GI지수 낮은 음식</span>
                         </label>
                     </li>
                     <li>
                         <label>
-                            <input imageTarget="radio" name="nutritionType" value="고단백&저지방 육류"
+                            <input type="radio" name="nutritionType" value="고단백&저지방 육류"
                                    class="radio radio checked:bg-blue-300"/>
                             <span class="text-sm ml-2 whitespace-nowrap inline-block">고단백&저지방 육류</span>
                         </label>
@@ -141,7 +141,7 @@
 
                 $.ajax({
                     url: "/recommend/list",
-                    imageTarget: "POST",
+                    type: "POST",
                     data: requestData,
                     success: function (data) {
                         // JSON 형식의 응답 데이터를 객체로 파싱
