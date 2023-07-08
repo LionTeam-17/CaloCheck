@@ -16,7 +16,6 @@ import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.entity.PostLike;
 import calocheck.boundedContext.postLike.service.PostLikeService;
-import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,23 +69,6 @@ public class NotProd {
                     .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), s3ConfigProperties.getSampleImg(), members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
-
-            List<String> recommendList = new ArrayList<>() {{
-                add("탄수화물");
-                add("단백질");
-                add("지방");
-                add("칼슘");
-                add("나트륨");
-                add("칼륨");
-                add("비타민A");
-                add("비타민C");
-                add("고단백&저지방");
-                add("GI지수 높은 음식");
-                add("GI지수 낮은 음식");
-            }};
-
-            recommendList.stream().filter(name -> recommendService.getRecommendByName(name) != null)
-                            .forEach(name -> recommendService.createRecommend(name, RecommendConfig.getDescription(name), RecommendConfig.getFoodList(name)));
 
             excelService.processExcel();
 

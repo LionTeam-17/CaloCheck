@@ -4,7 +4,6 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.photo.service.PhotoService;
-import calocheck.boundedContext.recommend.config.RecommendConfig;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,31 +45,31 @@ public class RecommendController {
         return "/usr/food/recommendList";
     }
 
-    @PostMapping("/list")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> postRecommendList
-            (@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
-
-        Object selectedValue = params.get("selectedValue");
-        String selectedNutrition = selectedValue.toString();
-
-        Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
-
-        List<String> recommendPhotoData = photoService.getRecommendPhotoData(recommendByName.getFoodList());
-
-        List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
-
-        Map<String, Object> result = new HashMap<String, Object>();
-
-        result.put("nutritionName", recommendByName.getNutritionName());
-        result.put("nutritionDescription", recommendByName.getDescription());
-        result.put("nutritionFoodList", recommendByName.getFoodList());
-        result.put("recommendPhotoData", recommendPhotoData);
-        result.put("top5ByFoodNameLists", top5ByFoodNameLists);
-
-        System.out.println("top5ByFoodNameLists = " + top5ByFoodNameLists.get(0));
-
-        return ResponseEntity.ok(result);
-    }
+//    @PostMapping("/list")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> postRecommendList
+//            (@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
+//
+//        Object selectedValue = params.get("selectedValue");
+//        String selectedNutrition = selectedValue.toString();
+//
+//        Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
+//
+//        List<String> recommendPhotoData = photoService.getRecommendPhotoData(recommendByName.getFoodList());
+//
+//        List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
+//
+//        Map<String, Object> result = new HashMap<String, Object>();
+//
+//        result.put("nutritionName", recommendByName.getNutritionName());
+//        result.put("nutritionDescription", recommendByName.getDescription());
+//        result.put("nutritionFoodList", recommendByName.getFoodList());
+//        result.put("recommendPhotoData", recommendPhotoData);
+//        result.put("top5ByFoodNameLists", top5ByFoodNameLists);
+//
+//        System.out.println("top5ByFoodNameLists = " + top5ByFoodNameLists.get(0));
+//
+//        return ResponseEntity.ok(result);
+//    }
 
 }
