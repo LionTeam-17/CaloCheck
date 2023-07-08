@@ -108,7 +108,7 @@ public class FoodInfoService {
         return foodInfoRepository.findByFoodName(foodName).orElse(null);
     }
 
-    public List<List<String>> findTop5ByFoodNameContains(String[] foodNameArr){
+    public List<List<String>> findTop5ByFoodNameContains(List<String> foodNameArr){
 
         List<List<String>> top5Lists = new ArrayList<>();
 

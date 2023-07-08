@@ -145,7 +145,7 @@ public class PhotoService {
         return sb.toString();
     }
 
-    public List<String> getRecommendPhotoData(String[] recommendList) {
+    public List<String> getRecommendPhotoData(List<String> recommendList) {
 
         List<String> imgList = new ArrayList<>();
 
