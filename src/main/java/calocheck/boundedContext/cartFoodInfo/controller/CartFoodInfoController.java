@@ -2,7 +2,6 @@ package calocheck.boundedContext.cartFoodInfo.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
-import calocheck.base.util.CriteriaDataExtractor;
 import calocheck.boundedContext.cartFoodInfo.dto.CartDTO;
 import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
@@ -15,6 +14,7 @@ import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.nutrient.dto.NutrientDTO;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,15 +23,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/cartFoodInfo")
 public class CartFoodInfoController {
+    private final Rq rq;
     private final CartFoodInfoService cartFoodInfoService;
     private final FoodInfoService foodInfoService;
-    private final Rq rq;
     private final MealHistoryService mealHistoryService;
     private final DailyMenuService dailyMenuService;
     private final CriteriaService criteriaService;
@@ -55,7 +54,14 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        RsData<CartFoodInfo> res = cartFoodInfoService.addFoodInfo(member, foodInfo, quantity);
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        }
+        else if(quantity < 1) {
+            return new CartDTO("fail", "요청하신 수량은 올바르지 않습니다.");
+        }
+
+        RsData<CartFoodInfo> res = cartFoodInfoService.addToCart(member, foodInfo, quantity);
 
         return new CartDTO("success", res.getMsg());
     }
@@ -67,8 +73,17 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        cartFoodInfoService.removeFoodInfo(member, foodInfo);
-        return new CartDTO("success");
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        }
+
+        RsData<CartFoodInfo> res = cartFoodInfoService.removeToCart(member, foodInfo);
+
+        if (res.isFail()) {
+            return new CartDTO("fail", res.getMsg());
+        }
+
+        return new CartDTO("success", res.getMsg(), foodId);
     }
 
     @PostMapping("/update")
@@ -78,13 +93,26 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
         FoodInfo foodInfo = foodInfoService.findById(foodId);
 
-        if (quantity == 0) {
-            cartFoodInfoService.removeFoodInfo(member, foodInfo);
-            return new CartDTO("success");
+        if (foodInfo == null) {
+            return new CartDTO("fail", "해당 식품이 존재하지 않습니다.");
+        }
+        else if(quantity < 0) {
+            return new CartDTO("fail", "요청하신 수량은 올바르지 않습니다.");
         }
 
-        cartFoodInfoService.updateFoodInfo(member, foodInfo, quantity);
-        return new CartDTO("success");
+        if (quantity == 0) {
+            RsData<CartFoodInfo> delRes = cartFoodInfoService.removeToCart(member, foodInfo);
+
+            if (delRes.isFail()) {
+                return new CartDTO("fail", delRes.getMsg());
+            }
+
+            return new CartDTO("success", delRes.getMsg(), foodId);
+        }
+
+        RsData<CartFoodInfo> updateRes = cartFoodInfoService.updateCart(member, foodInfo, quantity);
+
+        return new CartDTO("success", updateRes.getMsg());
     }
 
 
@@ -93,7 +121,12 @@ public class CartFoodInfoController {
     public String showCartTotal(Model model) {
         Member member = rq.getMember();
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
-        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);
+
+        if (cartList == null) {
+            return rq.historyBack("잘못된 접근입니다");
+        }
+
+        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
         Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
 
         model.addAttribute("kcalTotal", kcalTotal);
@@ -109,12 +142,16 @@ public class CartFoodInfoController {
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);      //카트에 담겨있는 리스트
 
+        if (cartList == null) {
+            return rq.historyBack("잘못된 접근입니다");
+        }
+
         Criteria myCriteria = criteriaService.findByGenderAndAge(member);           //나의 권장량
         List<MealHistory> todayMealHistory = mealHistoryService.findByMemberAndCreateDate(member); //오늘 먹은 내용들
-        List<Nutrient> nutrientTotal = cartFoodInfoService.calculateTotalNutrient(cartList);    //카트 내용의 영양소 총합
+        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);    //카트 내용의 영양소 총합
 
         //이걸 먹게되면 영양소가 어떻게 되는가?
-        List<Nutrient> calcNutrients = mealHistoryService.calcNutrient(myCriteria, todayMealHistory, nutrientTotal);
+        List<NutrientDTO> calcNutrients = mealHistoryService.calcNutrient(myCriteria, todayMealHistory, nutrientTotal);
 
         model.addAttribute("calcNutrients", calcNutrients);
         model.addAttribute("cartList", cartList);
@@ -124,10 +161,17 @@ public class CartFoodInfoController {
 
     @PostMapping("/addMenu")
     @PreAuthorize("isAuthenticated()")
-    public String addMenu(@RequestParam("mealType") String mealType,
-                          @RequestParam("menuMemo") String menuMemo,
-                          @RequestParam("menuScore") int menuScore) {
+    public String addMenu(@RequestParam(name = "mealType", defaultValue = "") String mealType,
+                          @RequestParam(name = "menuMemo", defaultValue = "") String menuMemo,
+                          @RequestParam(name = "menuScore", defaultValue = "-1") int menuScore) {
         Member member = rq.getMember();
+
+        if (mealType.equals("")) {
+            return rq.historyBack("식단 분류를 입력하지 않았습니다.");
+        }
+        else if (menuScore == -1) {
+            return rq.historyBack("식단 점수가 올바르지 않습니다.");
+        }
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<DailyMenu> dailyMenuList = dailyMenuService.create(member, cartList);
@@ -135,8 +179,9 @@ public class CartFoodInfoController {
         MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
 
         //장바구니 삭제
-        cartFoodInfoService.deleteAllList(member);
+        cartFoodInfoService.deleteAll(cartList);
 
         //내 식단 캘린더로 이동
-        return "redirect:/mealHistory/" + member.getId();    }
+        return "redirect:/mealHistory/" + member.getId();
+    }
 }

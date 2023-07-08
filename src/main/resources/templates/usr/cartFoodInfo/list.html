@@ -35,11 +35,13 @@
                  th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
                 장바구니 항목이 없습니다.
             </div>
-            <div id="cartInfos" class="flex flex-col w-full justify-center" th:if="${!cartList.isEmpty()}">
+            <div id="cartInfos"
+                 class="flex flex-col w-full justify-center"
+                 th:if="${!cartList.isEmpty()}">
                 <div class="flex flex-col justify-center"
                      th:id="${cartFoodInfo.foodInfo.id}"
-                     th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
-                     th:each="cartFoodInfo, loop: ${cartList}">
+                     th:each="cartFoodInfo, loop: ${cartList}"
+                     th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)">
                     <div class="flex flex-grow justify-between">
                         <span class="font-bold text-xs text-black flex justify-center"
                               style="width:6%"
@@ -59,16 +61,22 @@
             </div>
 
             <div class="flex justify-center mt-5">
-                <a href="/cartFoodInfo/total"
-                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                <a href="/foodInfo/search"
+                   class="m-3 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-full">
+                    식품 추가</a>
+                <a id="nextBtn"
+                   href="/cartFoodInfo/total"
+                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full"
+                   th:classappend="${!cartList.isEmpty()} ? '' : 'hidden'">
                     다음</a>
             </div>
         </div>
 
     </div>
 
-    <div id="customModal" class="fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white px-10 py-10 mx-10 my-20">
+    <div id="customModal"
+         class="w-full fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="w-2/3 bg-white px-10 py-10 mx-15 my-20">
             <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
             <div class="flex">
                 <div class="text-xs font-bold m-2">제조사/유통사</div>
@@ -100,9 +108,9 @@
     </div>
 
     <script th:inline="javascript">
-        var cartInfosTag = document.getElementById("cartInfos");
-        var removeElement;
-        var removeFoodId;
+        let cartInfosTag = document.getElementById("cartInfos");
+        let removeElement;
+        let removeFoodId;
 
         function updateFoodInfoConfirm(foodId, element) {
             removeFoodId = foodId;
@@ -164,13 +172,18 @@
                     },
                     dataType: "json",
                     success: function (response) {
+                        console.log(JSON.stringify(response));
+                        console.log(response.msg);
                         if (response.result === "success") {
-                            console.log("success");
                             removeElement.remove();
 
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                                document.getElementById("nextBtn").classList.add("hidden");
                             }
+                            toastNotice(response.msg);
+                        } else if(response.result === "fail") {
+                            toastWarning(response.msg);
                         }
                     },
                     error: function (error) {
@@ -199,8 +212,8 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.result === "success") {
-                            console.log("success");
                             if (quantity == 0) {
+                                console.log(removeFoodId);
                                 removeElement.remove();
                             } else {
                                 removeElement.children[0].children[3].innerText = quantity;
@@ -208,7 +221,12 @@
 
                             if (cartInfosTag.children.length == 0) {
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
+                                document.getElementById("nextBtn").classList.add("hidden");
                             }
+
+                            toastNotice(response.msg);
+                        } else if (response.result === "fail") {
+                            toastWarning(response.msg);
                         }
                     },
                     error: function (error) {

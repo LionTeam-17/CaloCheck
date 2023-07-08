@@ -59,7 +59,7 @@
                     <a class="ml-2 mt-1 font-bold text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${code.equals('1')}">추천순</a>
                     <a class="ml-2 mt-1 text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${!code.equals('1')}">추천순</a>
                 </div>
-                <div class="btn btn-sm" style="background:#112D4E">
+                <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
                     <a href="/post/createForm">
                         <i class="fa-solid fa-pencil"></i>
                         <span>&nbsp;글쓰기</span>

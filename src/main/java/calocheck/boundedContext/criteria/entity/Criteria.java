@@ -32,32 +32,32 @@ public class Criteria {
     private int potassium;      //칼륨
     private int magnesium;      //마그네슘
 
-    public int findByStrName(String name){
+    public int getCriteria(String name){
 
         switch (name) {
             case ("탄수화물") -> {
-                return this.getCarbohydrate();
+                return this.carbohydrate;
             }
             case ("단백질") -> {
-                return this.getProtein();
+                return this.protein;
             }
             case ("지방") -> {
-                return this.getFat();
+                return this.fat;
             }
             case ("식이섬유") -> {
-                return this.getFiber();
+                return this.fiber;
             }
             case ("칼슘") -> {
-                return this.getCalcium();
+                return this.calcium;
             }
             case ("나트륨") -> {
-                return this.getSodium();
+                return this.sodium;
             }
             case ("칼륨") -> {
-                return this.getPotassium();
+                return this.potassium;
             }
             case ("마그네슘") -> {
-                return this.getMagnesium();
+                return this.magnesium;
             }
             default -> {
                 return 0;
