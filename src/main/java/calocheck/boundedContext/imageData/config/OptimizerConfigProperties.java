@@ -11,7 +11,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "image.optimizer")
 public class OptimizerConfigProperties {
 
-    private String recommendOptimizer;
+    private String postProcessing;
 
+    private String foodProcessing;
+
+    private String recommendProcessing;
 
 }

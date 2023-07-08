@@ -73,7 +73,8 @@ public class PostController {
         model.addAttribute("commentList", commentList);
 
         Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.POST_IMAGE, postId);
-        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageData));
+
+        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageDataService.getPostDetailImage(imageData.getImageUrl())));
 
         return "usr/post/postDetail";
     }
@@ -95,7 +96,6 @@ public class PostController {
                            @RequestParam(required = false) MultipartFile img,
                            String selectedFood) throws IOException {
 
-        //TODO 서비스로 따로 빼기
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
         }
@@ -103,9 +103,8 @@ public class PostController {
             return rq.historyBack("내용을 입력해주세요.");
         }
 
-
         //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
-        RsData<String> isImgRsData = imageDataService.isImgFile(img.getOriginalFilename());
+        RsData<ImageData> isImgRsData = imageDataService.isImgFile(img.getOriginalFilename());
 
         //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
         String imageUrl = null;
@@ -113,9 +112,9 @@ public class PostController {
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
-            imageUrl = imageDataService.imageUpload(img);
-            RsData<String> detectedLabelRsData = imageDataService.detectLabelsRemote(imageUrl);
-            RsData<String> safeSearchRsData = imageDataService.detectSafeSearchRemote(imageUrl);
+            imageUrl = imageDataService.imageUpload(img, ImageTarget.POST_IMAGE);
+            RsData<ImageData> detectedLabelRsData = imageDataService.detectLabelsRemote(imageUrl);
+            RsData<ImageData> safeSearchRsData = imageDataService.detectSafeSearchRemote(imageUrl);
 
             //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
             if (safeSearchRsData != null && safeSearchRsData.isFail()) {
@@ -136,7 +135,12 @@ public class PostController {
                 Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
 
                 if (oFoodImage.isEmpty()) {
-                    imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+                    imageUrl = imageDataService.imageUpload(img, ImageTarget.FOOD_IMAGE);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+
+                    if(imageRsData.isFail()){
+                        return rq.historyBack(imageRsData);
+                    }
                 }
 
             }
@@ -152,7 +156,12 @@ public class PostController {
         }
 
         if(imageUrl != null){
-            imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, postRsData.getData().getId());
+
+            RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, postRsData.getData().getId());
+
+            if(imageRsData.isFail()){
+                return rq.historyBack(imageRsData);
+            }
         }
 
         return rq.redirectWithMsg("/post/list", postRsData);
@@ -183,21 +192,21 @@ public class PostController {
                              String iModifyContent,
                              @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
 
-        RsData<String> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
+        RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
 
-        String photoUrl = null;
+        String imageUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
-            photoUrl = imageDataService.imageUpload(iModifyImg);
+            imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.POST_IMAGE);
 
-//            //업로드된 이미지가 안전한 이미지인지 확인
-//            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
-//
-//            if (isSafeImg.isFail()) {
-//                return rq.historyBack(isSafeImg);
-//            }
+            //업로드된 이미지가 안전한 이미지인지 확인
+            RsData<ImageData> isSafeImg = imageDataService.detectSafeSearchRemote(imageUrl);
+
+            if (isSafeImg.isFail()) {
+                return rq.historyBack(isSafeImg);
+            }
 
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.

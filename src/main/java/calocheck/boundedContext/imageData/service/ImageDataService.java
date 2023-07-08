@@ -1,6 +1,7 @@
 package calocheck.boundedContext.imageData.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.imageData.config.OptimizerConfigProperties;
 import calocheck.boundedContext.imageData.config.S3ConfigProperties;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
@@ -29,11 +30,18 @@ public class ImageDataService {
 
     private final S3ConfigProperties s3ConfigProperties;
     private final ImageAnnotatorSettings visionAPISettings;
+    private final OptimizerConfigProperties optimizerConfigProperties;
     private final AmazonS3 amazonS3;
     private final ImageDataRepository imageDataRepository;
 
     @Transactional
-    public ImageData createImageData(ImageTarget imageTarget, String imageUrl, Long targetId){
+    public RsData<ImageData> createImageData(ImageTarget imageTarget, String imageUrl, Long targetId){
+
+        Optional<ImageData> byImageTargetAndTargetId = findByImageTargetAndTargetId(imageTarget, targetId);
+
+        if(byImageTargetAndTargetId.isPresent()){
+            return RsData.of("F-1", "이미지 등록에 실패하였습니다.");
+        }
 
         ImageData newImageData = ImageData.builder()
                 .imageTarget(imageTarget)
@@ -43,12 +51,10 @@ public class ImageDataService {
 
         imageDataRepository.save(newImageData);
 
-        return newImageData;
+        return RsData.of("S-1", "이미지 등록에 성공하였습니다.", newImageData);
     }
 
-    // upload local file
-    @Transactional
-    public String imageUpload(MultipartFile file) throws IOException {
+    public String imageUpload(MultipartFile file, ImageTarget imageTarget) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
@@ -59,7 +65,14 @@ public class ImageDataService {
         String ext = originalFilename.substring(index + 1);
 
         String storeFileName = UUID.randomUUID() + "." + ext;
-        String key = "foodImage/" + storeFileName;
+
+        String storage = switch (imageTarget) {
+            case POST_IMAGE -> "post/";
+            case FOOD_IMAGE -> "foodImage/";
+            default -> "sample/";
+        };
+
+        String key = storage + storeFileName;
 
         InputStream inputStream = file.getInputStream();
 
@@ -72,7 +85,7 @@ public class ImageDataService {
         return endPoint + "/%s/%s".formatted(bucketName, key);
     }
 
-    public RsData<String> isImgFile(String fileName) {
+    public RsData<ImageData> isImgFile(String fileName) {
 
         //확장자 추출
         String fileExtension = StringUtils.getFilenameExtension(fileName);
@@ -90,7 +103,7 @@ public class ImageDataService {
     }
 
     //detected Labels
-    public RsData<String> detectLabelsRemote(String imageUrl) throws IOException {
+    public RsData<ImageData> detectLabelsRemote(String imageUrl) throws IOException {
 
         try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings)) {
 
@@ -133,7 +146,7 @@ public class ImageDataService {
     }
 
     //이미지 유해성 검사
-    public RsData<String> detectSafeSearchRemote(String imageUrl) throws IOException {
+    public RsData<ImageData> detectSafeSearchRemote(String imageUrl) throws IOException {
 
         try (ImageAnnotatorClient vision = ImageAnnotatorClient.create(visionAPISettings)) {
 
@@ -186,6 +199,10 @@ public class ImageDataService {
         return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
+    public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId){
+        return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
+    }
+
     public String getPostDetailImage(String imageUrl) {
 
         String[] split = imageUrl.split("calocheck/");
@@ -193,7 +210,19 @@ public class ImageDataService {
         StringBuilder sb = new StringBuilder();
         sb.append(s3ConfigProperties.getCdnUrl());
         sb.append(split[1]);
-        sb.append("?type=m&w=500&h=500&quality=90&bgcolor=FFFFFF&extopt=3");
+        sb.append(optimizerConfigProperties.getPostProcessing());
+
+        return sb.toString();
+    }
+
+    public String getFoodDetailImage(String imageUrl){
+
+        String[] split = imageUrl.split("calocheck/");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(s3ConfigProperties.getCdnUrl());
+        sb.append(split[1]);
+        sb.append(optimizerConfigProperties.getFoodProcessing());
 
         return sb.toString();
     }
@@ -209,7 +238,8 @@ public class ImageDataService {
             sb.append(s3ConfigProperties.getCdnUrl());
             sb.append("recommendImg/");
             sb.append(recommend);
-            sb.append(".jpg?type=m&w=200&h=200&quality=90&bgcolor=FFFFFF&ttype=jpg&extopt=3");
+            sb.append(".jpg");
+            sb.append(optimizerConfigProperties.getRecommendProcessing());
 
 //            imgList.add(sb.toString());
         }
@@ -217,9 +247,6 @@ public class ImageDataService {
         return imgList;
     }
 
-    public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId){
 
-        return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
-    }
 
 }
