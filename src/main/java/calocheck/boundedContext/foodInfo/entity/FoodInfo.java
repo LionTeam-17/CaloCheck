@@ -28,7 +28,6 @@ public class FoodInfo extends BaseEntity {
     private String unit; // 내용량 단위
     private int totalSize; // 총 내용량
     private double kcal; // 에너지(kcal)
-    private String photoUrl;
     @OneToMany(mappedBy = "foodInfo", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Nutrient> nutrientList = new ArrayList<>();

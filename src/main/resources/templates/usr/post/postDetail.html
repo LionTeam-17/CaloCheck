@@ -51,11 +51,11 @@
         <div class="divider my-1"></div>
 <<<<<<< HEAD
         <div class="flex justify-center" th:if="${post.photoUrl}">
-            <img th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+            <img th:src="${@imageService.getPostDetailImage(post.photoUrl)}">
 =======
         <div class="flex justify-center">
             <img th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
-                 th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+                 th:src="${@imageService.getPostDetailImage(post.photoUrl)}">
 >>>>>>> 29bc9e184cd559d3b7371f3670b2dd06a5b88632
         </div>
         <div class="mb-6 h-[400px]" style="word-break: break-all"

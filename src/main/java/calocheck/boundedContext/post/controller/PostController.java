@@ -7,7 +7,7 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.photo.service.PhotoService;
+import calocheck.boundedContext.image.service.ImageService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class PostController {
     private final Rq rq;
     private final PostService postService;
     private final CommentService commentService;
-    private final PhotoService photoService;
+    private final ImageService imageService;
     private final FoodInfoService foodInfoService;
     private final DailyMenuService dailyMenuService;
 
@@ -98,17 +98,17 @@ public class PostController {
         }
 
         //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
-        RsData<String> isImgRsData = photoService.isImgFile(img.getOriginalFilename());
+        RsData<String> isImgRsData = imageService.isImgFile(img.getOriginalFilename());
 
         //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
-        String photoUrl = null;
+        String imageUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
-            photoUrl = photoService.photoUpload(img);
-            RsData<String> detectedLabelRsData = photoService.detectLabelsRemote(photoUrl);
-            RsData<String> safeSearchRsData = photoService.detectSafeSearchRemote(photoUrl);
+            imageUrl = imageService.imageUpload(img);
+            RsData<String> detectedLabelRsData = imageService.detectLabelsRemote(imageUrl);
+            RsData<String> safeSearchRsData = imageService.detectSafeSearchRemote(imageUrl);
 
             //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
             if(safeSearchRsData != null && safeSearchRsData.isFail()){
@@ -125,9 +125,10 @@ public class PostController {
                     && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null){
                 FoodInfo byFoodName = foodInfoService.findByFoodName(selectedFood);
 
-                if(byFoodName.getPhotoUrl() == null){
-                    foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
-                }
+                //TODO 사진이 있는지 찾는 메소드
+//                if(byFoodName.getImageUrl() == null){
+//                    foodInfoService.updatePhotoUrl(byFoodName, photoUrl);
+//                }
             }
 
         } else if (isImgRsData.isFail()) {
@@ -138,7 +139,6 @@ public class PostController {
                 postService.savePost(
                         iSubject,
                         iContent,
-                        photoUrl,
                         rq.getMember()
                 );
 
@@ -174,14 +174,14 @@ public class PostController {
                              String iModifyContent,
                              @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
 
-        RsData<String> isImgRsData = photoService.isImgFile(iModifyImg.getOriginalFilename());
+        RsData<String> isImgRsData = imageService.isImgFile(iModifyImg.getOriginalFilename());
 
         String photoUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
-            photoUrl = photoService.photoUpload(iModifyImg);
+            photoUrl = imageService.imageUpload(iModifyImg);
 
 //            //업로드된 이미지가 안전한 이미지인지 확인
 //            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);

@@ -24,12 +24,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberService memberService;
 
-    public RsData<Post> savePost(String subject, String content, String photoUrl, final Member member) {
+    public RsData<Post> savePost(String subject, String content, final Member member) {
         Post post = Post.builder()
                 .member(member)
                 .subject(subject)
                 .content(content)
-                .photoUrl(photoUrl)
                 .build();
 
         postRepository.save(post);
@@ -53,7 +52,6 @@ public class PostService {
         Post modifyPost = post.toBuilder()
                 .subject(subject)
                 .content(content)
-                .photoUrl(photoUrl)
                 .build();
 
         postRepository.save(modifyPost);

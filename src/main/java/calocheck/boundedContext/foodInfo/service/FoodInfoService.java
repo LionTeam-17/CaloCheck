@@ -142,13 +142,4 @@ public class FoodInfoService {
         return returnTagList;
     }
 
-    @Transactional
-    public void updatePhotoUrl(FoodInfo foodInfo, String photoUrl) {
-
-        FoodInfo updatedFoodInfo = foodInfo.toBuilder()
-                .photoUrl(photoUrl)
-                .build();
-
-        foodInfoRepository.save(updatedFoodInfo);
-    }
 }

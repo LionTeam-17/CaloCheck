@@ -1,7 +1,8 @@
-package calocheck.boundedContext.photo.service;
+package calocheck.boundedContext.image.service;
 
 import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.photo.config.S3ConfigProperties;
+import calocheck.boundedContext.image.config.S3ConfigProperties;
+import calocheck.boundedContext.image.type.Type;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -25,15 +26,23 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class PhotoService {
+public class ImageService {
 
     private final S3ConfigProperties s3ConfigProperties;
     private final ImageAnnotatorSettings visionAPISettings;
     private final AmazonS3 amazonS3;
 
+    @Transactional
+    public void createImage(Type type, String photoUrl, Long forId){
+
+
+
+
+    }
+
     // upload local file
     @Transactional
-    public String photoUpload(MultipartFile file) throws IOException {
+    public String imageUpload(MultipartFile file) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
@@ -171,7 +180,7 @@ public class PhotoService {
         return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
-    public String getPostDetailPhoto(String photoUrl) {
+    public String getPostDetailImage(String photoUrl) {
 
         String[] split = photoUrl.split("calocheck/");
 
@@ -183,9 +192,9 @@ public class PhotoService {
         return sb.toString();
     }
 
-    public List<String> getRecommendPhotoData(String[] recommendList) {
+    public List<calocheck.boundedContext.image.entity.Image> getRecommendImageList(String[] recommendList) {
 
-        List<String> imgList = new ArrayList<>();
+        List<calocheck.boundedContext.image.entity.Image> imgList = new ArrayList<>();
 
         for (String recommend : recommendList) {
 
@@ -196,7 +205,7 @@ public class PhotoService {
             sb.append(recommend);
             sb.append(".jpg?type=m&w=200&h=200&quality=90&bgcolor=FFFFFF&ttype=jpg&extopt=3");
 
-            imgList.add(sb.toString());
+//            imgList.add(sb.toString());
         }
 
         return imgList;

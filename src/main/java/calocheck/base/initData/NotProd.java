@@ -65,7 +65,7 @@ public class NotProd {
             Post[] posts = IntStream
                     .rangeClosed(1, POST_SIZE)
                     .filter(i -> postService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), null, members[i % MEMBER_SIZE])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
 
