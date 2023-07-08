@@ -165,7 +165,7 @@
 
             if (removeFoodId) {
                 $.ajax({
-                    type: "POST",
+                    imageTarget: "POST",
                     url: "/cartFoodInfo/remove",
                     data: {
                         foodId: removeFoodId
@@ -203,7 +203,7 @@
 
             if (removeFoodId) {
                 $.ajax({
-                    type: "POST",
+                    imageTarget: "POST",
                     url: "/cartFoodInfo/update",
                     data: {
                         foodId: removeFoodId,

@@ -41,7 +41,7 @@
                     </button>
                     <form hidden method="POST"
                           th:action="@{|/post/${postId}/delete|}">
-                        <input name="_method" type="hidden" value="PATCH">
+                        <input name="_method" imageTarget="hidden" value="PATCH">
                     </form>
                     <a class="btn btn-sm w-[40px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-full"
                        href="/post/list">목록</a>
@@ -51,11 +51,11 @@
         <div class="divider my-1"></div>
 <<<<<<< HEAD
         <div class="flex justify-center" th:if="${post.photoUrl}">
-            <img th:src="${@imageService.getPostDetailImage(post.photoUrl)}">
+            <img th:src="${@imageDataService.getPostDetailImage(post.photoUrl)}">
 =======
         <div class="flex justify-center">
             <img th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
-                 th:src="${@imageService.getPostDetailImage(post.photoUrl)}">
+                 th:src="${@imageDataService.getPostDetailImage(post.photoUrl)}">
 >>>>>>> 29bc9e184cd559d3b7371f3670b2dd06a5b88632
         </div>
         <div class="mb-6 h-[400px]" style="word-break: break-all"
@@ -68,21 +68,21 @@
             <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
                   method="POST" th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.login && @postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
-                <button class="link-button" name="submit" type="submit" value="value">
+                <button class="link-button" name="submit" imageTarget="submit" value="value">
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
             <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full" method="POST"
                   th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.logout}">
-                <button class="link-button" name="submit" type="submit" value="value">
+                <button class="link-button" name="submit" imageTarget="submit" value="value">
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
             <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
                   method="POST" th:action="@{|/post/${postId}/postLike/delete|}"
                   th:if="${@rq.login && !@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
-                <button class="link-button" name="submit" type="submit" value="value">
+                <button class="link-button" name="submit" imageTarget="submit" value="value">
                     <i class="fa-solid fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
@@ -109,7 +109,7 @@
                                     class="fa-solid fa-square-xmark"></i>&nbsp;삭제</a>
                             <form method="POST"
                                   th:action="@{|/post/${postId}/${comment.id}/delete|}">
-                                <input name="_method" type="hidden" value="PATCH">
+                                <input name="_method" imageTarget="hidden" value="PATCH">
                             </form>
                         </div>
                         <div class="flex justify-end items-center text-[8px]" style="width:15%"
@@ -130,7 +130,7 @@
                         <div class="flex flex-grow mt-2">
                             <input class="border flex flex-grow border-black border-opacity-10 h-8 p-4"
                                    id="id-input" name="iComment" placeholder="댓글을 입력하세요"
-                                   type="text"/>
+                                   imageTarget="text"/>
                             <!-- 등록 버튼 -->
                             <div class="submit-button flex">
                                 <div class="flex">

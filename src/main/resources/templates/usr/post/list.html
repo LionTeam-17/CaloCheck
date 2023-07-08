@@ -22,7 +22,7 @@
                                            onkeyup="$(this).next().children(':first-child').text('검색');"
                                            onpaste="setTimeoutZero(() => $(this).keyup());"
                                            placeholder="검색어를 입력하세요." th:value="${kw}"
-                                           type="text">
+                                           imageTarget="text">
                                     <a class="mx-1 w-[8px] text-sm"
                                        href="#"
                                        onclick="event.preventDefault(); location.href = '?code=0&kw=' + $(this).prev().val().trim().replace(/ /g, '');"

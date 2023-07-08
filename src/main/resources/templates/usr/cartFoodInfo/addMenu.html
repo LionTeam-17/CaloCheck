@@ -110,13 +110,13 @@
                         </div>
 
                         <div class="btn-group flex flex-row justify-center">
-                            <input type="radio" name="mealType" data-title="아침" value="breakfast"
+                            <input imageTarget="radio" name="mealType" data-title="아침" value="breakfast"
                                    class="btn btn-secondary"/>
-                            <input type="radio" name="mealType" data-title="점심" value="lunch"
+                            <input imageTarget="radio" name="mealType" data-title="점심" value="lunch"
                                    class="btn btn-secondary"/>
-                            <input type="radio" name="mealType" data-title="저녁" value="dinner"
+                            <input imageTarget="radio" name="mealType" data-title="저녁" value="dinner"
                                    class="btn btn-secondary"/>
-                            <input type="radio" name="mealType" data-title="기타" value="etc" class="btn btn-secondary"/>
+                            <input imageTarget="radio" name="mealType" data-title="기타" value="etc" class="btn btn-secondary"/>
                         </div>
                     </div>
                 </div>
@@ -131,11 +131,11 @@
                         </div>
 
                         <div class="flex justify-center rating rating-lg">
-                            <input type="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400" checked/>
+                            <input imageTarget="radio" name="menuScore" value=1 class="mask mask-star-2 bg-orange-400"/>
+                            <input imageTarget="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"/>
+                            <input imageTarget="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
+                            <input imageTarget="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
+                            <input imageTarget="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400" checked/>
                         </div>
 
                     </div>
@@ -160,13 +160,13 @@
                     </div>
                 </div>
 
-                <!--                <input type="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
+                <!--                <input imageTarget="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
 
                 <div class="flex justify-center mt-5">
                     <a href="/cartFoodInfo/total"
                        class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         이전</a>
-                    <button type="submit"
+                    <button imageTarget="submit"
                             id="addMenuBtn"
                             class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         식단 추가하기</button>
@@ -263,7 +263,7 @@
             });
             if (foodId) {
                 $.ajax({
-                    type: "POST",
+                    imageTarget: "POST",
                     url: "/cartFoodInfo/addMenu", // 좋아요 요청을 보낼 URL
                     data: {
                         foodId: foodId,

@@ -51,13 +51,13 @@ public class MemberControllerTests {
                 .andExpect(handler().methodName("showJoin"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString("""
-                        <input type="text" name="username"
+                        <input imageTarget="text" name="username"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="password" name="password"
+                        <input imageTarget="password" name="password"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="submit" value="회원가입"
+                        <input imageTarget="submit" value="회원가입"
                         """.stripIndent().trim())));
     }
 
@@ -164,13 +164,13 @@ public class MemberControllerTests {
                 .andExpect(handler().methodName("showLogin"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString("""
-                        <input type="text" name="username"
+                        <input imageTarget="text" name="username"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="password" name="password"
+                        <input imageTarget="password" name="password"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="submit" value="로그인"
+                        <input imageTarget="submit" value="로그인"
                         """.stripIndent().trim())));
     }
 

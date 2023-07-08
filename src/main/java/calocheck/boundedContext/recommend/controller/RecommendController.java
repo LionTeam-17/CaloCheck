@@ -1,8 +1,8 @@
 package calocheck.boundedContext.recommend.controller;
 
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.image.entity.Image;
-import calocheck.boundedContext.image.service.ImageService;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,14 +27,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/recommend")
 public class RecommendController {
 
-    private final ImageService imageService;
+    private final ImageDataService imageDataService;
     private final RecommendService recommendService;
     private final FoodInfoService foodInfoService;
 
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        model.addAttribute("photoService", imageService);
+        model.addAttribute("photoService", imageDataService);
 
         return "/usr/food/recommendList";
     }
@@ -49,7 +49,7 @@ public class RecommendController {
 
         Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
 
-        List<Image> recommendPhotoData = imageService.getRecommendImageList(recommendByName.getFoodList());
+        List<ImageData> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
 
         List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
 

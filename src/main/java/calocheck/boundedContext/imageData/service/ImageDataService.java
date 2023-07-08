@@ -1,8 +1,10 @@
-package calocheck.boundedContext.image.service;
+package calocheck.boundedContext.imageData.service;
 
 import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.image.config.S3ConfigProperties;
-import calocheck.boundedContext.image.type.Type;
+import calocheck.boundedContext.imageData.config.S3ConfigProperties;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
+import calocheck.boundedContext.imageData.repository.ImageDataRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -26,18 +28,25 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class ImageService {
+public class ImageDataService {
 
     private final S3ConfigProperties s3ConfigProperties;
     private final ImageAnnotatorSettings visionAPISettings;
     private final AmazonS3 amazonS3;
+    private final ImageDataRepository imageDataRepository;
 
     @Transactional
-    public void createImage(Type type, String photoUrl, Long forId){
+    public ImageData createImageData(ImageTarget imageTarget, String photoUrl, Long targetId){
 
+        ImageData newImageData = ImageData.builder()
+                .imageTarget(imageTarget)
+                .photoUrl(photoUrl)
+                .targetId(targetId)
+                .build();
 
+        imageDataRepository.save(newImageData);
 
-
+        return newImageData;
     }
 
     // upload local file
@@ -192,9 +201,9 @@ public class ImageService {
         return sb.toString();
     }
 
-    public List<calocheck.boundedContext.image.entity.Image> getRecommendImageList(String[] recommendList) {
+    public List<ImageData> getRecommendImageList(String[] recommendList) {
 
-        List<calocheck.boundedContext.image.entity.Image> imgList = new ArrayList<>();
+        List<ImageData> imgList = new ArrayList<>();
 
         for (String recommend : recommendList) {
 

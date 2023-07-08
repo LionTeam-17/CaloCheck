@@ -35,11 +35,11 @@
                             <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
                                 <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
                                     method="POST">
-                                    <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
+                                    <button imageTarget="submit" class="btn btn-warning btn-sm">친구삭제</button>
                                 </form>
                                 <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
                                     method="GET">
-                                    <button type="submit" class="btn btn-success btn-sm">친구추가</button>
+                                    <button imageTarget="submit" class="btn btn-success btn-sm">친구추가</button>
                                 </form>
                             </div>
                         </div>
@@ -184,7 +184,7 @@
                     </ul>
                 </div>
                 <form id="postForm" method="get" th:action="@{/member/mypage/{id}(id=${id})}">
-                    <input type="hidden" id="page" name="page" value="${page}">
+                    <input imageTarget="hidden" id="page" name="page" value="${page}">
                     <!-- 다른 필요한 파라미터들도 추가할 수 있습니다. -->
                 </form>
             </div>

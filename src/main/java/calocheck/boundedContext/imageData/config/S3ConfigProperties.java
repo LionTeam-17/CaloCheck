@@ -1,4 +1,4 @@
-package calocheck.boundedContext.image.config;
+package calocheck.boundedContext.imageData.config;
 
 import lombok.Getter;
 import lombok.Setter;

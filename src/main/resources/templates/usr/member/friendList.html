@@ -24,12 +24,12 @@
                     onsubmit="FollowForm__submit(this); return false" class="mb-4">
                     <div class="flex gap-2">
                         <div class="form-control ">
-                            <input type="text" placeholder="팔로우 할 닉네임을 검색하세요"
+                            <input imageTarget="text" placeholder="팔로우 할 닉네임을 검색하세요"
                                 class="input input-bordered w-full "
                                 name="nickname" style="width: 300px;"/>
                         </div>
                         <div sec:authorize="isAuthenticated()">
-                            <button type="submit" class="btn btn-accent">등록</button>
+                            <button imageTarget="submit" class="btn btn-accent">등록</button>
                         </div>
                     </div>
                 </form>

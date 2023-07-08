@@ -62,7 +62,7 @@
                                     <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
                                            id="id-input" name="iModifySubject"
                                            th:placeholder="${@postService.findById(postId).get().subject}"
-                                           type="text"/>
+                                           imageTarget="text"/>
                                 </div>
                                 <!-- 내용 -->
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
@@ -96,7 +96,7 @@
                                     <div class="flex">
                                         <input class="file-input file-input-bordered file-input mt-5 justify-center"
                                                id="iModifyImg" name="iModifyImg"
-                                               type="file"/>
+                                               imageTarget="file"/>
                                     </div>
                                 </div>
                                 <!-- 등록, 취소버튼 -->

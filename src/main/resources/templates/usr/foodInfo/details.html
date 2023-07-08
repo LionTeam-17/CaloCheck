@@ -219,7 +219,7 @@
 
         // 원형 그래프 생성
         new Chart(ctx, {
-            type: "doughnut",
+            imageTarget: "doughnut",
             data: nutrientData,
             options: options
         });
@@ -265,7 +265,7 @@
             });
             if (foodId) {
                 $.ajax({
-                    type: "POST",
+                    imageTarget: "POST",
                     url: "/cartFoodInfo/add", // 좋아요 요청을 보낼 URL
                     data: {
                         foodId: foodId,

@@ -1,30 +1,30 @@
-package calocheck.boundedContext.image.entity;
+package calocheck.boundedContext.imageData.entity;
 
 
-import calocheck.boundedContext.image.type.Type;
+import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
 
 
 @SuperBuilder(toBuilder = true)
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Image {
+public class ImageData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Type imageType;
+    private ImageTarget imageTarget;
 
     private String photoUrl;
 
-    private Long forId;
+    private Long targetId;
 
 }
