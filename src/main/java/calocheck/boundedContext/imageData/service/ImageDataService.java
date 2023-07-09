@@ -131,8 +131,6 @@ public class ImageDataService {
                     }
 
                     for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
-//                        annotation.getAllFields().forEach((k, v) ->
-//                                System.out.format("%s : %s%n", k, v.toString()));
 
                         //검출 결과 중에서 음식일 확률이 70% 이상이라면 바로 리턴 후 종료 -> true 반환
                         if (annotation.getDescription().contains("Food") && annotation.getScore() >= 0.7) {
@@ -203,50 +201,39 @@ public class ImageDataService {
         return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
     }
 
-    public String getPostDetailImage(String imageUrl) {
+    public List<String> getRecommendImageList(List<String> recommendList) {
 
-        String[] split = imageUrl.split("calocheck/");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(s3ConfigProperties.getCdnUrl());
-        sb.append(split[1]);
-        sb.append(optimizerConfigProperties.getPostProcessing());
-
-        return sb.toString();
-    }
-
-    public String getFoodDetailImage(String imageUrl){
-
-        String[] split = imageUrl.split("calocheck/");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(s3ConfigProperties.getCdnUrl());
-        sb.append(split[1]);
-        sb.append(optimizerConfigProperties.getFoodProcessing());
-
-        return sb.toString();
-    }
-
-    public List<ImageData> getRecommendImageList(String[] recommendList) {
-
-        List<ImageData> imgList = new ArrayList<>();
+        List<String> imgList = new ArrayList<>();
 
         for (String recommend : recommendList) {
 
             StringBuilder sb = new StringBuilder();
 
-            sb.append(s3ConfigProperties.getCdnUrl());
-            sb.append("recommendImg/");
-            sb.append(recommend);
-            sb.append(".jpg");
-            sb.append(optimizerConfigProperties.getRecommendProcessing());
+            sb.append(s3ConfigProperties.getCdnUrl()).append("recommendImg/").append(recommend)
+                    .append(".jpg").append(optimizerConfigProperties.getRecommendProcessing());
 
-//            imgList.add(sb.toString());
+            imgList.add(sb.toString());
+
         }
 
         return imgList;
     }
 
+    public String imageProcessing(ImageData imageData){
 
+        StringBuilder sb = new StringBuilder();
+
+        String[] imageUrl = imageData.getImageUrl().split("calocheck/");
+
+        sb.append(s3ConfigProperties.getCdnUrl()).append(imageUrl[1]);
+
+        if(imageData.getImageTarget().equals(ImageTarget.FOOD_IMAGE)){
+            sb.append(optimizerConfigProperties.getFoodProcessing());
+        } else if(imageData.getImageTarget().equals(ImageTarget.POST_IMAGE)){
+            sb.append(optimizerConfigProperties.getPostProcessing());
+        }
+
+        return sb.toString();
+    }
 
 }

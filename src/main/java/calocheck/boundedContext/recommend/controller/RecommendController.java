@@ -5,8 +5,6 @@ import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,34 +32,29 @@ public class RecommendController {
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        model.addAttribute("photoService", imageDataService);
-
-        return "/usr/food/recommendList";
+        return "/usr/recommend/recommendList";
     }
 
     @PostMapping("/list")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> postRecommendList
-            (@RequestParam Map<String, Object> params, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> postRecommendList (@RequestParam Map<String, Object> params) {
 
         Object selectedValue = params.get("selectedValue");
         String selectedNutrition = selectedValue.toString();
 
         Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
 
-        List<ImageData> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
+        List<String> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
 
         List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
 
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         result.put("nutritionName", recommendByName.getNutritionName());
         result.put("nutritionDescription", recommendByName.getDescription());
         result.put("nutritionFoodList", recommendByName.getFoodList());
         result.put("recommendPhotoData", recommendPhotoData);
         result.put("top5ByFoodNameLists", top5ByFoodNameLists);
-
-        System.out.println("top5ByFoodNameLists = " + top5ByFoodNameLists.get(0));
 
         return ResponseEntity.ok(result);
     }

@@ -74,7 +74,7 @@ public class PostController {
 
         Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.POST_IMAGE, postId);
 
-        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageDataService.getPostDetailImage(imageData.getImageUrl())));
+        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageDataService.imageProcessing(imageData)));
 
         return "usr/post/postDetail";
     }
