@@ -2,7 +2,6 @@ package calocheck.boundedContext.foodInfo.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.util.excel.service.ExcelService;
-import calocheck.base.util.s3.dto.EventObjectDTO;
 import calocheck.base.util.s3.service.S3Service;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
@@ -77,14 +76,13 @@ public class FoodInfoController {
         return "usr/foodInfo/details";
     }
 
-    @PostMapping("/test")
-    @ResponseBody
-    public String requeastTest(@RequestBody EventObjectDTO eventObject) throws IOException {
+    @GetMapping("/test")
+    public String requestTest(@RequestParam("bucket") String bucket, @RequestParam("key") String key) throws IOException {
         System.out.println("#################### request test ###################");
-        System.out.println(eventObject.getBucket() + " " + eventObject.getKey());
+        System.out.println(bucket + " " + key);
         System.out.println("#################### request test ###################");
 
-        InputStream inputStream = s3Service.getFileFromS3(eventObject.getKey());
+        InputStream inputStream = s3Service.getFileFromS3(key);
         excelService.processExcel(inputStream);
 
         return "test";
