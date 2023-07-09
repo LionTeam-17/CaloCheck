@@ -32,8 +32,6 @@ public class RecommendController {
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        model.addAttribute("photoService", imageDataService);
-
         return "/usr/recommend/recommendList";
     }
 

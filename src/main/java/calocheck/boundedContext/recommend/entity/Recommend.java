@@ -25,6 +25,6 @@ public class Recommend {
     private String description;
 
     @ElementCollection
-    private List<String> foodList;      //FIXME 동작은 잘 되는 것 같은데, 빨간줄 그여짐
+    private List<String> foodList;
 
 }
