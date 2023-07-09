@@ -5,6 +5,7 @@ import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrient.service.NutrientService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional
 public class ExcelService {
+    private final EntityManager entityManager;
     private final FoodInfoService foodInfoService;
     private final NutrientService nutrientService;
 
@@ -64,6 +66,7 @@ public class ExcelService {
     @Transactional
     public void processExcel(InputStream inputStream) throws IOException {
         Workbook workbook = null;
+        int batchSize = 100;
 
         try {
             workbook = WorkbookFactory.create(inputStream);
@@ -82,7 +85,14 @@ public class ExcelService {
 
                 FoodInfo foodInfo = extractFoodInfo(row);
                 foodInfoService.create(foodInfo);
+
+                if (i % batchSize == 0) {
+                    entityManager.flush();
+                    entityManager.clear();
+                }
             }
+            entityManager.flush();
+            entityManager.clear();
 
             workbook.close(); // 메모리 해제
         } catch (IOException e) {
