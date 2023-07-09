@@ -129,6 +129,7 @@ public class ExcelService {
         return foodInfo;
     }
 
+    @Transactional
     public void extractNurientList(Row row, FoodInfo foodInfo) {
         for (String key : nutrientGramMap.keySet()) {
             int value = nutrientGramMap.get(key);
