@@ -1,33 +1,24 @@
 package calocheck.base.initData;
 
-import calocheck.base.util.CriteriaDataExtractor;
+import calocheck.boundedContext.criteria.config.CriteriaDataExtractor;
 import calocheck.base.util.excel.service.ExcelService;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
-import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
-import calocheck.boundedContext.tag.config.TagConfig;
 import calocheck.boundedContext.tag.service.TagService;
-import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.post.service.PostService;
-import calocheck.boundedContext.postLike.entity.PostLike;
 import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.service.TrackingService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -119,7 +110,7 @@ public class NotProd {
 //                }
 //            }
 
-            criteriaDataExtractor.readFile();
+
         };
 
     }
