@@ -67,7 +67,7 @@ public class FoodInfoController {
         model.addAttribute("foodInfo", foodInfo);
         model.addAttribute("nutrients", nutrients);
         model.addAttribute("tagList", tagList);
-        oImageData.ifPresent(imageData -> model.addAttribute("imgData", imageDataService.getFoodDetailImage(imageData.getImageUrl())));
+        oImageData.ifPresent(imageData -> model.addAttribute("imgData", imageDataService.imageProcessing(imageData)));
 
         return "usr/foodInfo/details";
     }

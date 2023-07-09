@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @SuperBuilder(toBuilder = true)
@@ -23,6 +25,6 @@ public class Recommend {
     private String description;
 
     @ElementCollection
-    private String[] foodList;      //FIXME 동작은 잘 되는 것 같은데, 빨간줄 그여짐
+    private List<String> foodList;
 
 }

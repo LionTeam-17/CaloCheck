@@ -1,5 +1,6 @@
 package calocheck.boundedContext.recommend.service;
 
+import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.repository.RecommendRepository;
 import jakarta.transaction.Transactional;
@@ -16,8 +17,8 @@ public class RecommendService {
     private final RecommendRepository recommendRepository;
 
     @Transactional
-    public void createRecommend(
-            String nutritionName, String description, String[] foodList
+    public RsData<Recommend> createRecommend(
+            String nutritionName, String description, List<String> foodList
     ) {
 
         Recommend recommend = Recommend.builder()
@@ -27,6 +28,8 @@ public class RecommendService {
                 .build();
 
        recommendRepository.save(recommend);
+
+       return RsData.of("S-1", "추천 데이터 생성 성공", recommend);
     }
 
     public List<Recommend> getAllRecommendList(){
@@ -40,6 +43,5 @@ public class RecommendService {
 
         return byNutritionName.orElse(null);
     }
-
 
 }

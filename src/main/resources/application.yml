@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: dev
-    include: secret, tag
+    include: secret, recommend-data, tag
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/calocheck__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
