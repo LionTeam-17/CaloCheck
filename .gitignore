@@ -40,6 +40,7 @@ out/
 application-recommend.yml
 application-secret.yml
 application-tag.yml
+application-data.yml
 calocheck-391001-5de8ba64dcf0.json
 google-account.json
 src/main/generated/
