@@ -46,7 +46,7 @@ public class RecommendController {
 
         Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
 
-        List<ImageData> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
+        List<String> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
 
         List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
 
