@@ -1,5 +1,7 @@
 package calocheck.boundedContext.tag.service;
 
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.tag.entity.Tag;
 import calocheck.boundedContext.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,23 +19,16 @@ public class TagService {
     private final TagRepository tagRepository;
 
     @Transactional
-    public void createTag(String tagName, String tagColor, int tagCriteria){
+    public void createTag(String tagName, String tagColor, double tagCriteria){
 
         //중복 생성 방지
         if(findByTagName(tagName).isPresent()){
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("#");
-        sb.append(tagColor);
-
-        String tagColorCode = sb.toString();
-
         Tag tag = Tag.builder()
                 .tagName(tagName)
-                .tagColorCode(tagColorCode)
+                .tagColorCode("#" + tagColor)
                 .tagCriteria(tagCriteria)
                 .build();
 
@@ -45,6 +41,21 @@ public class TagService {
 
     public Optional<Tag> findByTagName(String tagName){
         return tagRepository.findByTagName(tagName);
+    }
+
+    public List<Tag> getTagList(FoodInfo foodInfo) {
+        List<Nutrient> nutrientList = foodInfo.getNutrientList();
+
+        List<Tag> tagList = findAllTag();
+
+        //TODO nutrient name 확인해야함 (contains OR equals)
+        List<Tag> returnTagList = nutrientList.stream()
+                .flatMap(nutrient -> tagList.stream()
+                        .filter(tag -> nutrient.getName().contains(tag.getTagName()))
+                        .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
+                .collect(Collectors.toList());
+
+        return returnTagList;
     }
 
 }

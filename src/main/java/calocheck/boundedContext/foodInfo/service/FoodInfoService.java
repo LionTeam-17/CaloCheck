@@ -129,17 +129,4 @@ public class FoodInfoService {
         return top5Lists;
     }
 
-    public List<Tag> getTagList(FoodInfo foodInfo) {
-        List<Nutrient> nutrientList = foodInfo.getNutrientList();
-        List<Tag> tagList = tagService.findAllTag();
-
-        List<Tag> returnTagList = nutrientList.stream()
-                .flatMap(nutrient -> tagList.stream()
-                        .filter(tag -> nutrient.getName().equals(tag.getTagName()))
-                        .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
-                .collect(Collectors.toList());
-
-        return returnTagList;
-    }
-
 }

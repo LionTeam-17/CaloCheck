@@ -23,6 +23,6 @@ public class Tag {
 
     private String tagName;
     private String tagColorCode;
-    private int tagCriteria;
+    private double tagCriteria;
 
 }
