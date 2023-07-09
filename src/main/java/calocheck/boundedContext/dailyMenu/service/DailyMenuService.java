@@ -5,11 +5,13 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.repository.DailyMenuRepository;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 // MealHistory (DailyMenu, DailyMenu, DailyMenu)
@@ -64,6 +66,24 @@ public class DailyMenuService {
     public void updateMealHistory(DailyMenu dailyMenu){
 
         dailyMenuRepository.save(dailyMenu);
+    }
+
+    public List<String> getTodayFoodNameList(Member member) {
+
+        LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+
+        List<DailyMenu> todayDailyMenuList = dailyMenuRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
+
+        List<String> todayFoodNameList = new ArrayList<>();
+
+        for (DailyMenu dailyMenu : todayDailyMenuList) {
+
+            todayFoodNameList.add(dailyMenu.getFoodInfo().getFoodName());
+
+        }
+
+        return todayFoodNameList;
     }
 
 }

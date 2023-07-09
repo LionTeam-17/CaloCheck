@@ -8,7 +8,6 @@ import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
-import calocheck.boundedContext.photo.config.S3ConfigProperties;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tag.config.TagConfig;
 import calocheck.boundedContext.tag.service.TagService;
@@ -48,8 +47,7 @@ public class NotProd {
             FoodInfoService foodInfoService,
             CartFoodInfoService cartFoodInfoService,
             CriteriaDataExtractor criteriaDataExtractor,
-            TagService tagService,
-            S3ConfigProperties s3ConfigProperties
+            TagService tagService
     ) {
         return args -> {
             int MEMBER_SIZE = 6;
@@ -66,7 +64,7 @@ public class NotProd {
             Post[] posts = IntStream
                     .rangeClosed(1, POST_SIZE)
                     .filter(i -> postService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), s3ConfigProperties.getSampleImg(), members[i % MEMBER_SIZE])
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
 
@@ -97,8 +95,8 @@ public class NotProd {
 //                    .mapToObj(i -> postLikeService.savePostLike(posts[3].getId(), members[i])
 //                            .getData())
 //                    .toArray(PostLike[]::new);
-
-            //Tracking 샘플 데이터
+//
+//            //Tracking 샘플 데이터
 //            LocalDate startDate = LocalDate.now().minusDays(90);
 //            Random random = new Random();
 //
