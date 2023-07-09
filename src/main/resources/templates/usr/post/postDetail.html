@@ -49,16 +49,11 @@
             </div>
         </div>
         <div class="divider my-1"></div>
-        <div class="flex justify-center">
-            <img th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
-                 th:src="${@photoService.getPostDetailPhoto(post.photoUrl)}">
+
+        <div class="flex justify-center" th:if="${postImage}">
+            <img th:src="${postImage}">
         </div>
-        <div class="mb-6 h-[400px]" style="word-break: break-all"
-             th:if="${post.photoUrl == null || post.photoUrl.equals(@s3Config.sampleImg)}"
-             th:text="${post.content}"></div>
-        <div class="mb-6" style="word-break: break-all"
-             th:if="${post.photoUrl != null && !post.photoUrl.equals(@s3Config.sampleImg)}"
-             th:text="${post.content}"></div>
+
         <div class="flex justify-center">
             <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
                   method="POST" th:action="@{|/post/${postId}/postLike|}"

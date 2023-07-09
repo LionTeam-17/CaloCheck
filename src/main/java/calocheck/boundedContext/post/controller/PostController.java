@@ -4,12 +4,15 @@ import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.photo.service.PhotoService;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
+import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +33,9 @@ public class PostController {
     private final Rq rq;
     private final PostService postService;
     private final CommentService commentService;
-    private final PhotoService photoService;
+    private final ImageDataService imageDataService;
     private final FoodInfoService foodInfoService;
-
-    @Value("${image.aws.sampleImg}")
-    private String sampleImg;
+    private final DailyMenuService dailyMenuService;
 
     @GetMapping("/list")
     public String showPostList(@RequestParam(defaultValue = "0") int page,
@@ -63,18 +65,28 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public String showPostPage(Model model, @PathVariable Long postId) {
+
         Optional<Post> oPost = postService.findById(postId);
         oPost.ifPresent(post -> model.addAttribute("post", post));
 
         List<Comment> commentList = commentService.findAllByPostId(postId);
         model.addAttribute("commentList", commentList);
 
+        Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.POST_IMAGE, postId);
+
+        oImageData.ifPresent(imageData -> model.addAttribute("postImage", imageDataService.getPostDetailImage(imageData.getImageUrl())));
+
         return "usr/post/postDetail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createForm")
-    public String savePost() {
+    public String savePost(Model model) {
+
+        List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
+
+        model.addAttribute("todayFoodNameList", todayFoodNameList);
+
         return "usr/post/createForm";
     }
 
@@ -82,7 +94,7 @@ public class PostController {
     @PostMapping("/createForm")
     public String savePost(String iSubject, String iContent,
                            @RequestParam(required = false) MultipartFile img,
-                           String selectedFood, boolean agree) throws IOException {
+                           String selectedFood) throws IOException {
 
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
@@ -91,37 +103,65 @@ public class PostController {
             return rq.historyBack("내용을 입력해주세요.");
         }
 
-        //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우(default 이미지 적용)
-        RsData<String> isImgRsData = photoService.isImgFile(img.getOriginalFilename());
+        //S-6 => 이미지 파일일 경우, S-7 => 첨부 파일이 없는 경우 null
+        RsData<ImageData> isImgRsData = imageDataService.isImgFile(img.getOriginalFilename());
 
-        String photoUrl = sampleImg;
+        //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
+        String imageUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
-            //S3 Bucket 에 이미지 업로드 및 경로 재대입
-            photoUrl = photoService.photoUpload(img);
+            //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
+            imageUrl = imageDataService.imageUpload(img, ImageTarget.POST_IMAGE);
+            RsData<ImageData> detectedLabelRsData = imageDataService.detectLabelsRemote(imageUrl);
+            RsData<ImageData> safeSearchRsData = imageDataService.detectSafeSearchRemote(imageUrl);
+
+            //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
+            if (safeSearchRsData != null && safeSearchRsData.isFail()) {
+                return rq.historyBack(safeSearchRsData);
+            }
+
+            //음식을 선택 했지만, 음식 이미지가 아닌 경우
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFood != null) {
+                return rq.historyBack(detectedLabelRsData);
+            }
+
+            //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
+            if (detectedLabelRsData != null && safeSearchRsData != null
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null) {
+
+                Long foodId = foodInfoService.findByFoodName(selectedFood).getId();
+
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
+
+                if (oFoodImage.isEmpty()) {
+                    imageUrl = imageDataService.imageUpload(img, ImageTarget.FOOD_IMAGE);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+
+                    if(imageRsData.isFail()){
+                        return rq.historyBack(imageRsData);
+                    }
+                }
+
+            }
 
         } else if (isImgRsData.isFail()) {
-            //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<String> imgCheckRsData = photoService.imageCheck(photoUrl);
-
-        if(imgCheckRsData.isFail()){
-            return rq.historyBack(imgCheckRsData);
-        }
-
-        RsData<Post> postRsData =
-                postService.savePost(
-                        iSubject,
-                        iContent,
-                        photoUrl,
-                        rq.getMember()
-                );
+        RsData<Post> postRsData = postService.savePost(iSubject, iContent, rq.getMember());
 
         if (postRsData.isFail()) {
             return rq.historyBack(postRsData);
+        }
+
+        if(imageUrl != null){
+
+            RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, postRsData.getData().getId());
+
+            if(imageRsData.isFail()){
+                return rq.historyBack(imageRsData);
+            }
         }
 
         return rq.redirectWithMsg("/post/list", postRsData);
@@ -152,28 +192,28 @@ public class PostController {
                              String iModifyContent,
                              @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
 
-        RsData<String> isImgRsData = photoService.isImgFile(iModifyImg.getOriginalFilename());
+        RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
 
-        String photoUrl = sampleImg;
+        String imageUrl = null;
 
         if (isImgRsData.getResultCode().equals("S-6")) {
 
             //S3 Bucket 에 이미지 업로드 및 경로 재대입
-            photoUrl = photoService.photoUpload(iModifyImg);
+            imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.POST_IMAGE);
 
-//            //업로드된 이미지가 안전한 이미지인지 확인
-//            RsData<String> isSafeImg = photoService.detectSafeSearchRemote(photoUrl);
-//
-//            if (isSafeImg.isFail()) {
-//                return rq.historyBack(isSafeImg);
-//            }
+            //업로드된 이미지가 안전한 이미지인지 확인
+            RsData<ImageData> isSafeImg = imageDataService.detectSafeSearchRemote(imageUrl);
+
+            if (isSafeImg.isFail()) {
+                return rq.historyBack(isSafeImg);
+            }
 
         } else if (isImgRsData.isFail()) {
             //첨부파일이 올바르지 않습니다.
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, rq.getMember(), photoUrl);
+        RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, rq.getMember());
 
         if (modifyPostRsData.isFail()) {
             return rq.historyBack(modifyPostRsData);

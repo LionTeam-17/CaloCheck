@@ -1,25 +1,19 @@
 package calocheck.boundedContext.recommend.controller;
 
-import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.photo.service.PhotoService;
-import calocheck.boundedContext.recommend.config.RecommendConfig;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,21 +21,20 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/recommend")
 public class RecommendController {
 
-    private final PhotoService photoService;
+    private final ImageDataService imageDataService;
     private final RecommendService recommendService;
     private final FoodInfoService foodInfoService;
 
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        model.addAttribute("photoService", photoService);
+        model.addAttribute("photoService", imageDataService);
 
         return "/usr/food/recommendList";
     }
@@ -56,7 +49,7 @@ public class RecommendController {
 
         Recommend recommendByName = recommendService.getRecommendByName(selectedNutrition);
 
-        List<String> recommendPhotoData = photoService.getRecommendPhotoData(recommendByName.getFoodList());
+        List<ImageData> recommendPhotoData = imageDataService.getRecommendImageList(recommendByName.getFoodList());
 
         List<List<String>> top5ByFoodNameLists = foodInfoService.findTop5ByFoodNameContains(recommendByName.getFoodList());
 
