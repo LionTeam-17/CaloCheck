@@ -42,41 +42,31 @@ public class ExcelService {
         put("에너지(kcal)", 14);
     }};
     private Map<String, Integer> nutrientGramMap = new HashMap<>() {{
-        put("단백질(g)", 16);
-        put("지방(g)", 17);
-        put("탄수화물(g)", 18);
-        put("총당류(g)", 19);
-        put("총식이섬유(g)", 24);
-        put("콜레스테롤(g)", 73);
-        put("포화지방산(g)", 75);
-        put("트랜스지방산(g)", 84);
-        put("불포화지방산(g)", 85);
+        put("단백질", 16);
+        put("지방", 17);
+        put("탄수화물", 18);
+        put("총당류", 19);
+        put("총식이섬유", 24);
+        put("콜레스테롤", 73);
+        put("포화지방산", 75);
+        put("트랜스지방산", 84);
+        put("불포화지방산", 85);
     }};
 
     private Map<String, Integer> nutrientMiliGramMap = new HashMap<>() {{
-        put("칼슘(mg)", 25);
-        put("철(mg)", 26);
-        put("마그네슘(mg)", 27);
-        put("칼륨(mg)", 29);
-        put("나트륨(mg)", 30);
+        put("칼슘", 25);
+        put("철", 26);
+        put("마그네슘", 27);
+        put("칼륨", 29);
+        put("나트륨", 30);
     }};
 
     @Transactional
-    public void processExcel() throws IOException {
-        String filePath = "src/main/java/calocheck/excel/data1.xlsx";
-        try (FileInputStream fis = new FileInputStream(filePath)) {
-            Workbook workbook = null;
+    public void processExcel(InputStream inputStream) throws IOException {
+        Workbook workbook = null;
 
-            if (filePath.toLowerCase().endsWith(".xlsx")) {
-                workbook = new XSSFWorkbook(fis); // .xlsx 형식인 경우
-            } else if (filePath.toLowerCase().endsWith(".xls")) {
-                workbook = new HSSFWorkbook(fis); // .xls 형식인 경우
-            } else {
-                throw new IllegalArgumentException("지원하지 않는 파일 형식입니다.");
-            }
-//        try {
-//            workbook = WorkbookFactory.create(inputStream);
-
+        try {
+            workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트를 가져옴
             int a = sheet.getLastRowNum();
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
@@ -91,7 +81,7 @@ public class ExcelService {
                 }
 
                 FoodInfo foodInfo = extractFoodInfo(row);
-                foodInfo = foodInfoService.create(foodInfo);
+                foodInfoService.create(foodInfo);
             }
 
             workbook.close(); // 메모리 해제

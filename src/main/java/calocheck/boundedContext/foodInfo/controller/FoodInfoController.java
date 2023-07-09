@@ -1,6 +1,9 @@
 package calocheck.boundedContext.foodInfo.controller;
 
 import calocheck.base.rq.Rq;
+import calocheck.base.util.excel.service.ExcelService;
+import calocheck.base.util.s3.dto.EventObjectDTO;
+import calocheck.base.util.s3.service.S3Service;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.imageData.entity.ImageData;
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +31,8 @@ public class FoodInfoController {
     private final Rq rq;
     private final FoodInfoService foodInfoService;
     private final ImageDataService imageDataService;
+    private final S3Service s3Service;
+    private final ExcelService excelService;
 
     @GetMapping("/search")
     public String searchFoodInfo(Model model,
@@ -68,5 +75,18 @@ public class FoodInfoController {
         oImageData.ifPresent(imageData -> model.addAttribute("imgData", imageDataService.imageProcessing(imageData)));
 
         return "usr/foodInfo/details";
+    }
+
+    @PostMapping("/test")
+    @ResponseBody
+    public String requeastTest(@RequestBody EventObjectDTO eventObject) throws IOException {
+        System.out.println("#################### request test ###################");
+        System.out.println(eventObject.getBucket() + " " + eventObject.getKey());
+        System.out.println("#################### request test ###################");
+
+        InputStream inputStream = s3Service.getFileFromS3(eventObject.getKey());
+        excelService.processExcel(inputStream);
+
+        return "test";
     }
 }
