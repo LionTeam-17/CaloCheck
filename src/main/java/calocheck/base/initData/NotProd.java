@@ -1,6 +1,5 @@
 package calocheck.base.initData;
 
-import calocheck.boundedContext.criteria.config.CriteriaDataExtractor;
 import calocheck.base.util.excel.service.ExcelService;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.service.CommentService;
@@ -8,10 +7,8 @@ import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
-import calocheck.boundedContext.tag.service.TagService;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.service.PostLikeService;
-import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -30,15 +27,12 @@ public class NotProd {
     public CommandLineRunner initData(
             MemberService memberService,
             PostService postService,
-            RecommendService recommendService,
             CommentService commentService,
             ExcelService excelService,
             TrackingService trackingService,
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
-            CartFoodInfoService cartFoodInfoService,
-            CriteriaDataExtractor criteriaDataExtractor,
-            TagService tagService
+            CartFoodInfoService cartFoodInfoService
     ) {
         return args -> {
             int MEMBER_SIZE = 6;
