@@ -1,16 +1,12 @@
 package calocheck.boundedContext.mealHistory.service;
 
-import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
-import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.criteria.entity.Criteria;
-import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
-import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.repository.MealHistoryRepository;
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.nutrient.dto.NutrientDTO;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
-import calocheck.boundedContext.nutrient.repository.NutrientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MealHistoryService {
     private final MealHistoryRepository mealHistoryRepository;
-    private final NutrientRepository nutrientRepository;
-    private final CartFoodInfoService cartFoodInfoService;
-    private final DailyMenuService dailyMenuService;
 
     public MealHistory create(Member member, List<DailyMenu> dailyMenuList, String mealType, String mealMemo, int mealScore) {
         MealHistory mealHistory = MealHistory.builder()
@@ -52,49 +45,22 @@ public class MealHistoryService {
     }
 
     public MealHistory getByMember(Member member) {
-
         return mealHistoryRepository.findByMember(member).orElse(null);
     }
 
-    //권장량 - total => (권장량 - 오늘 먹은 양) - 지금 먹을 양
-    public List<Nutrient> calcNutrient(Criteria myCriteria, List<MealHistory> todayMealHistory, List<Nutrient> cartNutrientTotal) {
-
-        //1. 권장량
-        //2. 오늘 먹은 양
-        //3. 지금 먹을 양
-        //(권장량 - 오늘먹은 양) - 지금 먹을 양
-
-        Map<String, Double> historyTotalMap = new HashMap<>();
-
-        //FIXME Sample
-        String[] nameList = {"단백질", "탄수화물", "지방", "식이섬유", "칼슘", "나트륨", "칼륨", "마그네슘"};
-
+    //(권장량 - 오늘먹은 양) - 지금 먹을 양
+    public List<NutrientDTO> calcNutrient(Criteria myCriteria, List<MealHistory> todayMealHistory, List<NutrientDTO> cartTotalNutrient) {
+        String[] nameList = {"단백질", "탄수화물", "지방", "칼슘", "나트륨", "칼륨", "마그네슘"};
         Map<String, Integer> todayNutritionMap = calcTodayNutrition(todayMealHistory);
 
-        List<Nutrient> calcList = Arrays.stream(nameList)
-                .map(name -> cartNutrientTotal.stream()
-                        .filter(nutrient -> nutrient.getName().equals(name))
-                        .findFirst()
-                        .map(nutrient -> Nutrient.builder()
-                                .name(name)
-                                .value(formattingDoubleValue(
-                                        myCriteria.findByStrName(name) -
-                                                todayNutritionMap.get(name) -
-                                                nutrient.getValue())) // 권장량 - 오늘먹은 양 - 지금 먹는 양
-                                .build())
-                        .orElse(null))
-                .filter(Objects::nonNull)
+        return Arrays.stream(nameList)
+                .map(name ->
+                    cartTotalNutrient.stream()
+                            .filter(nutrient -> nutrient.getName().equals(name))
+                            .map(nutrient -> new NutrientDTO(name, myCriteria.getCriteria(name) - todayNutritionMap.get(name) - nutrient.getValue()))
+                            .findFirst().orElse(null)
+                )
                 .collect(Collectors.toList());
-
-        return calcList;
-    }
-
-    public double formattingDoubleValue(double value) {
-
-        BigDecimal decimal = BigDecimal.valueOf(value);
-        decimal = decimal.setScale(2, RoundingMode.HALF_UP);
-
-        return decimal.doubleValue();
     }
 
     public Map<String, Integer> calcTodayNutrition(List<MealHistory> todayMealHistory) {

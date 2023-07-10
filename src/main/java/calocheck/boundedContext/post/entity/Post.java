@@ -23,7 +23,9 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 public class Post extends BaseEntity {
+    @Column(length = 30)
     private String subject;
+    @Column(columnDefinition = "TEXT")
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -35,7 +37,6 @@ public class Post extends BaseEntity {
     @ToString.Exclude
     @Builder.Default
     private List<Comment> commentList = new ArrayList<>();
-    private String photoUrl;
 
     public Boolean isToday() {
         return Ut.time.isToday(LocalDateTime.now(), getCreateDate());
