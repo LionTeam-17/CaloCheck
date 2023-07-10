@@ -3,6 +3,9 @@ package calocheck.boundedContext.foodInfo.controller;
 import calocheck.base.rq.Rq;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
+import calocheck.boundedContext.imageData.entity.ImageData;
+import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
+import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/foodInfo")
@@ -21,6 +25,7 @@ import java.util.List;
 public class FoodInfoController {
     private final Rq rq;
     private final FoodInfoService foodInfoService;
+    private final ImageDataService imageDataService;
 
     @GetMapping("/search")
     public String searchFoodInfo(Model model,
@@ -55,10 +60,12 @@ public class FoodInfoController {
 
         List<Nutrient> nutrients = foodInfo.getNutrientList();
         List<Tag> tagList = foodInfoService.getTagList(foodInfo);
+        Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, id);
 
         model.addAttribute("foodInfo", foodInfo);
         model.addAttribute("nutrients", nutrients);
         model.addAttribute("tagList", tagList);
+        oImageData.ifPresent(imageData -> model.addAttribute("imgData", imageDataService.imageProcessing(imageData)));
 
         return "usr/foodInfo/details";
     }

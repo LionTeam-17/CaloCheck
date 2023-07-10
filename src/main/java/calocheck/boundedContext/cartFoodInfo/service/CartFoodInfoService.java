@@ -5,14 +5,16 @@ import calocheck.boundedContext.cartFoodInfo.entity.CartFoodInfo;
 import calocheck.boundedContext.cartFoodInfo.repository.CartFoodInfoRepository;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.nutrient.dto.NutrientDTO;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
-import calocheck.boundedContext.nutrient.service.NutrientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
@@ -20,51 +22,44 @@ import java.util.stream.LongStream;
 @RequiredArgsConstructor
 public class CartFoodInfoService {
     private final CartFoodInfoRepository cartFoodInfoRepository;
-    private final NutrientService nutrientService;
 
-    public RsData<CartFoodInfo> addFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
+    public RsData<CartFoodInfo> addToCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo != null) {
             long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
             update(cartFoodInfo, member, foodInfo, updatedQuantity);
-            return RsData.of("success", "이미 장바구니에 있는 항목을 수정(%d개)하였습니다.".formatted(updatedQuantity));
+
+            return RsData.of("S-2", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
         }
 
-        cartFoodInfo = create(member, foodInfo, quantity);
-        cartFoodInfoRepository.save(cartFoodInfo);
+        create(member, foodInfo, quantity);
 
-        return RsData.of("success", "장바구니 추가 완료");
+        return RsData.of("S-1", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
-    public boolean removeFoodInfo(Member member, FoodInfo foodInfo) {
+    public RsData<CartFoodInfo> removeToCart(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
-        if (cartFoodInfo != null) {
-            cartFoodInfoRepository.delete(cartFoodInfo);
-            return true;
+        if (cartFoodInfo == null) {
+            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
-        return false;
+        delete(cartFoodInfo);
+
+        return RsData.of("S-1", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
     }
 
-    public boolean updateFoodInfo(Member member, FoodInfo foodInfo, Long quantity) {
+    public RsData<CartFoodInfo> updateCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
-        if (quantity == 0) {
-
+        if (cartFoodInfo == null) {
+            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
-        if (cartFoodInfo != null) {
-            CartFoodInfo updated = cartFoodInfo.toBuilder()
-                    .quantity(quantity)
-                    .build();
+        update(cartFoodInfo, member, foodInfo, quantity);
 
-            cartFoodInfoRepository.save(updated);
-            return true;
-        }
-
-        return false;
+        return RsData.of("S-1", "장바구니 수정 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
     public CartFoodInfo create(Member member, FoodInfo foodInfo, Long quantity) {
@@ -91,14 +86,8 @@ public class CartFoodInfoService {
         cartFoodInfoRepository.delete(cartFoodInfo);
     }
 
-    public void deleteAllList(Member member){
-
-        List<CartFoodInfo> allByMember = findAllByMember(member);
-
-        for (CartFoodInfo cartFoodInfo : allByMember) {
-            delete(cartFoodInfo);
-        }
-
+    public void deleteAll(List<CartFoodInfo> cartList) {
+        cartFoodInfoRepository.deleteAll(cartList);
     }
 
     public CartFoodInfo findById(Long id) {
@@ -121,35 +110,42 @@ public class CartFoodInfoService {
                 .sum();
     }
 
-    public List<Nutrient> calculateTotalNutrient(List<CartFoodInfo> cartList) {
-        List<Nutrient> total = new ArrayList<>() {{
-            add(new Nutrient(null, "단백질", 0.0));
-            add(new Nutrient(null, "지방", 0.0));
-            add(new Nutrient(null, "탄수화물", 0.0));
-            add(new Nutrient(null, "총당류", 0.0));
-            add(new Nutrient(null, "총식이섬유", 0.0));
-            add(new Nutrient(null, "칼슘", 0.0));
-            add(new Nutrient(null, "철", 0.0));
-            add(new Nutrient(null, "마그네슘", 0.0));
-            add(new Nutrient(null, "칼륨", 0.0));
-            add(new Nutrient(null, "나트륨", 0.0));
-            add(new Nutrient(null, "콜레스테롤", 0.0));
-            add(new Nutrient(null, "포화지방산", 0.0));
-            add(new Nutrient(null, "트랜스지방산", 0.0));
-            add(new Nutrient(null, "불포화지방산", 0.0));
+    public List<NutrientDTO> calcTotalNutrient(List<CartFoodInfo> cartList) {
+        List<NutrientDTO> total = new ArrayList<>() {{
+            add(new NutrientDTO("단백질", 0.0));
+            add(new NutrientDTO("지방", 0.0));
+            add(new NutrientDTO("탄수화물", 0.0));
+            add(new NutrientDTO("총당류", 0.0));
+            add(new NutrientDTO("총식이섬유", 0.0));
+            add(new NutrientDTO("칼슘", 0.0));
+            add(new NutrientDTO("철", 0.0));
+            add(new NutrientDTO("마그네슘", 0.0));
+            add(new NutrientDTO("칼륨", 0.0));
+            add(new NutrientDTO("나트륨", 0.0));
+            add(new NutrientDTO("콜레스테롤", 0.0));
+            add(new NutrientDTO("포화지방산", 0.0));
+            add(new NutrientDTO("트랜스지방산", 0.0));
+            add(new NutrientDTO("불포화지방산", 0.0));
         }};
+
+        total.sort(Comparator.comparing(NutrientDTO::getName));
 
         cartList.stream()
                 .forEach(cartItem -> {
-                    List<Nutrient> nutrientList = cartItem.getFoodInfo().getNutrientList();
+                    List<Nutrient> nutrientList = cartItem.getFoodInfo()
+                            .getNutrientList()
+                            .stream()
+                            .sorted(Comparator.comparing(Nutrient::getName))
+                            .collect(Collectors.toList());
+
                     LongStream.range(0, cartItem.getQuantity())
                         .forEach(i -> {
-                                    IntStream.range(0, total.size()).forEach(j -> {
-                                        total.get(j).addValue(nutrientList.get(j));
-                                    });
-                                }
-                            );
-                        }
+                                IntStream.range(0, total.size()).forEach(j -> {
+                                    total.get(j).addValue(nutrientList.get(j));
+                                });
+                            }
+                        );
+                    }
                 );
 
         return total;
