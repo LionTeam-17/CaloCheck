@@ -132,7 +132,13 @@ public class TrackingController {
             savedTracking = trackingService.createTracking(tracking);
         }
 
+        member.setAge(savedTracking.getAge());
+        member.setHeight(savedTracking.getHeight());
+        member.setWeight(savedTracking.getWeight());
+        member.setBodyFat(savedTracking.getBodyFat());
+        member.setMuscleMass(savedTracking.getMuscleMass());
 
+        memberService.updateMember(member);
 
         return "redirect:/tracking/bodyTracking";
     }
