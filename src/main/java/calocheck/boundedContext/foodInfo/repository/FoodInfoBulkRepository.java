@@ -27,8 +27,7 @@ public class FoodInfoBulkRepository {
                 " portion_size," +
                 " unit," +
                 " total_size," +
-                " kcal," +
-                "create_date" +
+                " kcal" +
                 ") " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -44,7 +43,6 @@ public class FoodInfoBulkRepository {
                     ps.setString(6, foodInfo.getUnit());
                     ps.setInt(7, foodInfo.getTotalSize());
                     ps.setDouble(8, foodInfo.getKcal());
-                    ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
                 });
     }
 }
