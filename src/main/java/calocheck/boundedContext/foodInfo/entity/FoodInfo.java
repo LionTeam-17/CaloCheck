@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodInfo extends BaseEntity {
+    @Column(unique = true)
     private String foodCode;
     private String foodName; // 식품명
     private String manufacturer; // 제조사/유통사

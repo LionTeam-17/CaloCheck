@@ -37,16 +37,20 @@ public class FoodInfoController {
 
     @GetMapping("/search")
     public String searchFoodInfo(Model model,
-                             @RequestParam(value = "keyword", defaultValue = "") String keyword,
-                             @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "10") int size) {
+                                 @RequestParam(value = "keyword", defaultValue = "") String keyword,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<FoodInfo> paging = null;
 
         switch (keyword) {
-            case "": paging = foodInfoService.findAll(pageable); break;
-            default: paging = foodInfoService.findByFoodNameContains(pageable, keyword); break;
+            case "":
+                paging = foodInfoService.findAll(pageable);
+                break;
+            default:
+                paging = foodInfoService.findByFoodNameContains(pageable, keyword);
+                break;
         }
 
         List<FoodInfo> foodList = paging.getContent();
@@ -78,15 +82,20 @@ public class FoodInfoController {
         return "usr/foodInfo/details";
     }
 
-    @GetMapping("/test")
-    public String requestTest(@RequestParam("bucket") String bucket, @RequestParam("key") String key) throws IOException {
-        System.out.println("#################### request test ###################");
+    @GetMapping("/handleLambda")
+    @ResponseBody
+    public String handleLambda(@RequestParam(name = "bucket", defaultValue = "calocheck-data") String bucket, @RequestParam(name = "key", defaultValue = "food-data/통합 식품영양성분DB_가공식품1.xlsx") String key) throws IOException {
+        System.out.println("#################### EXCEL SAVE START ###################");
         System.out.println(bucket + " " + key);
-        System.out.println("#################### request test ###################");
+        System.out.println("#################### EXCEL SAVE START ###################");
 
         InputStream inputStream = s3Service.getFileFromS3(key);
         excelService.processExcel(inputStream);
 
-        return "test";
+        System.out.println("#################### EXCEL SAVE COMPLETE ###################");
+        System.out.println(bucket + " " + key);
+        System.out.println("#################### EXCEL SAVE COMPLETE ###################");
+
+        return "success";
     }
 }
