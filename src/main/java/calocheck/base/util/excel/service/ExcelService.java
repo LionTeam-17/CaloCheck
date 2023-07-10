@@ -29,7 +29,7 @@ import java.util.Map;
 public class ExcelService {
     private final FoodInfoService foodInfoService;
     private final NutrientService nutrientService;
-    private final int BATCH_SIZE = 100;
+    private final int BATCH_SIZE = 10;
 
     private Map<String, Integer> foodInfoMap = new HashMap<>() {{
         put("식품코드", 2);
@@ -70,6 +70,7 @@ public class ExcelService {
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트를 가져옴
 
             List<FoodInfo> foodInfos = new ArrayList<>();
+
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
@@ -83,10 +84,15 @@ public class ExcelService {
 
                     nutrientService.saveAll(nutrients);
                     foodInfos.clear();
+                    System.out.println(BATCH_SIZE + "  OK");
                 }
             }
 
+            List<Nutrient> nutrients = new ArrayList<>();
+
             foodInfoService.saveAll(foodInfos);
+            foodInfos.stream().forEach(foodInfo -> nutrients.addAll(foodInfo.getNutrientList()));
+            nutrientService.saveAll(nutrients);
 
             workbook.close(); // 메모리 해제
         } catch (IOException e) {
