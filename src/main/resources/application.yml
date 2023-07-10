@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/calocheck__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password:
   profiles:
     active: dev
     include: secret
