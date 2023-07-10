@@ -86,6 +86,26 @@ public class CartFoodInfoController {
         return new CartDTO("success", res.getMsg(), foodId);
     }
 
+    @PostMapping("/removeAll")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseBody
+    public CartDTO removeCartFoodInfo() {
+        Member member = rq.getMember();
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+
+        if (cartList == null) {
+            return new CartDTO("fail", "장바구니가 이미 비어있습니다.");
+        }
+
+        RsData<CartFoodInfo> res = cartFoodInfoService.removeAllToCart(cartList);
+
+        if (res.isFail()) {
+            return new CartDTO("fail", res.getMsg());
+        }
+
+        return new CartDTO("success", res.getMsg());
+    }
+
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody

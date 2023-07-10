@@ -35,6 +35,8 @@ public class TrackingService {
 
         calculateBMI(tracking);
         calculateBodyFatPercentage(tracking);
+        calculateChanges(tracking);
+
 
         return trackingRepository.save(tracking);
     }
@@ -44,12 +46,16 @@ public class TrackingService {
     }
 
     public Tracking createTracking(Tracking tracking) {
+        calculateBMI(tracking);
+        calculateBodyFatPercentage(tracking);
+        calculateChanges(tracking);
         return trackingRepository.save(tracking);
     }
 
     public Tracking updateTracking(Tracking tracking) {
         calculateBMI(tracking);
         calculateBodyFatPercentage(tracking);
+        calculateChanges(tracking);
 
         return trackingRepository.save(tracking);
     }
@@ -69,6 +75,16 @@ public class TrackingService {
         if (tracking.getWeight() != null && tracking.getBodyFat() != null) {
             double bodyFatPercentage = (tracking.getBodyFat() / tracking.getWeight()) * 100;
             tracking.setBodyFatPercentage(bodyFatPercentage);
+        }
+    }
+
+    public void calculateChanges(Tracking current) {
+        Tracking previous = trackingRepository.findTopByMemberAndDateTimeLessThanOrderByDateTimeDesc(current.getMember(), current.getDateTime());
+
+        if (previous != null) {
+            current.setWeightChange(current.getWeight() - previous.getWeight());
+            current.setBodyFatChange(current.getBodyFat() - previous.getBodyFat());
+            current.setMuscleMassChange(current.getMuscleMass() - previous.getMuscleMass());
         }
     }
 

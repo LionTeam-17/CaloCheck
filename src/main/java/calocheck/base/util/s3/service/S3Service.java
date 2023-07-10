@@ -1,5 +1,7 @@
 package calocheck.base.util.s3.service;
 
+import calocheck.base.util.s3.config.S3Config;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -15,14 +17,21 @@ import java.io.InputStream;
 
 @Service
 public class S3Service {
-    public InputStream getFileFromS3(String region, String bucketName, String objectKey) throws IOException {
+    private final S3Config s3Config;
+
+    @Autowired
+    public S3Service(S3Config s3Config) {
+        this.s3Config = s3Config;
+    }
+
+    public InputStream getFileFromS3(String objectKey) throws IOException {
         S3Client s3Client = S3Client.builder()
-                .region(Region.of(region))
+                .region(Region.of(s3Config.getRegion()))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(bucketName)
+                    .bucket(s3Config.getBucketName())
                     .key(objectKey)
                     .build();
 

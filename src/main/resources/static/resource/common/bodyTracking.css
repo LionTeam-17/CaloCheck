@@ -1,43 +1,80 @@
-.tablink{
-    background-color: #112D4E;
-    color: white;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 10px 13px;
-    transition: 0.3s;
-    font-size: 15px;
-    margin-right: 5px;
-    border-radius: 10px;
+/*.tablink{*/
+/*    background-color: #112D4E;*/
+/*    color: white;*/
+/*    float: left;*/
+/*    border: none;*/
+/*    outline: none;*/
+/*    cursor: pointer;*/
+/*    padding: 10px 13px;*/
+/*    transition: 0.3s;*/
+/*    font-size: 15px;*/
+/*    margin-right: 5px;*/
+/*    border-radius: 10px;*/
+/*}*/
+
+/*.tablink:hover {*/
+/*    background-color: #3F72AF;*/
+/*}*/
+
+/*.tablink.active {*/
+/*    background-color: #3F72AF;*/
+/*    color: white;*/
+/*}*/
+
+.user-info {
+    width: 700px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 2px 15px rgba(0,0,0,0.1);
+    background-color: #fafafa;
+    margin-bottom: 10px;
 }
 
-#openModal {
-    background-color: #112D4E;
-    color: white;
-    border-radius: 10px;
-    padding: 10px 13px;
-    font-size: 15px;
+.user-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-detail-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.detail-title {
+    font-weight: bold;
+    color: #666;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.detail-value {
+    font-size: 18px;
+    margin-right: 40px;
+}
+
+/* 마지막 detail-value 항목에는 margin을 제거 */
+.user-detail-item:last-child .detail-value {
+    margin-right: 0;
+}
+#openRecordModal, #openTrackingModal {
+    /*background-color: #112D4E;*/
+    /*color: white;*/
+    /*border-radius: 10px;*/
+    /*padding: 10px 13px;*/
+    /*font-size: 15px;*/
 }
 
 #confirmRecord {
     background-color: #112D4E;
 }
 
-.tablink:hover {
+#openRecordModal:hover, #confirmRecord:hover,#openTrackingModal:hover {
     background-color: #3F72AF;
 }
 
-#openModal:hover, #confirmRecord:hover {
-    background-color: #3F72AF;
-}
-
-.tablink.active {
-    background-color: #3F72AF;
-    color: white;
-}
-
-#openModal.active {
+#openRecordModal.active, #openTrackingModal.active {
     background-color: #3F72AF;
     color: white;
 }
@@ -101,6 +138,7 @@
     width: 100% !important;
     max-width: 800px;
     height: auto !important;
+    margin-bottom: 10px;
 }
 
 .info-container {
@@ -120,6 +158,39 @@
     margin-right: 5px;
     margin-left: 10px;
 }
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1em;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    background-color: #dbe2ef;
+    color: black;
+    padding: 0.5em;
+    font-size: 1.25em;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.card-body {
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+
 @media (max-width: 600px) {
     .chart {
         height: 300px !important;

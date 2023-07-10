@@ -35,6 +35,10 @@ public class Tracking extends BaseEntity {
     private Double bmi;
     private Double bodyFatPercentage;
 
+    private Double weightChange;
+    private Double bodyFatChange;
+    private Double muscleMassChange;
+
     public void setWeight(Double weight) {
         this.weight = Math.round(weight * 100) / 100.0; // Round to 2 decimal places
     }
@@ -53,6 +57,18 @@ public class Tracking extends BaseEntity {
 
     public void setBodyFatPercentage(Double bodyFatPercentage) {
         this.bodyFatPercentage = Math.round(bodyFatPercentage * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setWeightChange(Double weightChange) {
+        this.weightChange = Math.round(weightChange * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setBodyFatChange(Double bodyFatChange) {
+        this.bodyFatChange = Math.round(bodyFatChange * 100) / 100.0; // Round to 2 decimal places
+    }
+
+    public void setMuscleMassChange(Double muscleMassChange) {
+        this.muscleMassChange = Math.round(muscleMassChange * 100) / 100.0; // Round to 2 decimal places
     }
 
 }

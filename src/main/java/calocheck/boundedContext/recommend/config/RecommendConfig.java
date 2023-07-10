@@ -23,13 +23,13 @@ public class RecommendConfig {
         Map<String, String> description = recommendConfigProp.getDescription();
         Map<String, List<String>> foodList = recommendConfigProp.getFoodList();
 
-        for (int i = 0; i < settingList.size(); i++) {
-
-            recommendService.createRecommend(recommendList.get(i)
-                    , description.get(settingList.get(i))
-                    , foodList.get(settingList.get(i)));
-
-        }
+//        for (int i = 0; i < settingList.size(); i++) {
+//
+//            recommendService.createRecommend(recommendList.get(i)
+//                    , description.get(settingList.get(i))
+//                    , foodList.get(settingList.get(i)));
+//
+//        }
     }
 
 }

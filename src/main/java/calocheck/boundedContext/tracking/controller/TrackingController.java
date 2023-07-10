@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/tracking")
@@ -35,7 +39,6 @@ public class TrackingController {
             this.trackingService = trackingService;
             this.memberService = memberService;
     }
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/bodyTracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
@@ -46,9 +49,32 @@ public class TrackingController {
 
         Member member = memberOptional.get();
         List<Tracking> trackingData = trackingService.findTrackingsByMember(member);
+        List<Tracking> trackingDataReverse = new ArrayList<>(trackingData);
+        Collections.reverse(trackingDataReverse);
+
         model.addAttribute("member", member);
         model.addAttribute("trackingData", trackingData);
+        model.addAttribute("trackingDataReverse", trackingDataReverse);
         model.addAttribute("tracking", new Tracking());
+
+        List<String> dates = trackingDataReverse.stream()
+                .map(tracking -> tracking.getDateTime().toString())
+                .collect(Collectors.toList());
+        List<Double> weights = trackingDataReverse.stream()
+                .map(Tracking::getWeight)
+                .collect(Collectors.toList());
+        List<Double> bodyFats = trackingDataReverse.stream()
+                .map(Tracking::getBodyFat)
+                .collect(Collectors.toList());
+        List<Double> muscleMasses = trackingDataReverse.stream()
+                .map(Tracking::getMuscleMass)
+                .collect(Collectors.toList());
+
+        model.addAttribute("dates", dates);
+        model.addAttribute("weights", weights);
+        model.addAttribute("bodyFats", bodyFats);
+        model.addAttribute("muscleMasses", muscleMasses);
+
         return "usr/tracking/bodyTracking";
     }
     @Transactional
@@ -89,6 +115,7 @@ public class TrackingController {
         }
 
         Optional<Tracking> existingTracking = trackingService.findByMemberAndDate(member, tracking.getDateTime());
+
         Tracking savedTracking;
         if (existingTracking.isPresent()) {
             Tracking trackingToUpdate = existingTracking.get();
@@ -98,12 +125,17 @@ public class TrackingController {
 
             trackingService.calculateBMI(trackingToUpdate);
             trackingService.calculateBodyFatPercentage(trackingToUpdate);
+            trackingService.calculateChanges(trackingToUpdate);
 
             savedTracking = trackingService.updateTracking(trackingToUpdate);
         } else {
             tracking.setWeight(member.getWeight());
             tracking.setBodyFat(member.getBodyFat());
             tracking.setMuscleMass(member.getMuscleMass());
+
+            trackingService.calculateBMI(tracking);
+            trackingService.calculateBodyFatPercentage(tracking);
+            trackingService.calculateChanges(tracking);
 
             savedTracking = trackingService.createTracking(tracking);
         }
