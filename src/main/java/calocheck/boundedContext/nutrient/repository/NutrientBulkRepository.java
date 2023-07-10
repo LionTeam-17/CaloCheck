@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -18,7 +20,9 @@ public class NutrientBulkRepository {
         String sql = "INSERT INTO nutrient (" +
                 "food_code," +
                 "`name`," +
-                "`value`) " +
+                "`value`," +
+                "create_date" +
+                ") " +
                 "VALUES (?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
@@ -28,6 +32,7 @@ public class NutrientBulkRepository {
                     ps.setString(1, nutrient.getFoodInfo().getFoodCode());
                     ps.setString(2, nutrient.getName());
                     ps.setDouble(3, nutrient.getValue());
+                    ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                 });
 
     }

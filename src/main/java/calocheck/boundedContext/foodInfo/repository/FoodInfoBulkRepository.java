@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,7 +27,8 @@ public class FoodInfoBulkRepository {
                 " portion_size," +
                 " unit," +
                 " total_size," +
-                " kcal" +
+                " kcal," +
+                "create_date" +
                 ") " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -40,6 +44,7 @@ public class FoodInfoBulkRepository {
                     ps.setString(6, foodInfo.getUnit());
                     ps.setInt(7, foodInfo.getTotalSize());
                     ps.setDouble(8, foodInfo.getKcal());
+                    ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
                 });
     }
 }
