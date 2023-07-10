@@ -125,15 +125,45 @@ public class MemberService {
 
     // 소셜 로그인
     @Transactional
-    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String gender, String email, String nickname, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    public RsData<Member> whenSocialLogin(
+            String providerTypeCode, String username, String gender, String email, String nickname,
+            Integer age, Double height, Double weight, Double muscleMass, Double bodyFat
+    ) {
         Optional<Member> opMember = findByUsername(username);
 
-        if (opMember.isPresent()) return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
+        if (opMember.isPresent()) {
+            return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
+        }
 
-        return join(providerTypeCode, username, "", gender, email,  nickname,
-                0, 0.0, 0.0,0.0, 0.0); // 최초 로그인시 실행
-        //TODO : 닉네임 설정
+        RsData<Member> joinResult = join(providerTypeCode, username, "", gender, email, nickname,
+                0, 0.0, 0.0, 0.0, 0.0); // 최초 로그인 시 회원 가입
 
+        if (joinResult.isSuccess()) {
+            Member member = joinResult.getData();
+            updateTrackingWithInitialBodyInfo(member, age, height, weight, muscleMass, bodyFat);
+        }
+
+        return joinResult;
+    }
+
+    @Transactional
+    public void updateTrackingWithInitialBodyInfo(Member member, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+        LocalDate today = LocalDate.now();
+        Tracking newTracking = new Tracking();
+        newTracking.setMember(member);
+        newTracking.setDateTime(today);
+        newTracking.setAge(age);
+        newTracking.setHeight(height);
+        newTracking.setWeight(weight);
+        newTracking.setBodyFat(bodyFat);
+        newTracking.setMuscleMass(muscleMass);
+
+        // BMI 및 체지방률 계산
+        trackingService.calculateBMI(newTracking);
+        trackingService.calculateBodyFatPercentage(newTracking);
+        trackingService.calculateChanges(newTracking);
+
+        trackingRepository.save(newTracking);
     }
 
     @Transactional
@@ -191,6 +221,11 @@ public class MemberService {
     }
 
     @Transactional
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Transactional
     public void updateTrackingWithLatestBodyInfo(Member member) {
         LocalDate today = LocalDate.now();
         Optional<Tracking> latestTrackingOptional = trackingRepository.findByMemberAndDateTime(member, today);
@@ -206,6 +241,7 @@ public class MemberService {
             // BMI 및 체지방률 재계산
             trackingService.calculateBMI(latestTracking);
             trackingService.calculateBodyFatPercentage(latestTracking);
+            trackingService.calculateChanges(latestTracking);
 
             trackingRepository.save(latestTracking);
         } else {
@@ -221,6 +257,7 @@ public class MemberService {
             // BMI 및 체지방률 계산
             trackingService.calculateBMI(newTracking);
             trackingService.calculateBodyFatPercentage(newTracking);
+            trackingService.calculateChanges(newTracking);
 
             trackingRepository.save(newTracking);
         }

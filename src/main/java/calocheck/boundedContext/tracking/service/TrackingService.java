@@ -100,4 +100,10 @@ public class TrackingService {
         }
     }
 
+    public Tracking findLatestTracking(Member member) {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        return trackingRepository.findTopByMemberAndDateTimeBeforeOrderByDateTimeDesc(member, tomorrow);
+    }
+
+
 }
