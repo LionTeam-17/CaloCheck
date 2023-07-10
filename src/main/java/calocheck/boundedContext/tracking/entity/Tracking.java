@@ -35,9 +35,9 @@ public class Tracking extends BaseEntity {
     private Double bmi;
     private Double bodyFatPercentage;
 
-    private Double weightChange;
-    private Double bodyFatChange;
-    private Double muscleMassChange;
+    private Double weightChange = 0.0;
+    private Double bodyFatChange = 0.0;
+    private Double muscleMassChange = 0.0;
 
     public void setWeight(Double weight) {
         this.weight = Math.round(weight * 100) / 100.0; // Round to 2 decimal places

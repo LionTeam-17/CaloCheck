@@ -10,6 +10,7 @@ import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
+import calocheck.boundedContext.tracking.repository.TrackingRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -40,7 +42,9 @@ public class MemberController {
     private final Rq rq;
     private final PostService postService;
     private final TrackingService trackingService;
+    private final TrackingRepository trackingRepository;
     private final FriendService friendService;
+
 
     @AllArgsConstructor
     @Getter
@@ -208,6 +212,14 @@ public class MemberController {
 
         model.addAttribute("member", member);
         model.addAttribute("id", id);
+
+        // 트래킹에서 최신 정보 가져오기
+        Tracking latestTracking =  trackingService.findLatestTracking(member);
+
+        // 회원 정보에 최신 트래킹 정보 반영
+        member.setWeight(latestTracking.getWeight());
+        member.setBodyFat(latestTracking.getBodyFat());
+        member.setMuscleMass(latestTracking.getMuscleMass());
 
         // 친구
         List<Member> followingList = friendService.findFollowing(id);

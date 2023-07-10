@@ -46,7 +46,7 @@ public class NotProd {
             Member[] members = IntStream
                     .rangeClosed(1, MEMBER_SIZE)
                     .filter(i -> memberService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "male", null,
+                    .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "M", null,
                                     "닉네임%d".formatted(i), 25, 178.4, 65.0, 30.0, 20.0)
                             .getData())
                     .toArray(Member[]::new);
