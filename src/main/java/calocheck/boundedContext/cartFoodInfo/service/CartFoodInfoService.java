@@ -50,6 +50,11 @@ public class CartFoodInfoService {
         return RsData.of("S-1", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
     }
 
+    public RsData<CartFoodInfo> removeAllToCart(List<CartFoodInfo> cartList) {
+        deleteAll(cartList);
+        return RsData.of("S-1", "%d개의 항목이 장바구니에서 삭제되었습니다.".formatted(cartList.size()));
+    }
+
     public RsData<CartFoodInfo> updateCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
