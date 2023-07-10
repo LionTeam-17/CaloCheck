@@ -56,37 +56,41 @@
             내 정보 수정
             </h2>
 
-            <form th:action method="POST" class="p-10 flex flex-col gap-4"
-                  onsubmit="modifyInformation(this); return false;">
+            <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="modifyInformation(this); return false;">
                 <div class="flex justify-center gap-3">
                     <div>
                         <span>성별:</span>
                     </div>
                     <div>
                         <label>
-                            <input type="radio" name="gender" value="M">
+                            <input type="radio" name="gender" value="M" th:checked="${member.gender == 'M'}">
                             남성
                         </label>
                         <label>
-                            <input type="radio" name="gender" value="W">
+                            <input type="radio" name="gender" value="W" th:checked="${member.gender == 'W'}">
                             여성
                         </label>
                     </div>
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered">
+                    <span>나이: </span>
+                    <input type="text" name="age" maxlength="3" placeholder="나이" class="input input-bordered" th:value="${member.age}">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="height" maxlength="3" placeholder="키(cm)" class="input input-bordered">
+                    <span>키: </span>
+                    <input type="text" name="height" maxlength="3" placeholder="키(cm)" class="input input-bordered" th:value="${member.height}">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="weight" maxlength="3" placeholder="몸무게(kg)" class="input input-bordered">
+                    <span>몸무게: </span>
+                    <input type="text" name="weight" maxlength="3" placeholder="몸무게(kg)" class="input input-bordered" th:value="${member.weight}">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="muscleMass" maxlength="3" placeholder="골격근량(kg)" class="input input-bordered">
+                    <span>골격근량: </span>
+                    <input type="text" name="muscleMass" maxlength="3" placeholder="골격근량(kg)" class="input input-bordered" th:value="${member.muscleMass}">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <input type="text" name="bodyFat" maxlength="3" placeholder="체지방량(kg)" class="input input-bordered">
+                    <span>체지방량: </span>
+                    <input type="text" name="bodyFat" maxlength="3" placeholder="체지방량(kg)" class="input input-bordered" th:value="${member.bodyFat}">
                 </div>
 
                 <div class="form-control">
