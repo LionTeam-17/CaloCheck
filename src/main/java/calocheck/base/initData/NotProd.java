@@ -93,29 +93,29 @@ public class NotProd {
 //                    .mapToObj(i -> postLikeService.savePostLike(posts[3].getId(), members[i])
 //                            .getData())
 //                    .toArray(PostLike[]::new);
-//
-//            //Tracking 샘플 데이터
-//            LocalDate startDate = LocalDate.now().minusDays(90);
-//            Random random = new Random();
-//
-//            for (Member member : members) {
-//                int age = member.getAge();
-//                double height = member.getHeight();
-//                double weight = 60 + random.nextDouble() * 5;
-//                double bodyFat = 20 + random.nextDouble() * 5;
-//                double muscleMass = 30 + random.nextDouble() * 5;
-//                LocalDate date = startDate;
-//
-//                while (!date.isAfter(LocalDate.now())) {
-//                    weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
-//                    bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
-//                    muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
-//                    Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
-//                    trackingService.calculateBMI(tracking);
-//                    trackingService.calculateBodyFatPercentage(tracking);
-//                    date = date.plusDays(random.nextInt(4) + 1);
-//                }
-//            }
+
+            //Tracking 샘플 데이터
+            LocalDate startDate = LocalDate.now().minusDays(90);
+            Random random = new Random();
+
+            for (Member member : members) {
+                int age = member.getAge();
+                double height = member.getHeight();
+                double weight = 60 + random.nextDouble() * 5;
+                double bodyFat = 20 + random.nextDouble() * 5;
+                double muscleMass = 30 + random.nextDouble() * 5;
+                LocalDate date = startDate;
+
+                while (!date.isAfter(LocalDate.now())) {
+                    weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
+                    bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
+                    muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
+                    Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
+                    trackingService.calculateBMI(tracking);
+                    trackingService.calculateBodyFatPercentage(tracking);
+                    date = date.plusDays(random.nextInt(4) + 1);
+                }
+            }
 
             tagService.createTag("탄수화물", TagConfig.getCarbohydrateColor(), TagConfig.getCarbohydrateCriteria());
             tagService.createTag("단백질", TagConfig.getProteinColor(), TagConfig.getProteinCriteria());
