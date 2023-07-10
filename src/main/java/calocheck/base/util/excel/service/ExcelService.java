@@ -75,14 +75,6 @@ public class ExcelService {
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
-                // 이미 기존에 존재하던 식품 정보라면 데이터 제외
-                String foodCode = row.getCell(foodInfoMap.get("식품코드")).getStringCellValue();
-                FoodInfo temp = foodInfoService.findByFoodCode(foodCode);
-
-                if (temp != null) {
-                    continue;
-                }
-
                 foodInfos.add(extractFoodInfo(row));
 
                 if (foodInfos.size() == BATCH_SIZE) {
