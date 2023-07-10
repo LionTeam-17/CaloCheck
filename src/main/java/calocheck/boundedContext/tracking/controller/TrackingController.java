@@ -39,7 +39,7 @@ public class TrackingController {
         this.trackingService = trackingService;
         this.memberService = memberService;
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/bodyTracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
@@ -79,6 +79,7 @@ public class TrackingController {
         return "usr/tracking/bodyTracking";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/bodyTracking")
     public String createTracking(@ModelAttribute("tracking")
                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Tracking tracking,
