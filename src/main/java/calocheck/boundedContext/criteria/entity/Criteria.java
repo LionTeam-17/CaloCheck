@@ -23,16 +23,16 @@ public class Criteria {
 
     private String gender;      //성별
     private int age;            //연령
-    private int carbohydrate;   //탄수화물
-    private int protein;        //단백질
-    private int fat;            //지방
-    private int fiber;          //식이섬유
-    private int calcium;        //칼슘
-    private int sodium;         //나트륨
-    private int potassium;      //칼륨
-    private int magnesium;      //마그네슘
+    private double carbohydrate;   //탄수화물
+    private double protein;        //단백질
+    private double fat;            //지방
+    private double fiber;          //식이섬유
+    private double calcium;        //칼슘
+    private double sodium;         //나트륨
+    private double potassium;      //칼륨
+    private double magnesium;      //마그네슘
 
-    public int getCriteria(String name){
+    public double getCriteria(String name){
 
         switch (name) {
             case ("탄수화물") -> {

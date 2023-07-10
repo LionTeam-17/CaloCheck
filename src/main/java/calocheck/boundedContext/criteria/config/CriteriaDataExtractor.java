@@ -1,4 +1,4 @@
-package calocheck.base.util;
+package calocheck.boundedContext.criteria.config;
 
 
 import calocheck.boundedContext.criteria.entity.Criteria;
@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
@@ -22,7 +23,10 @@ public class CriteriaDataExtractor {
 
     private final CriteriaService criteriaService;
 
-    Map<String, Integer> indexMap = new HashMap<>() {{
+    @Bean
+    public void readFile() {
+
+        Map<String, Integer> indexMap = new HashMap<>() {{
             put("성별", 0);
             put("연령", 1);
             put("탄수화물", 3);
@@ -33,9 +37,8 @@ public class CriteriaDataExtractor {
             put("나트륨",8);
             put("칼륨",9);
             put("마그네슘",10);
-    }};
+        }};
 
-    public void readFile() {
         String filePath = "src/main/java/calocheck/excel/nutrientCriteria.xlsx";
         try (FileInputStream fis = new FileInputStream(filePath)) {
             Workbook workbook;
@@ -55,14 +58,14 @@ public class CriteriaDataExtractor {
 
                 String gender = row.getCell(indexMap.get("성별")).getStringCellValue();
                 int age = (int)row.getCell(indexMap.get("연령")).getNumericCellValue();
-                int fiber = (int)row.getCell(indexMap.get("식이섬유")).getNumericCellValue();
-                int protein = (int)row.getCell(indexMap.get("단백질")).getNumericCellValue();
-                int calcium = (int)row.getCell(indexMap.get("칼슘")).getNumericCellValue();
-                int sodium = (int)row.getCell(indexMap.get("나트륨")).getNumericCellValue();
-                int potassium = (int)row.getCell(indexMap.get("칼륨")).getNumericCellValue();
-                int magnesium = (int)row.getCell(indexMap.get("마그네슘")).getNumericCellValue();
-                int carbohydrate = (int)row.getCell(indexMap.get("탄수화물")).getNumericCellValue();
-                int fat = (int)row.getCell(indexMap.get("지방")).getNumericCellValue();
+                double fiber = row.getCell(indexMap.get("식이섬유")).getNumericCellValue();
+                double protein = row.getCell(indexMap.get("단백질")).getNumericCellValue();
+                double calcium = row.getCell(indexMap.get("칼슘")).getNumericCellValue();
+                double sodium = row.getCell(indexMap.get("나트륨")).getNumericCellValue();
+                double potassium = row.getCell(indexMap.get("칼륨")).getNumericCellValue();
+                double magnesium = row.getCell(indexMap.get("마그네슘")).getNumericCellValue();
+                double carbohydrate = row.getCell(indexMap.get("탄수화물")).getNumericCellValue();
+                double fat = row.getCell(indexMap.get("지방")).getNumericCellValue();
 
                 Criteria criteria = criteriaService.create(gender, age, fiber, protein,
                         calcium, sodium, potassium, magnesium, carbohydrate, fat);

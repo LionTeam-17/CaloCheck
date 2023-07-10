@@ -2,8 +2,11 @@ package calocheck.boundedContext.criteria.controller;
 
 
 import calocheck.base.rq.Rq;
+import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.criteria.entity.Criteria;
 import calocheck.boundedContext.criteria.service.CriteriaService;
+import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.mealHistory.service.MealHistoryService;
 import calocheck.boundedContext.member.entity.Member;
@@ -25,6 +28,7 @@ public class CriteriaController {
     private final Rq rq;
     private final CriteriaService criteriaService;
     private final MealHistoryService mealHistoryService;
+    private final DailyMenuService dailyMenuService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/info")
@@ -34,11 +38,15 @@ public class CriteriaController {
 
         Criteria byGenderAndAge = criteriaService.findByGenderAndAge(member);
 
-        List<MealHistory> byMemberAndCreateDate = mealHistoryService.findByMemberAndCreateDate(member);
-        Map<String, Integer> calcTodayNutritionMap = mealHistoryService.calcTodayNutrition(byMemberAndCreateDate);
+        List<DailyMenu> todayMenuList = dailyMenuService.findMembersTodayMenuList(member);
+        RsData<Map<String, Double>> todayCalcRsData = criteriaService.calcTodayNutrition(todayMenuList);
+
+        if(todayCalcRsData.isSuccess()){
+            model.addAttribute("calcMap",todayCalcRsData.getData());
+        }
 
         model.addAttribute("BMR", member.getBmr());
-        model.addAttribute("calcMap",calcTodayNutritionMap);
+
         model.addAttribute("criteria", byGenderAndAge);
 
         return "/usr/criteria/criteria";

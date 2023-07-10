@@ -167,11 +167,11 @@ public class CartFoodInfoController {
         }
 
         Criteria myCriteria = criteriaService.findByGenderAndAge(member);           //나의 권장량
-        List<MealHistory> todayMealHistory = mealHistoryService.findByMemberAndCreateDate(member); //오늘 먹은 내용들
+        List<DailyMenu> todayMenuList = dailyMenuService.findMembersTodayMenuList(member); //오늘 먹은 내용들
         List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);    //카트 내용의 영양소 총합
 
         //이걸 먹게되면 영양소가 어떻게 되는가?
-        List<NutrientDTO> calcNutrients = mealHistoryService.calcNutrient(myCriteria, todayMealHistory, nutrientTotal);
+        List<NutrientDTO> calcNutrients = criteriaService.calcNutrient(myCriteria, todayMenuList, nutrientTotal);
 
         model.addAttribute("calcNutrients", calcNutrients);
         model.addAttribute("cartList", cartList);

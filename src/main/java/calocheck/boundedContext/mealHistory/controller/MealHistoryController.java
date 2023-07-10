@@ -53,7 +53,7 @@ public class MealHistoryController {
         }
 
         Member member = memberOpt.get();
-        List<MealHistory> mealHistoriesToday = mealHistoryService.findByMemberAndCreateDate(member);
+        List<MealHistory> mealHistoriesToday = mealHistoryService.findMembersTodayHistory(member);
 
         List<MealHistoryDto> mealHistoryDtos = mealHistoriesToday.stream()
                 .map(MealHistoryDto::fromEntity)

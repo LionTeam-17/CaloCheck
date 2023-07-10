@@ -6,47 +6,51 @@
 </head>
 
 <body>
-<div layout:fragment="Content">
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div>
+                <h1 class="text-black">나의 권장량</h1>
+                <div class="bg-gray-400">
+                    <div th:text="'성별 : ' + ${criteria.gender}"></div>
+                    <div th:text="'나이 : ' + ${criteria.age} + '세'"></div>
+                    <div th:text="'기초대사량 : ' + ${BMR} + ' kcal'"></div>
+                    <div th:text="'탄수화물 : ' + ${criteria.carbohydrate} + 'g'"></div>
+                    <div th:text="'단백질 : ' + ${criteria.protein} + 'g'"></div>
+                    <div th:text="'지방 : ' + ${criteria.fat} + 'g'"></div>
+                    <div th:text="'식이섬유 : ' + ${criteria.fiber} + 'g'"></div>
+                    <div th:text="'칼슘 : ' + ${criteria.calcium} + 'g'"></div>
+                    <div th:text="'나트륨 : ' + ${criteria.sodium} + 'g'"></div>
+                    <div th:text="'칼륨 : ' + ${criteria.potassium} + 'g'"></div>
+                    <div th:text="'마그네슘 : ' + ${criteria.magnesium} + 'g'"></div>
+                </div>
+            </div>
 
-    <div class="flex flex-col justify-center items-center">
-        <h1 class="text-black">나의 권장량</h1>
-        <div class="bg-gray-400">
-            <div th:text="'성별 : ' + ${criteria.gender}"></div>
-            <div th:text="'나이 : ' + ${criteria.age} + '세'"></div>
-            <div th:text="'기초대사량 : ' + ${BMR} + ' kcal'"></div>
-            <div th:text="'탄수화물 : ' + ${criteria.carbohydrate} + 'g'"></div>
-            <div th:text="'단백질 : ' + ${criteria.protein} + 'g'"></div>
-            <div th:text="'지방 : ' + ${criteria.fat} + 'g'"></div>
-            <div th:text="'식이섬유 : ' + ${criteria.fiber} + 'g'"></div>
-            <div th:text="'칼슘 : ' + ${criteria.calcium} + 'mg'"></div>
-            <div th:text="'나트륨 : ' + ${criteria.sodium} + 'mg'"></div>
-            <div th:text="'칼륨 : ' + ${criteria.potassium} + 'mg'"></div>
-            <div th:text="'마그네슘 : ' + ${criteria.magnesium} + 'mg'"></div>
-        </div>
-    </div>
+            <div class="divider"></div>
 
-    <div class="divider"></div>
+            <div>
+                <div th:unless="${calcMap}">
+                    <h1 class="text-black">오늘 먹은 양</h1>
+                    <h1 class="text-black"> 아직 오늘의 식단이 없어요!</h1>
+                </div>
 
-    <div class="flex flex-col justify-center items-center">
-        <div th:unless="${calcMap}">
-            <h1 class="text-black">오늘 먹은 양</h1>
-            <h1 class="text-black"> 아직 오늘의 식단이 없어요!</h1>
-        </div>
-
-        <div th:if="${calcMap}">
-            <h1 class="text-black">오늘 먹은 양</h1>
-            <div class="bg-gray-400">
-                <div th:text="'탄수화물 : ' + ${calcMap.get('탄수화물')}"></div>
-                <div th:text="'단백질 : ' + ${calcMap.get('단백질')}"></div>
-                <div th:text="'지방 : ' + ${calcMap.get('지방')}"></div>
-                <div th:text="'식이섬유 : ' + ${calcMap.get('식이섬유')}"></div>
-                <div th:text="'칼슘 : ' + ${calcMap.get('칼슘')}"></div>
-                <div th:text="'마그네슘 : ' + ${calcMap.get('마그네슘')}"></div>
-                <div th:text="'칼륨 : ' + ${calcMap.get('칼륨')}"></div>
-                <div th:text="'나트륨 : ' + ${calcMap.get('나트륨')}"></div>
+                <div th:if="${calcMap}">
+                    <h1 class="text-black">오늘 먹은 양</h1>
+                    <div class="bg-gray-400">
+                        <div th:text="'탄수화물 : ' + ${calcMap.get('탄수화물')}"></div>
+                        <div th:text="'단백질 : ' + ${calcMap.get('단백질')}"></div>
+                        <div th:text="'지방 : ' + ${calcMap.get('지방')}"></div>
+                        <div th:text="'식이섬유 : ' + ${calcMap.get('식이섬유')}"></div>
+                        <div th:text="'칼슘 : ' + ${calcMap.get('칼슘')}"></div>
+                        <div th:text="'마그네슘 : ' + ${calcMap.get('마그네슘')}"></div>
+                        <div th:text="'칼륨 : ' + ${calcMap.get('칼륨')}"></div>
+                        <div th:text="'나트륨 : ' + ${calcMap.get('나트륨')}"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </main>
+</th:block>
+>
 </body>
