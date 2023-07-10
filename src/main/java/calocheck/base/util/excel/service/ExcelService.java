@@ -26,10 +26,11 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ExcelService {
+    private final EntityManager entityManager;
     private final FoodInfoService foodInfoService;
     private final NutrientService nutrientService;
-    private final int BATCH_SIZE = 10;
 
     private Map<String, Integer> foodInfoMap = new HashMap<>() {{
         put("식품코드", 2);
@@ -63,37 +64,35 @@ public class ExcelService {
     }};
 
     @Transactional
-    public void processExcel(InputStream inputStream) {
+    public void processExcel(InputStream inputStream) throws IOException {
         Workbook workbook = null;
+        int BATCH_SIZE = 100;
 
         try {
             workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트를 가져옴
-
-            List<FoodInfo> foodInfos = new ArrayList<>();
-
+            int a = sheet.getLastRowNum();
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
-                foodInfos.add(extractFoodInfo(row));
+                // 이미 기존에 존재하던 식품 정보라면 데이터 제외
+                String foodCode = row.getCell(foodInfoMap.get("식품코드")).getStringCellValue();
+                FoodInfo temp = foodInfoService.findByFoodCode(foodCode);
 
-                if (foodInfos.size() == BATCH_SIZE) {
-                    List<Nutrient> nutrients = new ArrayList<>();
+                if (temp != null) {
+                    continue;
+                }
 
-                    foodInfoService.saveAll(foodInfos);
-                    foodInfos.stream().forEach(foodInfo -> nutrients.addAll(foodInfo.getNutrientList()));
+                FoodInfo foodInfo = extractFoodInfo(row);
+                foodInfoService.create(foodInfo);
 
-                    nutrientService.saveAll(nutrients);
-                    foodInfos.clear();
-                    System.out.println(BATCH_SIZE + "  OK");
+                if (i % BATCH_SIZE == 0) {
+                    entityManager.flush();
+                    entityManager.clear();
                 }
             }
-
-            List<Nutrient> nutrients = new ArrayList<>();
-
-            foodInfoService.saveAll(foodInfos);
-            foodInfos.stream().forEach(foodInfo -> nutrients.addAll(foodInfo.getNutrientList()));
-            nutrientService.saveAll(nutrients);
+            entityManager.flush();
+            entityManager.clear();
 
             workbook.close(); // 메모리 해제
         } catch (IOException e) {
@@ -147,12 +146,7 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str);
 
-            Nutrient nutrient = Nutrient.builder()
-                    .foodInfo(foodInfo)
-                    .name(key)
-                    .value(nutrientVal)
-                    .build();
-
+            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
             foodInfo.addNutrient(nutrient);
         }
 
@@ -161,12 +155,7 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str) / 1000;
 
-            Nutrient nutrient = Nutrient.builder()
-                    .foodInfo(foodInfo)
-                    .name(key)
-                    .value(nutrientVal)
-                    .build();
-
+            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
             foodInfo.addNutrient(nutrient);
         }
     }
