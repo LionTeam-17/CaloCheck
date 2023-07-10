@@ -62,6 +62,7 @@ public class ExcelService {
         put("나트륨", 30);
     }};
 
+    @Transactional
     public void processExcel(InputStream inputStream) {
         Workbook workbook = null;
 
