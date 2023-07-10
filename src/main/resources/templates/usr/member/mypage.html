@@ -119,13 +119,23 @@
                         kg
                     </div>
 
-                    <div class="flex justify-center">
-                        <a href="/tracking/bodyTracking"
-                           th:if="${@rq.login && member.id == @rq.member.id}">
-                            <button class="btn btn-xs btn-outline"
+                    <div class="flex justify-center gap-3">
+                        <div>
+                            <a th:href="@{|/member/modify/${member.id}|}"
+                               th:if="${@rq.login && member.id == @rq.member.id}">
+                                <button class="btn btn-xs btn-outline"
+                                        th:attr="data-member-id=${@rq.member.id}"> 수정하기
+                                </button>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="/tracking/bodyTracking"
+                            th:if="${@rq.login && member.id == @rq.member.id}">
+                                <button class="btn btn-xs btn-outline"
                                     th:attr="data-member-id=${@rq.member.id}">기록하러 가기
-                            </button>
-                        </a>
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
