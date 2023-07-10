@@ -128,7 +128,13 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{memberId}")
-    public String showModify(@PathVariable Long memberId) {
+    public String showModify(@PathVariable Long memberId, Model model) {
+        // 이전에 입력된 회원 정보 가져오기
+        Member member = memberService.findById(memberId).orElse(null);
+
+        // 회원 정보를 모델에 설정하여 폼 페이지로 전달
+        model.addAttribute("member", member);
+
         return "usr/member/modify";
     }
 
