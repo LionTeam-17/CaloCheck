@@ -26,7 +26,6 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ExcelService {
     private final FoodInfoService foodInfoService;
     private final NutrientService nutrientService;
