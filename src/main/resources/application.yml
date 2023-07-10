@@ -2,11 +2,6 @@ spring:
   profiles:
     active: dev
     include: secret, recommend, tag
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/calocheck__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
   security:
     csrf:
       enabled: true
@@ -41,7 +36,7 @@ spring:
             user-name-attribute: response
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
