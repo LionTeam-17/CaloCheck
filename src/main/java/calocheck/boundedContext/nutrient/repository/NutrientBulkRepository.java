@@ -16,16 +16,16 @@ public class NutrientBulkRepository {
 
     public void saveAll(List<Nutrient> nutrients) {
         String sql = "INSERT INTO nutrient (" +
-                "food_info_id," +
+                "food_code," +
                 "`name`," +
-                "value" +
+                "`value`) " +
                 "VALUES (?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql,
                 nutrients,
                 nutrients.size(),
                 (PreparedStatement ps, Nutrient nutrient) -> {
-                    ps.setLong(1, nutrient.getFoodInfo().getId());
+                    ps.setString(1, nutrient.getFoodInfo().getFoodCode());
                     ps.setString(2, nutrient.getName());
                     ps.setDouble(3, nutrient.getValue());
                 });

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class Nutrient extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_code", referencedColumnName = "foodCode")
     private FoodInfo foodInfo;
     private String name;
     private Double value;

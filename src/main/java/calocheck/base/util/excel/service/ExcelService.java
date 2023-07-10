@@ -83,11 +83,15 @@ public class ExcelService {
                     continue;
                 }
 
-                FoodInfo foodInfo = extractFoodInfo(row);
-                foodInfos.add(foodInfo);
+                foodInfos.add(extractFoodInfo(row));
 
                 if (foodInfos.size() == BATCH_SIZE) {
+                    List<Nutrient> nutrients = new ArrayList<>();
+
                     foodInfoService.saveAll(foodInfos);
+                    foodInfos.stream().forEach(foodInfo -> nutrients.addAll(foodInfo.getNutrientList()));
+
+                    nutrientService.saveAll(nutrients);
                     foodInfos.clear();
                 }
             }
@@ -146,7 +150,12 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str);
 
-            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
+            Nutrient nutrient = Nutrient.builder()
+                    .foodInfo(foodInfo)
+                    .name(key)
+                    .value(nutrientVal)
+                    .build();
+
             foodInfo.addNutrient(nutrient);
         }
 
@@ -155,10 +164,13 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str) / 1000;
 
-            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
+            Nutrient nutrient = Nutrient.builder()
+                    .foodInfo(foodInfo)
+                    .name(key)
+                    .value(nutrientVal)
+                    .build();
+
             foodInfo.addNutrient(nutrient);
         }
-
-        nutrientService.saveAll(foodInfo.getNutrientList());
     }
 }
