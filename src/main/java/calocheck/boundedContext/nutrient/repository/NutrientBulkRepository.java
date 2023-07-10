@@ -20,8 +20,7 @@ public class NutrientBulkRepository {
         String sql = "INSERT INTO nutrient (" +
                 "food_code," +
                 "`name`," +
-                "`value`," +
-                "create_date" +
+                "`value`" +
                 ") " +
                 "VALUES (?, ?, ?)";
 
@@ -32,7 +31,6 @@ public class NutrientBulkRepository {
                     ps.setString(1, nutrient.getFoodInfo().getFoodCode());
                     ps.setString(2, nutrient.getName());
                     ps.setDouble(3, nutrient.getValue());
-                    ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                 });
 
     }

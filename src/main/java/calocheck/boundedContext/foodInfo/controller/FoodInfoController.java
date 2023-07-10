@@ -78,15 +78,20 @@ public class FoodInfoController {
         return "usr/foodInfo/details";
     }
 
-    @GetMapping("/test")
-    public String requestTest(@RequestParam("bucket") String bucket, @RequestParam("key") String key) throws IOException {
-        System.out.println("#################### request test ###################");
+    @GetMapping("/handleLambda")
+    @ResponseBody
+    public String handleLambda(@RequestParam("bucket") String bucket, @RequestParam("key") String key) throws IOException {
+        System.out.println("#################### EXCEL SAVE START ###################");
         System.out.println(bucket + " " + key);
-        System.out.println("#################### request test ###################");
+        System.out.println("#################### EXCEL SAVE START ###################");
 
         InputStream inputStream = s3Service.getFileFromS3(key);
         excelService.processExcel(inputStream);
 
-        return "test";
+        System.out.println("#################### EXCEL SAVE COMPLETE ###################");
+        System.out.println(bucket + " " + key);
+        System.out.println("#################### EXCEL SAVE COMPLETE ###################");
+
+        return "success";
     }
 }
