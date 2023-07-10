@@ -4,12 +4,17 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.repository.MemberRepository;
+import calocheck.boundedContext.tracking.repository.TrackingRepository;
+import calocheck.boundedContext.tracking.service.TrackingService;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.tracking.entity.Tracking;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +24,9 @@ public class MemberService {
     private final CriteriaService criteriaService;
 
     private final MemberRepository memberRepository;
+
+    private final TrackingRepository trackingRepository;
+    private final TrackingService trackingService;
     public Member create(
             String username, String password, String email, String nickname, Integer age,
             Double height, Double weight, Double muscleMass,  Double bodyFat
@@ -95,6 +103,7 @@ public class MemberService {
                 .build();
 
         memberRepository.save(modifyMember);
+        updateTrackingWithLatestBodyInfo(modifyMember);
         return RsData.of("S-1", "정보가 수정되었습니다.", member);
     }
 
@@ -182,7 +191,38 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMember(Member member) {
-        memberRepository.save(member);
+    public void updateTrackingWithLatestBodyInfo(Member member) {
+        LocalDate today = LocalDate.now();
+        Optional<Tracking> latestTrackingOptional = trackingRepository.findByMemberAndDateTime(member, today);
+
+        if (latestTrackingOptional.isPresent()) {
+            Tracking latestTracking = latestTrackingOptional.get();
+            latestTracking.setAge(member.getAge());
+            latestTracking.setHeight(member.getHeight());
+            latestTracking.setWeight(member.getWeight());
+            latestTracking.setBodyFat(member.getBodyFat());
+            latestTracking.setMuscleMass(member.getMuscleMass());
+
+            // BMI 및 체지방률 재계산
+            trackingService.calculateBMI(latestTracking);
+            trackingService.calculateBodyFatPercentage(latestTracking);
+
+            trackingRepository.save(latestTracking);
+        } else {
+            Tracking newTracking = new Tracking();
+            newTracking.setMember(member);
+            newTracking.setDateTime(today);
+            newTracking.setAge(member.getAge());
+            newTracking.setHeight(member.getHeight());
+            newTracking.setWeight(member.getWeight());
+            newTracking.setBodyFat(member.getBodyFat());
+            newTracking.setMuscleMass(member.getMuscleMass());
+
+            // BMI 및 체지방률 계산
+            trackingService.calculateBMI(newTracking);
+            trackingService.calculateBodyFatPercentage(newTracking);
+
+            trackingRepository.save(newTracking);
+        }
     }
 }

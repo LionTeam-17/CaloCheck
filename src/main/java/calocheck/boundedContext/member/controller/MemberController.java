@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -208,6 +209,18 @@ public class MemberController {
 
         model.addAttribute("member", member);
         model.addAttribute("id", id);
+
+        // 트래킹에서 최신 정보 가져오기
+        LocalDate today = LocalDate.now();
+        Optional<Tracking> latestTrackingOptional = trackingService.findByMemberAndDate(member, today);
+        Tracking latestTracking = latestTrackingOptional.orElse(new Tracking());
+
+        // 회원 정보에 최신 트래킹 정보 반영
+        member.setAge(latestTracking.getAge());
+        member.setHeight(latestTracking.getHeight());
+        member.setWeight(latestTracking.getWeight());
+        member.setBodyFat(latestTracking.getBodyFat());
+        member.setMuscleMass(latestTracking.getMuscleMass());
 
         // 친구
         List<Member> followingList = friendService.findFollowing(id);

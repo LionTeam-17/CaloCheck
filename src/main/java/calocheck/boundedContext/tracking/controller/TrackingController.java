@@ -139,8 +139,10 @@ public class TrackingController {
         member.setBodyFat(savedTracking.getBodyFat());
         member.setMuscleMass(savedTracking.getMuscleMass());
 
-        memberService.updateMember(member);
+        memberService.modify(member.getId(), member.getGender(), member.getAge(), member.getHeight(), member.getWeight(), member.getMuscleMass(), member.getBodyFat(), member);
+
 
         return "redirect:/tracking/bodyTracking";
     }
+
 }
