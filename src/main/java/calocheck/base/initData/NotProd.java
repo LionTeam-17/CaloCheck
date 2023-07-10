@@ -9,11 +9,9 @@ import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.service.PostLikeService;
-<<<<<<< HEAD
 import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.entity.Tracking;
-=======
->>>>>>> 6db73a49d17ed1857e5209e4db927f0c59640d5d
+
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
