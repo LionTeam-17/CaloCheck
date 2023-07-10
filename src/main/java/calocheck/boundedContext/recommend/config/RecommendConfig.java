@@ -1,8 +1,5 @@
 package calocheck.boundedContext.recommend.config;
 
-
-import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
