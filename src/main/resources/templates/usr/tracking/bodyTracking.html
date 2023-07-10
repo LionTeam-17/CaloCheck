@@ -25,6 +25,10 @@
                         <span class="detail-value" th:text="${member.username} + '님'"></span>
                     </div>
                     <div class="user-detail-item">
+                        <span class="detail-title">성별 :</span>
+                        <span class="detail-value" th:text="(${member.gender} == 'male') ? '남' : '여'"></span>
+                    </div>
+                    <div class="user-detail-item">
                         <span class="detail-title">나이 :</span>
                         <span class="detail-value" th:text="${member.age} + '세'"></span>
                     </div>
