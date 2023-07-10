@@ -120,10 +120,10 @@
                     </div>
 
                     <div class="flex justify-center">
-                        <a th:href="@{|/member/modify/${member.id}|}"
+                        <a href="/tracking/bodyTracking"
                            th:if="${@rq.login && member.id == @rq.member.id}">
                             <button class="btn btn-xs btn-outline"
-                                    th:attr="data-member-id=${@rq.member.id}">수정하기
+                                    th:attr="data-member-id=${@rq.member.id}">기록하러 가기
                             </button>
                         </a>
                     </div>
