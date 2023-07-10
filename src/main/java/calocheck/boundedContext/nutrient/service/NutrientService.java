@@ -2,17 +2,20 @@ package calocheck.boundedContext.nutrient.service;
 
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
+import calocheck.boundedContext.nutrient.repository.NutrientBulkRepository;
 import calocheck.boundedContext.nutrient.repository.NutrientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class NutrientService {
     private final NutrientRepository nutrientRepository;
+    private final NutrientBulkRepository nutrientBulkRepository;
 
     @Transactional
     public Nutrient create(FoodInfo foodInfo, String name, Double value) {
@@ -51,5 +54,9 @@ public class NutrientService {
         Optional<Nutrient> nutrient = nutrientRepository.findByNameAndValue(name, value);
 
         return nutrient.orElse(null);
+    }
+
+    public void saveAll(List<Nutrient> nutrients) {
+        nutrientBulkRepository.saveAll(nutrients);
     }
 }

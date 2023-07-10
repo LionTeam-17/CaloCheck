@@ -28,9 +28,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional
 public class ExcelService {
-    private final EntityManager entityManager;
     private final FoodInfoService foodInfoService;
     private final NutrientService nutrientService;
+    private final int BATCH_SIZE = 100;
 
     private Map<String, Integer> foodInfoMap = new HashMap<>() {{
         put("식품코드", 2);
@@ -64,14 +64,14 @@ public class ExcelService {
     }};
 
     @Transactional
-    public void processExcel(InputStream inputStream) throws IOException {
+    public void processExcel(InputStream inputStream) {
         Workbook workbook = null;
-        int batchSize = 100;
 
         try {
             workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 첫 번째 시트를 가져옴
-            int a = sheet.getLastRowNum();
+
+            List<FoodInfo> foodInfos = new ArrayList<>();
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
@@ -83,16 +83,20 @@ public class ExcelService {
                     continue;
                 }
 
-                FoodInfo foodInfo = extractFoodInfo(row);
-                foodInfoService.create(foodInfo);
+                foodInfos.add(extractFoodInfo(row));
 
-                if (i % batchSize == 0) {
-                    entityManager.flush();
-                    entityManager.clear();
+                if (foodInfos.size() == BATCH_SIZE) {
+                    List<Nutrient> nutrients = new ArrayList<>();
+
+                    foodInfoService.saveAll(foodInfos);
+                    foodInfos.stream().forEach(foodInfo -> nutrients.addAll(foodInfo.getNutrientList()));
+
+                    nutrientService.saveAll(nutrients);
+                    foodInfos.clear();
                 }
             }
-            entityManager.flush();
-            entityManager.clear();
+
+            foodInfoService.saveAll(foodInfos);
 
             workbook.close(); // 메모리 해제
         } catch (IOException e) {
@@ -146,7 +150,12 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str);
 
-            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
+            Nutrient nutrient = Nutrient.builder()
+                    .foodInfo(foodInfo)
+                    .name(key)
+                    .value(nutrientVal)
+                    .build();
+
             foodInfo.addNutrient(nutrient);
         }
 
@@ -155,7 +164,12 @@ public class ExcelService {
             String str = row.getCell(value).getStringCellValue();
             double nutrientVal = !Ut.check.isDouble(str) ? 0 : Double.parseDouble(str) / 1000;
 
-            Nutrient nutrient = nutrientService.create(foodInfo, key, nutrientVal);
+            Nutrient nutrient = Nutrient.builder()
+                    .foodInfo(foodInfo)
+                    .name(key)
+                    .value(nutrientVal)
+                    .build();
+
             foodInfo.addNutrient(nutrient);
         }
     }
