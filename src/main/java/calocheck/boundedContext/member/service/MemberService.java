@@ -4,11 +4,16 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.criteria.service.CriteriaService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.repository.MemberRepository;
+import calocheck.boundedContext.tracking.repository.TrackingRepository;
+import calocheck.boundedContext.tracking.service.TrackingService;
+import calocheck.boundedContext.tracking.entity.Tracking;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +23,9 @@ public class MemberService {
     private final CriteriaService criteriaService;
 
     private final MemberRepository memberRepository;
+
+    private final TrackingRepository trackingRepository;
+    private final TrackingService trackingService;
     public Member create(
             String username, String password, String gender, String email, String nickname, Integer age,
             Double height, Double weight, Double muscleMass,  Double bodyFat
@@ -99,6 +107,7 @@ public class MemberService {
                 .build();
 
         memberRepository.save(modifyMember);
+        updateTrackingWithLatestBodyInfo(modifyMember);
         return RsData.of("S-1", "정보가 수정되었습니다.", member);
     }
 
@@ -121,14 +130,45 @@ public class MemberService {
 
     // 소셜 로그인
     @Transactional
-    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String gender, String email, String nickname, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+    public RsData<Member> whenSocialLogin(
+            String providerTypeCode, String username, String gender, String email, String nickname,
+            Integer age, Double height, Double weight, Double muscleMass, Double bodyFat
+    ) {
         Optional<Member> opMember = findByUsername(username);
 
-        if (opMember.isPresent()) return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
+        if (opMember.isPresent()) {
+            return RsData.of("S-1", "로그인 되었습니다.", opMember.get());
+        }
 
-        return join(providerTypeCode, username, "", gender, email,  nickname,
-                0, 0.0, 0.0,0.0, 0.0); // 최초 로그인시 실행
+        RsData<Member> joinResult = join(providerTypeCode, username, "", gender, email, nickname,
+                0, 0.0, 0.0, 0.0, 0.0); // 최초 로그인 시 회원 가입
 
+        if (joinResult.isSuccess()) {
+            Member member = joinResult.getData();
+            updateTrackingWithInitialBodyInfo(member, age, height, weight, muscleMass, bodyFat);
+        }
+
+        return joinResult;
+    }
+
+    @Transactional
+    public void updateTrackingWithInitialBodyInfo(Member member, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat) {
+        LocalDate today = LocalDate.now();
+        Tracking newTracking = new Tracking();
+        newTracking.setMember(member);
+        newTracking.setDateTime(today);
+        newTracking.setAge(age);
+        newTracking.setHeight(height);
+        newTracking.setWeight(weight);
+        newTracking.setBodyFat(bodyFat);
+        newTracking.setMuscleMass(muscleMass);
+
+        // BMI 및 체지방률 계산
+        trackingService.calculateBMI(newTracking);
+        trackingService.calculateBodyFatPercentage(newTracking);
+        trackingService.calculateChanges(newTracking);
+
+        trackingRepository.save(newTracking);
     }
 
     // 닉네임 변경 로직
@@ -185,5 +225,48 @@ public class MemberService {
 
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
+    }
+
+    @Transactional
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void updateTrackingWithLatestBodyInfo(Member member) {
+        LocalDate today = LocalDate.now();
+        Optional<Tracking> latestTrackingOptional = trackingRepository.findByMemberAndDateTime(member, today);
+
+        if (latestTrackingOptional.isPresent()) {
+            Tracking latestTracking = latestTrackingOptional.get();
+            latestTracking.setAge(member.getAge());
+            latestTracking.setHeight(member.getHeight());
+            latestTracking.setWeight(member.getWeight());
+            latestTracking.setBodyFat(member.getBodyFat());
+            latestTracking.setMuscleMass(member.getMuscleMass());
+
+            // BMI 및 체지방률 재계산
+            trackingService.calculateBMI(latestTracking);
+            trackingService.calculateBodyFatPercentage(latestTracking);
+            trackingService.calculateChanges(latestTracking);
+
+            trackingRepository.save(latestTracking);
+        } else {
+            Tracking newTracking = new Tracking();
+            newTracking.setMember(member);
+            newTracking.setDateTime(today);
+            newTracking.setAge(member.getAge());
+            newTracking.setHeight(member.getHeight());
+            newTracking.setWeight(member.getWeight());
+            newTracking.setBodyFat(member.getBodyFat());
+            newTracking.setMuscleMass(member.getMuscleMass());
+
+            // BMI 및 체지방률 계산
+            trackingService.calculateBMI(newTracking);
+            trackingService.calculateBodyFatPercentage(newTracking);
+            trackingService.calculateChanges(newTracking);
+
+            trackingRepository.save(newTracking);
+        }
     }
 }
