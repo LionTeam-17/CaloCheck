@@ -1,0 +1,20 @@
+custom:
+  tag:
+    criteria:
+      carbohydrate: 45
+      fat: 15
+      protein: 20
+      calcium: 0.25
+      sodium: 0.5
+      potassium: 1.2
+      magnesium: 0.1
+    color-code:
+      carbohydrate: 121882
+      fat: 401f0d
+      protein: b2c615
+      calcium: 16b629
+      sodium: f55600
+      potassium: 16bed4
+      magnesium: 121af2
+    setting-list: carbohydrate, fat, protein, calcium, sodium, potassium, magnesium
+    name-list: 탄수화물, 지방, 단백질, 칼슘, 나트륨, 칼륨, 마그네슘
