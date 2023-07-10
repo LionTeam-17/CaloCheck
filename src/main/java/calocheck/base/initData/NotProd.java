@@ -68,8 +68,6 @@ public class NotProd {
                             .getData())
                     .toArray(Post[]::new);
 
-            excelService.processExcel();
-
 //            int COMMENT_SIZE = 5;
 //
 //            Comment[] comments = IntStream
