@@ -74,7 +74,8 @@
                     <a class="ml-2 mt-1 text-sm" th:href="@{|?postType=${postType}&code=1&kw=${kw}|}"
                        th:if="${!code.equals('1')}">추천순</a>
                 </div>
-                <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
+                <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                     style="border: white">
                     <a href="/post/createForm">
                         <i class="fa-solid fa-pencil"></i>
                         <span>&nbsp;글쓰기</span>
