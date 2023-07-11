@@ -198,10 +198,10 @@ public class PostController {
     public String modifyPost(@PathVariable Long postId, Model model) {
 
         Optional<Post> oPost = postService.findById(postId);
+        List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
 
-        if(oPost.isPresent()){
-            model.addAttribute("post",oPost.get());
-        }
+        oPost.ifPresent(post -> model.addAttribute("post", post));
+        model.addAttribute("todayFoodNameList", todayFoodNameList);
 
         return "usr/post/modify";
     }
@@ -215,8 +215,6 @@ public class PostController {
                              @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
-
-
 
         RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, iModifyPostType, rq.getMember());
 
