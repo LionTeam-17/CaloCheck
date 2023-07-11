@@ -27,17 +27,16 @@ public class CriteriaService {
     private final TagConfigProperties tagConfigProp;
 
     @Transactional
-    public Criteria create(String gender, int age, double protein,
-                           double fiber, double calcium, double sodium,
-                           double potassium, double magnesium, double carbohydrate, double fat) {
+    public Criteria create(String gender, int age, double carbohydrate, double fiber, double fat,
+                           double protein, double calcium, double sodium, double potassium, double magnesium) {
 
         Criteria criteria = Criteria.builder()
                 .gender(gender)
                 .age(age)
                 .carbohydrate(carbohydrate)
-                .protein(protein)
-                .fat(fat)
                 .fiber(fiber)
+                .fat(fat)
+                .protein(protein)
                 .calcium(calcium)
                 .sodium(sodium)
                 .potassium(potassium)
