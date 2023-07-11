@@ -1,5 +1,6 @@
 package calocheck.boundedContext.imageData.config;
 
+import calocheck.base.util.s3.service.S3Service;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -20,10 +21,11 @@ public class ImageConfig {
 
     private final S3ConfigProperties s3ConfigProperties;
     private final GCPConfigProperties gcpConfigProperties;
+    private final S3Service s3Service;
 
     @Bean
     public ImageAnnotatorSettings visionAPISettings() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(gcpConfigProperties.getFilePath()));
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(s3Service.getFileFromS3(gcpConfigProperties.getFilePath()));
         ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
 
         return settings;
