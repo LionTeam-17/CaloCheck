@@ -29,57 +29,51 @@ class TagServiceTest {
     @Autowired
     private NutrientService nutrientService;
 
+    private FoodInfo testFood;
+
     @BeforeEach
     void setUp() {
         List<Nutrient> nutrientList = new ArrayList<>();
-
-        FoodInfo testFood = foodInfoService.create("testFood", "제조사", "카테고리",
-                1, "g", 200, 1000, nutrientList);
 
         Nutrient testNutrient = nutrientService.create(testFood, "testNutrient", 30.0);
 
         nutrientList.add(testNutrient);
 
         //testFood는 영양소로 testNutrient를 30 만큼 가짐
-        FoodInfo updatedTestFood = foodInfoService.update(testFood, testFood.getFoodName(), testFood.getManufacturer(),
-                testFood.getCategory(), testFood.getPortionSize(), testFood.getUnit(), testFood.getTotalSize(),
-                testFood.getKcal(), nutrientList);
+        testFood = FoodInfo.builder()
+                .foodCode("test")
+                .foodName("testFood")
+                .nutrientList(nutrientList)
+                .build();
     }
 
     @Test
     @DisplayName("태그 기준치보다 높다면 태그 반영")
     void t001() {
-
-        FoodInfo testFood = foodInfoService.findByFoodName("testFood");
-
         //20을 기준치로 하는 testNutrient 생성
         tagService.createTag("testNutrient", "FFFFFF", 20);
 
         List<Tag> tagList = tagService.getTagList(testFood);
 
+        //(30 > 20) => true
         assertThat(tagList.size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("태그 기준치보다 낮다면 태그가 반영되지 않음")
     void t002() {
-
-        FoodInfo testFood = foodInfoService.findByFoodName("testFood");
-
         //20을 기준치로 하는 testNutrient 생성
         tagService.createTag("testNutrient", "FFFFFF", 50);
 
         List<Tag> tagList = tagService.getTagList(testFood);
 
+        //(30 > 50) => false
         assertThat(tagList.size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("태그명과 영양소 이름이 다르다면 검출되지 않음")
     void t003() {
-
-        FoodInfo testFood = foodInfoService.findByFoodName("testFood");
-
         //20을 기준치로 하는 testNutrient 생성
         tagService.createTag("anotherNutrient", "FFFFFF", 50);
 
