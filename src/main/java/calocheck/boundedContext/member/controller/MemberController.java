@@ -2,6 +2,10 @@ package calocheck.boundedContext.member.controller;
 
 import calocheck.base.rq.Rq;
 import calocheck.base.rsData.RsData;
+import calocheck.boundedContext.criteria.entity.Criteria;
+import calocheck.boundedContext.criteria.service.CriteriaService;
+import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
+import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
 import calocheck.boundedContext.friend.entity.Friend;
 import calocheck.boundedContext.friend.service.FriendService;
 import calocheck.boundedContext.member.entity.Member;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -44,7 +49,8 @@ public class MemberController {
     private final TrackingService trackingService;
     private final TrackingRepository trackingRepository;
     private final FriendService friendService;
-
+    private final CriteriaService criteriaService;
+    private final DailyMenuService dailyMenuService;
 
     @AllArgsConstructor
     @Getter
@@ -250,6 +256,19 @@ public class MemberController {
 
         model.addAttribute("followingList", followingList);
         model.addAttribute("followerList", followerList);
+
+        Criteria myCriteria = criteriaService.findByGenderAndAge(member);
+
+        List<DailyMenu> todayMenuList = dailyMenuService.findMembersTodayMenuList(member);
+        RsData<Map<String, Double>> todayCalcRsData = criteriaService.calcTodayNutrition(todayMenuList);
+
+        if(todayCalcRsData.isSuccess()){
+            model.addAttribute("calcMap",todayCalcRsData.getData());
+        }
+
+        model.addAttribute("myBMR", member.getBmr());
+
+        model.addAttribute("myCriteria", myCriteria);
 
         return "usr/member/mypage";
     }

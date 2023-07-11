@@ -13,7 +13,7 @@
 
     <div class="flex-grow flex items-center justify-center">
 
-        <div class="hero-content flex-col gap-20">
+        <div class="hero-content flex-col gap-10">
 
             <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
                 마이페이지
@@ -23,9 +23,9 @@
                 <div class="flex justify-between gap-10">
                     <div class="flex gap-3">
                         <div class="avatar">
-                        <div class="w-32 rounded-full">
-                            <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
-                        </div>
+                            <div class="w-32 rounded-full">
+                                <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
+                            </div>
                         </div>
                         <div class="flex justify-center items-center gap-4">
                             <span class="text-2xl font-bold" th:text="${member.nickname}"></span>
@@ -34,11 +34,11 @@
                             </a>
                             <div sec:authorize="isAuthenticated()" th:if="${member.id != @rq.member.id}">
                                 <form th:if="${follow} != null " th:action="@{|/friend/delete/${member.id}|}"
-                                    method="POST">
+                                      method="POST">
                                     <button type="submit" class="btn btn-warning btn-sm">친구삭제</button>
                                 </form>
                                 <form th:if="${follow} == null" th:action="@{|/friend/create/${member.id}|}"
-                                    method="GET">
+                                      method="GET">
                                     <button type="submit" class="btn btn-success btn-sm">친구추가</button>
                                 </form>
                             </div>
@@ -58,14 +58,16 @@
                         </div>
                         <div class="flex gap-4" th:if="${member.id == @rq.member.id}">
                             <div class="hover:bg-blue-50 p-2">
-                                <a href="/friend/list" class="flex flex-col justify-center items-center gap-4 font-bold">
+                                <a href="/friend/list"
+                                   class="flex flex-col justify-center items-center gap-4 font-bold">
                                     팔로잉
                                     <div><span th:text="${#lists.size(followingList)}"></span></div>
                                 </a>
                             </div>
                             <div class="divider divider-horizontal !mx-1"></div>
                             <div class="hover:bg-blue-50 p-2">
-                                <a href="/friend/list" class="flex flex-col justify-center items-center gap-4 font-bold">
+                                <a href="/friend/list"
+                                   class="flex flex-col justify-center items-center gap-4 font-bold">
                                     팔로워
                                     <div><span th:text="${#lists.size(followerList)}"></span></div>
                                 </a>
@@ -76,7 +78,7 @@
                 <div class="divider !my-1"></div>
             </div>
 
-            <div class="flex flex-col justify-center mt-5 gap-1" >
+            <div class="flex flex-col justify-center mt-5 gap-1">
                 <div class="flex">
                     <div class="mx-2 text-2xl font-bold btn">
                         <button id="myInformationBtn">
@@ -89,12 +91,17 @@
                             <span>내 포스트</span>
                         </button>
                     </div>
+                    <div class="divider divider-horizontal !mx-2"></div>
+                    <div class="mx-2 text-2xl font-bold btn">
+                        <button id="myCriteriaBtn">
+                            <span>나의 권장량</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="divider !my-1"></div>
             </div>
 
-
-            <div id="myInformation" class="card flex-shrink-0 w-full shadow-xl bg-base-100" style="width: 400px; height: 550px">
+            <div id="myInformation" class="card flex-shrink-0 w-full shadow-xl bg-base-100">
                 <div class="card-body flex flex-col gap-10">
                     <div class="mt-10"> 나이 :
                         <span th:text="${member.age}" style="font-weight: bold;"></span>
@@ -130,9 +137,9 @@
                         </div>
                         <div>
                             <a href="/tracking/bodyTracking"
-                            th:if="${@rq.login && member.id == @rq.member.id}">
+                               th:if="${@rq.login && member.id == @rq.member.id}">
                                 <button class="ml-1 mt-1 text-xs bg-red-500 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-full"
-                                    th:attr="data-member-id=${@rq.member.id}">기록하러 가기
+                                        th:attr="data-member-id=${@rq.member.id}">기록하러 가기
                                 </button>
                             </a>
                         </div>
@@ -145,13 +152,13 @@
                     <div th:each="post : ${postList}">
                         <div class="mt-5 flex flex-row gap-4">
                             <a th:href="@{|/post/${post.id}|}"
-                               class="card flex-shrink-0 w-full shadow-xl bg-base-100"
-                               style="width: 400px">
+                               class="card flex-shrink-0 w-full shadow-xl bg-base-100">
                                 <div class="card-body">
                                     <div class="flex justify-between">
                                         <div th:text="${post.subject}" class="text-lg font-bold "></div>
                                         <div class="flex flex-col gap-1">
-                                            <div th:text="${#temporals.format(post.createDate, 'yy년 MM월 dd일')}" class="text-xs"></div>
+                                            <div th:text="${#temporals.format(post.createDate, 'yy년 MM월 dd일')}"
+                                                 class="text-xs"></div>
                                             <div class="flex flex-end gap-1">
                                                 <i class="fa-regular fa-thumbs-up"></i>
                                                 <span th:text="${post.popularity}" class="text-xs"></span>
@@ -189,7 +196,8 @@
                             <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${page+1})}">다음</a>
                         </li>
                         <li class="btn text-xs page-item" th:classappend="${page == totalPages -1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/member/mypage/{id}(id=${id}, page=${totalPages -1})}">마지막</a>
+                            <a class="page-link"
+                               th:href="@{/member/mypage/{id}(id=${id}, page=${totalPages -1})}">마지막</a>
                         </li>
                     </ul>
                 </div>
@@ -198,6 +206,39 @@
                     <!-- 다른 필요한 파라미터들도 추가할 수 있습니다. -->
                 </form>
             </div>
+
+            <div id="myCriteria" class="hidden card flex-shrink-0 w-full shadow-xl bg-base-100">
+                <div class="card-body flex flex-col gap-5">
+                    <div class="mt-3"> 기초대사량 :
+                        <span th:text="${myBMR} + 'kacl' " style="font-weight: bold; "></span>
+                    </div>
+                    <div class="mt-5"> 탄수화물 :
+                        <span th:text="${myCriteria.carbohydrate} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 단백질 :
+                        <span th:text="${myCriteria.protein} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 지방 :
+                        <span th:text="${myCriteria.fat} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 식이섬유 :
+                        <span th:text="${myCriteria.fiber} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 칼슘 :
+                        <span th:text="${myCriteria.calcium} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 나트륨 :
+                        <span th:text="${myCriteria.sodium} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 칼륨 :
+                        <span th:text="${myCriteria.potassium} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                    <div class="mt-5"> 마그네슘 :
+                        <span th:text="${myCriteria.magnesium} + 'g'" style="font-weight: bold;"></span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -206,6 +247,8 @@
         const myInformation = document.getElementById("myInformation");
         const myPostBtn = document.getElementById("myPostBtn");
         const myPost = document.getElementById("myPost");
+        const myCriteriaBtn = document.getElementById("myCriteriaBtn");
+        const myCriteria = document.getElementById("myCriteria");
 
         const page_elements = document.getElementsByClassName("page-link");
         Array.from(page_elements).forEach(function (element) {
@@ -219,18 +262,32 @@
         myInformationBtn.addEventListener("click", () => {
             myInformation.style.display = "block";
             myPost.style.display = "none";
+            myCriteria.style.display = "none";
 
             myPostBtn.style.fontWeight = "normal";
+            myCriteriaBtn.style.fontWeight = "normal";
             myInformationBtn.style.fontWeight = "bold";
         });
 
         myPostBtn.addEventListener("click", () => {
             myPost.style.display = "block";
             myInformation.style.display = "none";
+            myCriteria.style.display = "none";
 
             myInformationBtn.style.fontWeight = "normal";
+            myCriteriaBtn.style.fontWeight = "normal";
             myPostBtn.style.fontWeight = "bold";
         });
+
+        myCriteriaBtn.addEventListener("click", () => {
+            myCriteria.style.display = "block";
+            myInformation.style.display = "none";
+            myPost.style.display = "none";
+
+            myInformationBtn.style.fontWeight = "normal";
+            myPostBtn.style.fontWeight = "normal";
+            myCriteriaBtn.style.fontWeight = "bold";
+        })
     </script>
 </th:block>
 </body>
