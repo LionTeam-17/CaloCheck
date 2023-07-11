@@ -53,25 +53,21 @@
         <div class="hero-content flex-col">
 
             <h2 class="text-4xl mt-5 mx-5 font-bold flex flex-col">
-            내 정보 수정
+                내 정보 수정
             </h2>
 
             <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="modifyInformation(this); return false;">
-                <div class="flex items-center justify-center gap-3">
+                <div class="flex justify-center gap-3">
                     <div>
                         <span>성별:</span>
                     </div>
                     <div>
                         <label>
                             <input type="radio" name="gender" value="M" th:checked="${member.gender == 'M'}">
-                            <i class="fa-solid fa-person"></i>
                             남성
                         </label>
-                    </div>
-                    <div>
                         <label>
                             <input type="radio" name="gender" value="W" th:checked="${member.gender == 'W'}">
-                            <i class="fa-solid fa-person-dress"></i>
                             여성
                         </label>
                     </div>
@@ -89,12 +85,12 @@
                     <input type="text" name="weight" maxlength="10" placeholder="몸무게(kg)" class="input input-bordered" th:value="${member.weight}">
                 </div>
                 <div class="form-control flex flex-col gap-3">
-                    <span>골격근량: </span>
-                    <input type="text" name="muscleMass" maxlength="10" placeholder="골격근량(kg)" class="input input-bordered" th:value="${member.muscleMass}">
-                </div>
-                <div class="form-control flex flex-col gap-3">
                     <span>체지방량: </span>
                     <input type="text" name="bodyFat" maxlength="10" placeholder="체지방량(kg)" class="input input-bordered" th:value="${member.bodyFat}">
+                </div>
+                <div class="form-control flex flex-col gap-3">
+                    <span>골격근량: </span>
+                    <input type="text" name="muscleMass" maxlength="10" placeholder="골격근량(kg)" class="input input-bordered" th:value="${member.muscleMass}">
                 </div>
 
                 <div class="form-control">
