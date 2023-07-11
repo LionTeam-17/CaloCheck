@@ -24,7 +24,7 @@ public class S3Config {
     public String getBucketName() {return bucketName; }
 
     @Bean
-    public AmazonS3Client amazonS3Client() {
+    public AmazonS3Client amazonS3Client2() {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
                 .withRegion(region).enablePathStyleAccess()
