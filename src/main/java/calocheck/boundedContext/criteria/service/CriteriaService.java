@@ -168,4 +168,9 @@ public class CriteriaService {
         return RsData.of("S-1", "오늘의 영양소 계산이 완료되었습니다", calcNutritionMap);
     }
 
+    public List<Criteria> findAll(){
+
+        return criteriaRepository.findAll();
+    }
+
 }
