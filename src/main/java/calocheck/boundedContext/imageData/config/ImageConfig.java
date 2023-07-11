@@ -1,5 +1,6 @@
 package calocheck.boundedContext.imageData.config;
 
+import calocheck.base.util.s3.config.S3Config;
 import calocheck.base.util.s3.service.S3Service;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,7 +21,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class ImageConfig {
 
-    private final S3ConfigProperties s3ConfigProperties;
+    private final S3Config s3ConfigProperties;
     private final GCPConfigProperties gcpConfigProperties;
     private final S3Service s3Service;
 
@@ -33,15 +33,4 @@ public class ImageConfig {
 
         return settings;
     }
-
-    @Primary
-    @Bean
-    public AmazonS3 amazonS3Client1() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(s3ConfigProperties.getAccessKey(), s3ConfigProperties.getSecretKey());
-        return (AmazonS3) AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(s3ConfigProperties.getEndPoint(), s3ConfigProperties.getRegion()))
-                .build();
-    }
-
 }

@@ -1,11 +1,13 @@
 package calocheck.base.util.s3.service;
 
 import calocheck.base.util.s3.config.S3Config;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.S3Object;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -20,22 +22,21 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class S3Service {
     private final S3Config s3Config;
+    private final AmazonS3 s3Client;
 
     public InputStream getFileFromS3(String objectKey) throws IOException {
-        S3Client s3Client = S3Client.builder()
-                .region(Region.of(s3Config.getRegion()))
-                .credentialsProvider(DefaultCredentialsProvider.create())
-                .build();
+//        S3Client s3Client = S3Client.builder()
+//                .region(Region.of(s3Config.getRegion()))
+//                .credentialsProvider(DefaultCredentialsProvider.create())
+//                .build();
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(s3Config.getBucketName())
+                    .bucket(s3Config.getBucket())
                     .key(objectKey)
                     .build();
 
-            ResponseBytes<GetObjectResponse> responseBytes = s3Client.getObject(getObjectRequest,
-                    ResponseTransformer.toBytes());
-
-            return responseBytes.asInputStream();
+            S3Object s3Object = s3Client.getObject(s3Config.getBucket(), objectKey);
+            return s3Object.getObjectContent();
         } catch (S3Exception e) {
             throw new IOException("S3 파일 읽기 에러");
         }
