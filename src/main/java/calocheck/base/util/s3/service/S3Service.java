@@ -25,10 +25,6 @@ public class S3Service {
     private final AmazonS3 s3Client;
 
     public InputStream getFileFromS3(String objectKey) throws IOException {
-//        S3Client s3Client = S3Client.builder()
-//                .region(Region.of(s3Config.getRegion()))
-//                .credentialsProvider(DefaultCredentialsProvider.create())
-//                .build();
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(s3Config.getBucket())
