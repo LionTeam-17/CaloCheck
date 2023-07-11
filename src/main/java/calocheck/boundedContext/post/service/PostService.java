@@ -24,11 +24,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberService memberService;
 
-    public RsData<Post> savePost(String subject, String content, final Member member) {
+    public RsData<Post> savePost(String subject, String content, String postType, final Member member) {
         Post post = Post.builder()
                 .member(member)
                 .subject(subject)
                 .content(content)
+                .postType(postType)
                 .build();
 
         postRepository.save(post);
@@ -36,7 +37,7 @@ public class PostService {
         return RsData.of("S-1", "게시물이 등록되었습니다.", post);
     }
 
-    public RsData<Post> modifyPost(final Long id, String subject, String content, Member member) {
+    public RsData<Post> modifyPost(final Long id, String subject, String content, String postType, Member member) {
         Optional<Post> oPost = postRepository.findById(id);
 
         if (oPost.isEmpty()) {
@@ -52,6 +53,7 @@ public class PostService {
         Post modifyPost = post.toBuilder()
                 .subject(subject)
                 .content(content)
+                .postType(postType)
                 .build();
 
         postRepository.save(modifyPost);
@@ -98,46 +100,62 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findByOrderByPopularityDesc() {
-        return postRepository.findByOrderByPopularityDesc();
+    public List<Post> findByPostType(String postType) {
+        return postRepository.findByPostType(postType);
     }
 
+    //-- paging --//
     @Transactional(readOnly = true)
-    public Page<Post> findByOrderByPopularityDesc(int page) {
+    public Page<Post> findByPostType(String postType, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return postRepository.findByOrderByPopularityDesc(pageable);
+        return postRepository.findByPostType(postType, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw) {
-        return postRepository.findBySubjectLikeOrMemberNicknameLike(subjectKw, nicknameKw);
+    public List<Post> findByPostTypeOrderByPopularityDesc(String postType) {
+        return postRepository.findByPostTypeOrderByPopularityDesc(postType);
     }
 
     @Transactional(readOnly = true)
-    public Page<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw, int page) {
+    public Page<Post> findByPostTypeOrderByPopularityDesc(String postType, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return postRepository.findBySubjectLikeOrMemberNicknameLike(subjectKw, nicknameKw, pageable);
+        return postRepository.findByPostTypeOrderByPopularityDesc(postType, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw) {
-        return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw);
+    public List<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLike(String postType, String subjectKw, String nicknameKw) {
+        return postRepository.findByPostTypeAndSubjectLikeOrMemberNicknameLike(postType, subjectKw, nicknameKw);
     }
 
     @Transactional(readOnly = true)
-    public Page<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw, int page) {
+    public Page<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLike(String postType, String subjectKw, String nicknameKw, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return postRepository.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(subjectKw, nicknameKw, pageable);
+        return postRepository.findByPostTypeAndSubjectLikeOrMemberNicknameLike(postType, subjectKw, nicknameKw, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public List<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String postType, String subjectKw, String nicknameKw) {
+        return postRepository.findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(postType, subjectKw, nicknameKw);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String postType, String subjectKw, String nicknameKw, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(postType, subjectKw, nicknameKw, pageable);
+    }
+
     public Page<Post> findByMemberId(Long id, Pageable pageable) {
         return postRepository.findByMemberId(id, pageable);
     }

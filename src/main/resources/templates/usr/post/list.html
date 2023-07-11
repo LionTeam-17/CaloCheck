@@ -1,46 +1,57 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="">
 <head>
     <title>커뮤니티 - CaloCheck</title>
+    <link href="/resource/common/list.css" rel="stylesheet">
 </head>
 
 <body>
 <main class="flex-grow flex items-center justify-center" layout:fragment="Content">
     <div class="flex flex-col max-w-5xl w-full justify-center">
-        <div>
-            <div class="flex max-w-5xl w-full mt-4">
-                <div class="flex justify-between flex-grow">
-                    <div class="px-4 flex flex-grow">
-                        <div class="form-control flex flex-grow">
-                            <div class="font-bold"><i class="fa-solid fa-magnifying-glass"></i>
-                                <span>검색</span>
-                            </div>
-                            <div class="mt-4 flex">
-                                <label class="flex flex-col flex-grow">
-                                    <input autofocus class="input input-bordered flex flex-grow" name="subject"
-                                           onchange="$(this).keyup();"
-                                           onkeydown="handleEnterKey(event);"
-                                           onkeyup="$(this).next().children(':first-child').text('검색');"
-                                           onpaste="setTimeoutZero(() => $(this).keyup());"
-                                           placeholder="검색어를 입력하세요." th:value="${kw}"
-                                           type="text">
-                                    <a class="mx-1 w-[8px] text-sm"
-                                       href="#"
-                                       onclick="event.preventDefault(); location.href = '?code=0&kw=' + $(this).prev().val().trim().replace(/ /g, '');"
-                                       style="background:rgba(0, 0, 0, 0); color:white">
-                                        <span class="flex mt-1 justify-center items-center"></span>
-                                    </a>
-                                    <script>
-                                        $(`input[name="subject"]:last`).keyup();
+        <div class="text-left" id="menu">
+            <ul>
+                <li>
+                    <div th:if="${postType.equals('A')}">자유게시판</div>
+                    <div th:if="${postType.equals('B')}">식단공유게시판</div>
+                    <ul>
+                        <li><a th:href="@{|?postType=A|}">자유게시판</a></li>
+                        <li><a th:href="@{|?postType=B|}">식단공유게시판</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="flex max-w-5xl w-full mt-4">
+            <div class="flex justify-between flex-grow">
+                <div class="px-4 flex flex-grow">
+                    <div class="form-control flex flex-grow">
+                        <div class="font-bold"><i class="fa-solid fa-magnifying-glass"></i>
+                            <span>검색</span>
+                        </div>
+                        <div class="mt-4 flex">
+                            <label class="flex flex-col flex-grow">
+                                <input autofocus class="input input-bordered flex flex-grow" name="subject"
+                                       onchange="$(this).keyup();"
+                                       onkeydown="handleEnterKey(event);"
+                                       onkeyup="$(this).next().children(':first-child').text('검색');"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="검색어를 입력하세요." th:value="${kw}"
+                                       type="text">
+                                <a class="mx-1 w-[8px] text-sm"
+                                   href="#"
+                                   onclick="event.preventDefault(); location.href = '?code=0&kw=' + $(this).prev().val().trim().replace(/ /g, '');"
+                                   style="background:rgba(0, 0, 0, 0); color:white">
+                                    <span class="flex mt-1 justify-center items-center"></span>
+                                </a>
+                                <script>
+                                    $(`input[name="subject"]:last`).keyup();
 
-                                        function handleEnterKey(event) {
-                                            if (event.keyCode === 13) { // 13은 엔터키의 keyCode입니다.
-                                                event.preventDefault();
-                                                location.href = '?code=0&kw=' + event.target.value.trim().replace(/ /g, '');
-                                            }
+                                    function handleEnterKey(event) {
+                                        if (event.keyCode === 13) { // 13은 엔터키의 keyCode입니다.
+                                            event.preventDefault();
+                                            location.href = '?code=0&kw=' + event.target.value.trim().replace(/ /g, '');
                                         }
-                                    </script>
-                                </label>
-                            </div>
+                                    }
+                                </script>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -54,10 +65,14 @@
                         <i class="fa-solid fa-list"></i>
                         <span>게시글 목록</span>
                     </h1>
-                    <a class="ml-4 mt-1 font-bold text-sm" th:href="@{|?code=0&kw=${kw}|}" th:if="${!code.equals('1')}">최신순</a>
-                    <a class="ml-4 mt-1 text-sm" th:href="@{|?code=0&kw=${kw}|}" th:if="${code.equals('1')}">최신순</a>
-                    <a class="ml-2 mt-1 font-bold text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${code.equals('1')}">추천순</a>
-                    <a class="ml-2 mt-1 text-sm" th:href="@{|?code=1&kw=${kw}|}" th:if="${!code.equals('1')}">추천순</a>
+                    <a class="ml-4 mt-1 font-bold text-sm" th:href="@{|?postType=${postType}&code=0&kw=${kw}|}"
+                       th:if="${!code.equals('1')}">최신순</a>
+                    <a class="ml-4 mt-1 text-sm" th:href="@{|?postType=${postType}&code=0&kw=${kw}|}"
+                       th:if="${code.equals('1')}">최신순</a>
+                    <a class="ml-2 mt-1 font-bold text-sm" th:href="@{|?postType=${postType}&code=1&kw=${kw}|}"
+                       th:if="${code.equals('1')}">추천순</a>
+                    <a class="ml-2 mt-1 text-sm" th:href="@{|?postType=${postType}&code=1&kw=${kw}|}"
+                       th:if="${!code.equals('1')}">추천순</a>
                 </div>
                 <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
                     <a href="/post/createForm">
@@ -86,7 +101,7 @@
                         <!-- 역순 정렬 로직 시작 -->
                         <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
                               th:if="${kw.equals('')}"
-                              th:text="${post.id}"></span>
+                              th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
                         <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
                               th:if="${!kw.equals('')}"
                               th:text="${post.id}"></span>
@@ -121,7 +136,7 @@
                     <li class="page-item"
                         th:if="${paging.hasPrevious() == true }">
                         <a class="page-link m-1 btn btn-sm text-xs" style="background:#112D4E;"
-                           th:href="@{|?code=${code}&kw=${kw}&page=${paging.number - 1}|}">
+                           th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
                     </li>
@@ -129,16 +144,16 @@
                         th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
                         th:if="${page >= paging.number - 1 and page <= paging.number+3}">
                         <a class="page-link m-1 btn btn-sm btn-outline text-xs"
-                           th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
+                           th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page != paging.number+1}" th:text="${page}"></a>
                         <a class="page-link m-1 btn btn-sm text-sm" style="background:#112D4E;"
-                           th:href="@{|?code=${code}&kw=${kw}&page=${page -1}|}"
+                           th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page == paging.number+1}" th:text="${page}"></a>
                     </li>
                     <li class="page-item"
                         th:if="${paging.hasNext() == true }">
                         <a class="page-link m-1 btn btn-sm text-xs" style="background:#112D4E;"
-                           th:href="@{|?code=${code}&kw=${kw}&page=${paging.number+1}|}">
+                           th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number+1}|}">
                             <span>다음</span>
                         </a>
                     </li>

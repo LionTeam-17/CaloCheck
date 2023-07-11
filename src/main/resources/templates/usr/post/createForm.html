@@ -28,6 +28,14 @@
                 return;
             }
 
+            const $checkediPostTypeRadioButton = $(form).find("[name=iPostType]:checked");
+
+            if ($checkediPostTypeRadioButton.length === 0) {
+                toastWarning('게시할 게시판을 선택해주세요');
+                $(form).find("[name=iPostType]:first").focus();
+                return;
+            }
+
             form.submit();
         }
 
@@ -74,7 +82,26 @@
                                     cols="45" name="iContent" placeholder="내용을 입력하세요."
                                     rows="15"></textarea>
                                 </div>
+                                <div class="mt-6 text-gray-500 font-semi-bold mr-2">
+                                    카테고리 선택
+                                </div>
+                                <div class="flex justify-start gap-4 mt-3">
+                                    <label class="flex gap-2 items-center cursor-pointer">
+                                        <input class="radio peer" name="iPostType" type="radio" value="A">
+                                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
+                                <i class="fa-solid fa-person-rays"></i>
+                                자유게시판
+                            </span>
+                                    </label>
 
+                                    <label class="flex gap-2 items-center cursor-pointer">
+                                        <input class="radio peer" name="iPostType" type="radio" value="B">
+                                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
+                                <i class="fa-regular fa-face-smile"></i>
+                                식단등록게시판
+                            </span>
+                                    </label>
+                                </div>
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
                                     식단 선택
                                 </div>
