@@ -35,10 +35,11 @@ public class TrackingController {
 
     @Autowired
     public TrackingController(Rq rq, TrackingService trackingService, MemberService memberService) {
-            this.rq =rq;
-            this.trackingService = trackingService;
-            this.memberService = memberService;
+        this.rq = rq;
+        this.trackingService = trackingService;
+        this.memberService = memberService;
     }
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/bodyTracking")
     public String showTracking(Model model) {
         Optional<Member> memberOptional = memberService.findById(rq.getMember().getId());
@@ -77,7 +78,7 @@ public class TrackingController {
 
         return "usr/tracking/bodyTracking";
     }
-    @Transactional
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/bodyTracking")
     public String createTracking(@ModelAttribute("tracking")
@@ -91,7 +92,7 @@ public class TrackingController {
         tracking.setMember(member);
         tracking.setDateTime(LocalDate.now());
 
-
+        // 입력된 값이 null일 경우, 회원 정보의 값으로 설정
         if (tracking.getAge() == null) {
             tracking.setAge(member.getAge());
         }
@@ -107,13 +108,13 @@ public class TrackingController {
         if (tracking.getMuscleMass() == null) {
             tracking.setMuscleMass(member.getMuscleMass());
         }
-        if (tracking.getBmi() == null) {
-            trackingService.calculateBMI(tracking);
-        }
-        if (tracking.getBodyFatPercentage() == null) {
-            trackingService.calculateBodyFatPercentage(tracking);
-        }
 
+
+        trackingService.calculateBMI(tracking);
+        trackingService.calculateBodyFatPercentage(tracking);
+        trackingService.calculateChanges(tracking);
+
+        // 기존 트래킹 데이터가 있는지 확인
         Optional<Tracking> existingTracking = trackingService.findByMemberAndDate(member, tracking.getDateTime());
 
         Tracking savedTracking;
@@ -129,19 +130,19 @@ public class TrackingController {
 
             savedTracking = trackingService.updateTracking(trackingToUpdate);
         } else {
-            tracking.setWeight(member.getWeight());
-            tracking.setBodyFat(member.getBodyFat());
-            tracking.setMuscleMass(member.getMuscleMass());
-
-            trackingService.calculateBMI(tracking);
-            trackingService.calculateBodyFatPercentage(tracking);
-            trackingService.calculateChanges(tracking);
-
             savedTracking = trackingService.createTracking(tracking);
         }
 
+        member.setAge(savedTracking.getAge());
+        member.setHeight(savedTracking.getHeight());
+        member.setWeight(savedTracking.getWeight());
+        member.setBodyFat(savedTracking.getBodyFat());
+        member.setMuscleMass(savedTracking.getMuscleMass());
+
+        memberService.modify(member.getId(), member.getGender(), member.getAge(), member.getHeight(), member.getWeight(), member.getMuscleMass(), member.getBodyFat(), member);
+
+
         return "redirect:/tracking/bodyTracking";
     }
-
 
 }

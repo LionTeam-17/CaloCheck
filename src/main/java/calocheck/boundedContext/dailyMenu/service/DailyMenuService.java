@@ -70,10 +70,7 @@ public class DailyMenuService {
 
     public List<String> getTodayFoodNameList(Member member) {
 
-        LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
-
-        List<DailyMenu> todayDailyMenuList = dailyMenuRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
+        List<DailyMenu> todayDailyMenuList = findMembersTodayMenuList(member);
 
         List<String> todayFoodNameList = new ArrayList<>();
 
@@ -82,8 +79,15 @@ public class DailyMenuService {
             todayFoodNameList.add(dailyMenu.getFoodInfo().getFoodName());
 
         }
-
         return todayFoodNameList;
+    }
+
+    public List<DailyMenu> findMembersTodayMenuList(Member member){
+
+        LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+
+        return dailyMenuRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
     }
 
 }

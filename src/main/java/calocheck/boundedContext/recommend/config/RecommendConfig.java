@@ -1,8 +1,5 @@
 package calocheck.boundedContext.recommend.config;
 
-
-import calocheck.base.rsData.RsData;
-import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +23,13 @@ public class RecommendConfig {
         Map<String, String> description = recommendConfigProp.getDescription();
         Map<String, List<String>> foodList = recommendConfigProp.getFoodList();
 
-//        for (int i = 0; i < settingList.size(); i++) {
-//
-//            recommendService.createRecommend(recommendList.get(i)
-//                    , description.get(settingList.get(i))
-//                    , foodList.get(settingList.get(i)));
-//
-//        }
+        for (int i = 0; i < settingList.size(); i++) {
+
+            recommendService.createRecommend(recommendList.get(i)
+                    , description.get(settingList.get(i))
+                    , foodList.get(settingList.get(i)));
+
+        }
     }
 
 }

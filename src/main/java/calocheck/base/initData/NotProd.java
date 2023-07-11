@@ -1,6 +1,5 @@
 package calocheck.base.initData;
 
-import calocheck.base.util.CriteriaDataExtractor;
 import calocheck.base.util.excel.service.ExcelService;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.comment.service.CommentService;
@@ -11,9 +10,8 @@ import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.recommend.service.RecommendService;
-import calocheck.boundedContext.tag.config.TagConfig;
-import calocheck.boundedContext.tag.service.TagService;
 import calocheck.boundedContext.tracking.entity.Tracking;
+
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -34,15 +32,12 @@ public class NotProd {
     public CommandLineRunner initData(
             MemberService memberService,
             PostService postService,
-            RecommendService recommendService,
             CommentService commentService,
             ExcelService excelService,
             TrackingService trackingService,
             PostLikeService postLikeService,
             FoodInfoService foodInfoService,
-            CartFoodInfoService cartFoodInfoService,
-            CriteriaDataExtractor criteriaDataExtractor,
-            TagService tagService
+            CartFoodInfoService cartFoodInfoService
     ) {
         return args -> {
             int MEMBER_SIZE = 6;
@@ -51,15 +46,15 @@ public class NotProd {
             Member[] members = IntStream
                     .rangeClosed(1, MEMBER_SIZE)
                     .filter(i -> memberService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "male", null,
+                    .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "M", null,
                                     "닉네임%d".formatted(i), 25, 178.4, 65.0, 30.0, 20.0)
                             .getData())
                     .toArray(Member[]::new);
 
             Post[] posts = IntStream
                     .rangeClosed(1, POST_SIZE)
-                    .filter(i -> postService.findById((long) i).orElse(null) == null)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), "A", members[i % MEMBER_SIZE])
+                    .filter(i -> postService.findById((long)i).orElse(null) == null)
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
 
@@ -88,7 +83,7 @@ public class NotProd {
 //                    .mapToObj(i -> postLikeService.savePostLike(posts[3].getId(), members[i])
 //                            .getData())
 //                    .toArray(PostLike[]::new);
-
+//
             //Tracking 샘플 데이터
             LocalDate startDate = LocalDate.now().minusDays(90);
             Random random = new Random();
@@ -112,15 +107,7 @@ public class NotProd {
                 }
             }
 
-            tagService.createTag("탄수화물", TagConfig.getCarbohydrateColor(), TagConfig.getCarbohydrateCriteria());
-            tagService.createTag("단백질", TagConfig.getProteinColor(), TagConfig.getProteinCriteria());
-            tagService.createTag("지방", TagConfig.getFatColor(), TagConfig.getFatCriteria());
-            tagService.createTag("칼슘", TagConfig.getCalciumColor(), TagConfig.getCalciumCriteria());
-            tagService.createTag("나트륨", TagConfig.getSodiumColor(), TagConfig.getSodiumCriteria());
-            tagService.createTag("칼륨", TagConfig.getPotassiumColor(), TagConfig.getPotassiumCriteria());
-            tagService.createTag("마그네슘", TagConfig.getMagnesiumColor(), TagConfig.getMagnesiumCriteria());
 
-            criteriaDataExtractor.readFile();
         };
 
     }

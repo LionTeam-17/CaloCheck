@@ -66,7 +66,7 @@ public class ExcelService {
     @Transactional
     public void processExcel(InputStream inputStream) throws IOException {
         Workbook workbook = null;
-        int batchSize = 100;
+        int BATCH_SIZE = 100;
 
         try {
             workbook = WorkbookFactory.create(inputStream);
@@ -86,7 +86,7 @@ public class ExcelService {
                 FoodInfo foodInfo = extractFoodInfo(row);
                 foodInfoService.create(foodInfo);
 
-                if (i % batchSize == 0) {
+                if (i % BATCH_SIZE == 0) {
                     entityManager.flush();
                     entityManager.clear();
                 }

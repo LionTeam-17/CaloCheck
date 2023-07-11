@@ -1,6 +1,7 @@
 package calocheck.boundedContext.foodInfo.service;
 
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
+import calocheck.boundedContext.foodInfo.repository.FoodInfoBulkRepository;
 import calocheck.boundedContext.foodInfo.repository.FoodInfoRepository;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.tag.entity.Tag;
@@ -19,8 +20,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FoodInfoService {
-
     private final FoodInfoRepository foodInfoRepository;
+    private final FoodInfoBulkRepository foodInfoBulkRepository;
     private final TagService tagService;
 
     @Transactional
@@ -130,17 +131,7 @@ public class FoodInfoService {
         return top5Lists;
     }
 
-    public List<Tag> getTagList(FoodInfo foodInfo) {
-        List<Nutrient> nutrientList = foodInfo.getNutrientList();
-        List<Tag> tagList = tagService.findAllTag();
-
-        List<Tag> returnTagList = nutrientList.stream()
-                .flatMap(nutrient -> tagList.stream()
-                        .filter(tag -> nutrient.getName().equals(tag.getTagName()))
-                        .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
-                .collect(Collectors.toList());
-
-        return returnTagList;
+    public void saveAll(List<FoodInfo> foodInfos) {
+        foodInfoBulkRepository.saveAll(foodInfos);
     }
-
 }
