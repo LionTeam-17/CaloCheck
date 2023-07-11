@@ -6,7 +6,6 @@ import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.repository.MemberRepository;
 import calocheck.boundedContext.tracking.repository.TrackingRepository;
 import calocheck.boundedContext.tracking.service.TrackingService;
-import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,13 @@ public class MemberService {
     private final TrackingRepository trackingRepository;
     private final TrackingService trackingService;
     public Member create(
-            String username, String password, String email, String nickname, Integer age,
+            String username, String password, String gender, String email, String nickname, Integer age,
             Double height, Double weight, Double muscleMass,  Double bodyFat
                          ) {
         Member member = Member.builder()
                 .username(username)
                 .password(password)
+                .gender(gender)
                 .email(email)
                 .nickname(nickname)
                 .age(age)
@@ -48,15 +48,18 @@ public class MemberService {
     public void delete(Member member) {
         memberRepository.delete(member);
     }
+
+    // 일반 회원가입
     @Transactional
     public RsData<Member> join(
-            String username, String password,String gender, String email, String nickname,
+            String username, String password, String gender, String email, String nickname,
             Integer age, Double height, Double weight, Double muscleMass, Double bodyFat
     ) {
 
         return join("Calocheck", username, password, gender, email, nickname, age, height,weight, muscleMass, bodyFat);
     }
 
+    // 일반 회원가입
     @Transactional
     public RsData<Member> join(
             String providerTypeCode, String username, String password, String gender, String email, String nickname,
@@ -82,6 +85,7 @@ public class MemberService {
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }
 
+    // 회원 인적사항 수정 기능
     @Transactional
     public RsData<Member> modify(final Long id, String gender, Integer age, Double height, Double weight, Double muscleMass, Double bodyFat, Member actor
     ) {
@@ -107,6 +111,7 @@ public class MemberService {
         return RsData.of("S-1", "정보가 수정되었습니다.", member);
     }
 
+    // 회원가입 유효성 체크 로직
     public RsData<Member> checkDuplicateValue(String username, String email, String nickname) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
@@ -166,6 +171,7 @@ public class MemberService {
         trackingRepository.save(newTracking);
     }
 
+    // 닉네임 변경 로직
     @Transactional
     public RsData<Member> updateNickname(Member actor, Long memberId, String nickname) {
 
@@ -185,6 +191,7 @@ public class MemberService {
         return RsData.of("S-1", "닉네임이 수정되었습니다.");
     }
 
+    // 이메일 변경 로직
     @Transactional
     public RsData<Member> updateEmail(Member actor, Long memberId, String email) {
 
