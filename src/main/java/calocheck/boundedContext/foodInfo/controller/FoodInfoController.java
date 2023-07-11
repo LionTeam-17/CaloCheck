@@ -86,29 +86,29 @@ public class FoodInfoController {
     @ResponseBody
     public String handleLambda(@RequestParam(name = "bucket", defaultValue = "calocheck") String bucket, @RequestParam(name = "key", defaultValue = "food-data/통합 식품영양성분DB_가공식품1.xlsx") String key) throws IOException {
         String [] nameList = {
-                "food-data/통합 식품영양성분DB_가공식품1.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품2.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품3.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품4.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품5.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품6.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품7.xlsx",
-                "food-data/통합 식품영양성분DB_가공식품8.xlsx"
+                "food-data/통합 식품영양성분DB_가공식품1.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품2.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품3.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품4.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품5.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품6.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품7.xlsx",
+                "food-data/통합 식품영양성분DB_가공식품8.xlsx"
         };
 
 
         for (String name : nameList) {
             key = name;
-            System.out.println("#################### EXCEL SAVE START ###################");
-            System.out.println(bucket + " " + key);
-            System.out.println("#################### EXCEL SAVE START ###################");
+            System.out.println("############### EXCEL SAVE START");
+            System.out.println(key);
+            System.out.println("############### EXCEL SAVE START");
 
             InputStream inputStream = s3Service.getFileFromS3(key);
             excelService.processExcel(inputStream);
 
-            System.out.println("#################### EXCEL SAVE COMPLETE ###################");
-            System.out.println(bucket + " " + key);
-            System.out.println("#################### EXCEL SAVE COMPLETE ###################");
+            System.out.println("############### EXCEL SAVE COMPLETE");
+            System.out.println(key);
+            System.out.println("############### EXCEL SAVE COMPLETE");
         }
 
         return "success";

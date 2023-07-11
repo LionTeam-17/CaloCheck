@@ -5,18 +5,11 @@ import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.nutrient.entity.Nutrient;
 import calocheck.boundedContext.nutrient.service.NutrientService;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -62,6 +55,26 @@ public class ExcelService {
         put("나트륨", 30);
     }};
 
+    public String cellReader(Cell cell) throws Exception {
+        switch (cell.getCellType()) {
+            case _NONE:
+            case BLANK:
+                return cell.getStringCellValue() + "";
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return cell.getNumericCellValue() + "";
+            case FORMULA:
+                return cell.getCellFormula() + "";
+            case BOOLEAN:
+                return cell.getBooleanCellValue() + "";
+            case ERROR:
+                throw new Exception("엑셀 파일 에러");
+            default:
+                return "";
+        }
+    }
+
     public void processExcel(InputStream inputStream) {
         Workbook workbook = null;
 
@@ -74,7 +87,11 @@ public class ExcelService {
             for (int i = 1; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
 
-                foodInfos.add(extractFoodInfo(row));
+                try {
+                    foodInfos.add(extractFoodInfo(row));
+                } catch (Exception e) {
+                }
+
 
                 if (foodInfos.size() == BATCH_SIZE) {
                     List<Nutrient> nutrients = new ArrayList<>();
@@ -84,7 +101,7 @@ public class ExcelService {
 
                     nutrientService.saveAll(nutrients);
                     foodInfos.clear();
-                    System.out.println(BATCH_SIZE + "  OK");
+                    System.out.println(BATCH_SIZE + " Save Complete");
                 }
             }
 
@@ -100,16 +117,18 @@ public class ExcelService {
         }
     }
 
-    public FoodInfo extractFoodInfo(Row row) {
-        String foodCode = row.getCell(foodInfoMap.get("식품코드")).getStringCellValue();
-        String foodName = row.getCell(foodInfoMap.get("식품명")).getStringCellValue();
-        String manufacturer = row.getCell(foodInfoMap.get("제조사/유통사")).getStringCellValue();
-        String category = row.getCell(foodInfoMap.get("식품군대분류")).getStringCellValue();
-        int portionSize = Integer.parseInt(row.getCell(foodInfoMap.get("1회제공량")).getStringCellValue());
-        String unit = row.getCell(foodInfoMap.get("내용량_단위")).getStringCellValue();
-        String gramTotalSize = row.getCell(foodInfoMap.get("총내용량(g)")).getStringCellValue();
-        String literTotalSize = row.getCell(foodInfoMap.get("총내용량(mL)")).getStringCellValue();
-        String kcalStr = row.getCell(foodInfoMap.get("에너지(kcal)")).getStringCellValue();
+    public FoodInfo extractFoodInfo(Row row) throws Exception {
+        String foodCode = cellReader(row.getCell(foodInfoMap.get("식품코드")));
+        String foodName = cellReader(row.getCell(foodInfoMap.get("식품명")));
+        String manufacturer = cellReader(row.getCell(foodInfoMap.get("제조사/유통사")));
+        String category = cellReader(row.getCell(foodInfoMap.get("식품군대분류")));
+        String portionSizeStr = cellReader(row.getCell(foodInfoMap.get("1회제공량")));
+        String unit = cellReader(row.getCell(foodInfoMap.get("내용량_단위")));
+        String gramTotalSize = cellReader(row.getCell(foodInfoMap.get("총내용량(g)")));
+        String literTotalSize = cellReader(row.getCell(foodInfoMap.get("총내용량(mL)")));
+        String kcalStr = cellReader(row.getCell(foodInfoMap.get("에너지(kcal)")));
+        
+        int portionSize = !Ut.check.isInteger(portionSizeStr) ? 0 : Integer.parseInt(portionSizeStr);
         double kcal = !Ut.check.isDouble(kcalStr) ? 0 : Double.parseDouble(kcalStr);
 
         int totalSize = 0;
