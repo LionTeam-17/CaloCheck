@@ -90,4 +90,9 @@ public class DailyMenuService {
         return dailyMenuRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
     }
 
+    @Transactional
+    public void save(DailyMenu dailyMenu){
+        dailyMenuRepository.save(dailyMenu);
+    }
+
 }

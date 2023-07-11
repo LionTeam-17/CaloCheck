@@ -59,4 +59,9 @@ public class NutrientService {
     public void saveAll(List<Nutrient> nutrients) {
         nutrientBulkRepository.saveAll(nutrients);
     }
+
+    @Transactional
+    public void save(Nutrient nutrient){
+        nutrientRepository.save(nutrient);
+    }
 }
