@@ -142,7 +142,6 @@ public class PostController {
                         return rq.historyBack(imageRsData);
                     }
                 }
-
             }
 
         } else if (isImgRsData.isFail()) {
@@ -181,7 +180,14 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{postId}/modify")
-    public String modifyPost(@PathVariable Long postId) {
+    public String modifyPost(@PathVariable Long postId, Model model) {
+
+        Optional<Post> oPost = postService.findById(postId);
+
+        if(oPost.isPresent()){
+            model.addAttribute("post",oPost.get());
+        }
+
         return "usr/post/modify";
     }
 
@@ -194,24 +200,7 @@ public class PostController {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
 
-        String imageUrl = null;
 
-        if (isImgRsData.getResultCode().equals("S-6")) {
-
-            //S3 Bucket 에 이미지 업로드 및 경로 재대입
-            imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.POST_IMAGE);
-
-            //업로드된 이미지가 안전한 이미지인지 확인
-            RsData<ImageData> isSafeImg = imageDataService.detectSafeSearchRemote(imageUrl);
-
-            if (isSafeImg.isFail()) {
-                return rq.historyBack(isSafeImg);
-            }
-
-        } else if (isImgRsData.isFail()) {
-            //첨부파일이 올바르지 않습니다.
-            return rq.historyBack(isImgRsData);
-        }
 
         RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, rq.getMember());
 

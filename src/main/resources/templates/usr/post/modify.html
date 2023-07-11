@@ -61,7 +61,7 @@
                                 <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
                                     <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
                                            id="id-input" name="iModifySubject"
-                                           th:placeholder="${@postService.findById(postId).get().subject}"
+                                           th:value="${post.getSubject()}"
                                            type="text"/>
                                 </div>
                                 <!-- 내용 -->
@@ -73,7 +73,7 @@
                             <textarea
                                     class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
                                     cols="45" name="iModifyContent"
-                                    th:placeholder="${@postService.findById(postId).get().content}"
+                                    th:text="${post.getContent()}"
                                     rows="15"></textarea>
                                 </div>
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
