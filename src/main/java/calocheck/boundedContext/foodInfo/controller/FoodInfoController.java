@@ -84,7 +84,7 @@ public class FoodInfoController {
 
     @GetMapping("/handleLambda")
     @ResponseBody
-    public String handleLambda(@RequestParam(name = "bucket", defaultValue = "calocheck-data") String bucket, @RequestParam(name = "key", defaultValue = "food-data/통합 식품영양성분DB_가공식품1.xlsx") String key) throws IOException {
+    public String handleLambda(@RequestParam(name = "bucket", defaultValue = "calocheck") String bucket, @RequestParam(name = "key", defaultValue = "food-data/통합 식품영양성분DB_가공식품1.xlsx") String key) throws IOException {
         String [] nameList = {
                 "food-data/통합 식품영양성분DB_가공식품1.xlsx",
                 "food-data/통합 식품영양성분DB_가공식품2.xlsx",

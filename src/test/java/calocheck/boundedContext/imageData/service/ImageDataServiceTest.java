@@ -3,7 +3,7 @@ package calocheck.boundedContext.imageData.service;
 import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.imageData.config.OptimizerConfigProperties;
-import calocheck.boundedContext.imageData.config.S3ConfigProperties;
+import calocheck.boundedContext.imageData.config.S3Config;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import calocheck.boundedContext.member.entity.Member;
@@ -39,7 +39,7 @@ class ImageDataServiceTest {
     @Autowired
     private ImageDataService imageDataService;
     @Autowired
-    private S3ConfigProperties s3ConfigProp;
+    private S3Config s3ConfigProp;
     @Autowired
     private PostService postService;
     @Autowired
