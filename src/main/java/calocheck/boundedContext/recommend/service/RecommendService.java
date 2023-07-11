@@ -44,4 +44,10 @@ public class RecommendService {
         return byNutritionName.orElse(null);
     }
 
+    public List<Recommend> findAll(){
+
+        return recommendRepository.findAll();
+
+    }
+
 }
