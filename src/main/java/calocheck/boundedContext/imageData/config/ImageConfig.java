@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 @RequiredArgsConstructor
@@ -25,7 +26,8 @@ public class ImageConfig {
 
     @Bean
     public ImageAnnotatorSettings visionAPISettings() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(s3Service.getFileFromS3(gcpConfigProperties.getFilePath()));
+        InputStream inputStream = s3Service.getFileFromS3(gcpConfigProperties.getFilePath());
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(inputStream);
         ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
 
         return settings;
