@@ -6,7 +6,7 @@
 
 <body>
 <main class="flex-grow flex items-center justify-center" layout:fragment="Content">
-    <div class="flex flex-col max-w-5xl w-full justify-center">
+    <div class="flex flex-col max-w-3xl w-full justify-center">
         <div class="text-left" id="menu">
             <ul>
                 <li>
@@ -19,7 +19,7 @@
                 </li>
             </ul>
         </div>
-        <div class="flex max-w-5xl w-full mt-4">
+        <div class="flex max-w-3xl w-full mt-4">
             <div class="flex justify-between flex-grow">
                 <div class="px-4 flex flex-grow">
                     <div class="form-control flex flex-grow">
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="divider my-2" style="height: 1px"></div>
-        <div class="max-w-5xl w-full mt-4 px-4">
+        <div class="max-w-3xl w-full mt-4 px-4">
             <div class="flex justify-between">
                 <div class="flex">
                     <h1 class="font-bold mb-2">
@@ -92,10 +92,10 @@
                 </div>
             </div>
             <div class="divider my-2" style="height: 1px"></div>
-            <div class="flex flex-wrap max-w-5xl w-full" th:if="${paging.isEmpty()}">
+            <div class="flex flex-wrap max-w-3xl w-full" th:if="${paging.isEmpty()}">
                 게시물이 없습니다.
             </div>
-            <div class="flex flex-col max-w-5xl w-full" th:if="${!paging.isEmpty()}">
+            <div class="flex flex-col max-w-3xl w-full" th:if="${!paging.isEmpty()}">
                 <div class="flex flex-col" th:each="post, loop: ${paging}">
                     <div class="flex flex-grow justify-between">
                         <!-- 역순 정렬 로직 시작 -->

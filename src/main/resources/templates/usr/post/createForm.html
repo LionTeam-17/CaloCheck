@@ -46,13 +46,13 @@
         }
     </script>
 
-    <div class="flex flex-col max-w-5xl w-full justify-center">
-        <section class="mb-5 max-w-5xl w-full">
+    <div class="flex flex-col max-w-3xl w-full justify-center">
+        <section class="mb-5 max-w-3xl w-full">
             <form class="flex flex-col gap-6" enctype="multipart/form-data" method="POST"
                   onsubmit="SavePost__submit(this); return false;"
                   th:action>
-                <div class="flex flex-grow max-w-5xl w-full justify-center">
-                    <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
+                <div class="flex flex-grow max-w-3xl w-full justify-center">
+                    <div class="flex flex-col max-w-3xl w-full justify-center mt-20">
                         <div class="flex justify-center">
                             <div class="text-center font-bold text-4xl text-black">
                                 게시물 작성
@@ -60,13 +60,13 @@
                         </div>
                         <div class="mt-10 flex justify-center">
                             <!-- 제목 입력 부분-->
-                            <div class="flex flex-grow max-w-5xl w-full flex-col mx-5">
+                            <div class="flex flex-grow max-w-3xl w-full flex-col mx-5">
                                 <!-- 제목 -->
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
                                     제목
                                 </div>
                                 <!-- 제목 입력 -->
-                                <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
+                                <div class="flex flex-grow max-w-3xl w-full justify-center mt-2 mr-2">
                                     <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
                                            id="id-input" name="iSubject" placeholder="제목을 입력하세요."
                                            type="text"/>
@@ -76,9 +76,9 @@
                                     내용
                                 </div>
                                 <!-- 내용 입력 -->
-                                <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
+                                <div class="flex flex-grow max-w-3xl w-full justify-center mt-2 mr-2">
                             <textarea
-                                    class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
+                                    class="border flex flex-grow max-w-3xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
                                     cols="45" name="iContent" placeholder="내용을 입력하세요."
                                     rows="15"></textarea>
                                 </div>
@@ -115,7 +115,7 @@
                                     </select>
                                 </div>
 
-                                <div class="flex flex-grow flex-col max-w-5xl w-full mt-2 mr-2">
+                                <div class="flex flex-grow flex-col max-w-3xl w-full mt-2 mr-2">
                                     <div class="flex">
                                         <input id="img" name="img" type="file"
                                                class="file-input file-input-bordered file-input mt-5 justify-center"/>
@@ -124,8 +124,8 @@
                             </div>
                         </div>
                         <!-- 등록, 취소버튼 -->
-                        <div class="flex max-w-5xl w-full justify-end">
-                            <div class="flex max-w-5xl w-full justify-end">
+                        <div class="flex max-w-3xl w-full justify-end">
+                            <div class="flex max-w-3xl w-full justify-end">
                                 <div class="flex mt-6">
                                     <button class="btn btn-sm w-20 mr-2 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded-full"
                                             onclick="cancelForm()">

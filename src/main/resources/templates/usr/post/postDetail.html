@@ -19,7 +19,7 @@
         }
     </script>
 
-    <div class="max-w-5xl w-full mt-4 px-4">
+    <div class="max-w-3xl w-full mt-4 px-4">
         <div class="flex flex-col">
             <h1 class="font-bold font-xl mb-4" th:text="${post.subject}"></h1>
             <div class="flex justify-between">
@@ -88,7 +88,7 @@
         <div class="flex items-center card bg-light" th:unless="${!#lists.isEmpty(commentList)}">
             댓글이 없습니다!!
         </div>
-        <ul class="flex flex-col max-w-5xl w-full gap-4" th:if="${!#lists.isEmpty(commentList)}">
+        <ul class="flex flex-col max-w-3xl w-full gap-4" th:if="${!#lists.isEmpty(commentList)}">
             <li th:each="comment: ${commentList}">
                 <div class="max-w-5xl w-full">
                     <div class="flex">
@@ -117,7 +117,7 @@
         </ul>
         <form class="flex flex-col gap-6" method="POST" onsubmit="SaveComment__submit(this); return false;"
               th:action>
-            <div class="flex flex-grow max-w-5xl w-full justify-center">
+            <div class="flex flex-grow max-w-3xl w-full justify-center">
                 <div class="flex flex-col flex-grow posts-box mt-5">
                     <div class="flex justify-center">
                         <div class="flex flex-grow mt-2">
