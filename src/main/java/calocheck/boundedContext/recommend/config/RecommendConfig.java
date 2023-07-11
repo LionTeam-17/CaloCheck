@@ -17,18 +17,19 @@ public class RecommendConfig {
 
     @Bean
     public void createRecommend() {
+        if(recommendService.findAll().isEmpty()){
+            List<String> recommendList = recommendConfigProp.getRecommendList();
+            List<String> settingList = recommendConfigProp.getSettingList();
+            Map<String, String> description = recommendConfigProp.getDescription();
+            Map<String, List<String>> foodList = recommendConfigProp.getFoodList();
 
-        List<String> recommendList = recommendConfigProp.getRecommendList();
-        List<String> settingList = recommendConfigProp.getSettingList();
-        Map<String, String> description = recommendConfigProp.getDescription();
-        Map<String, List<String>> foodList = recommendConfigProp.getFoodList();
+            for (int i = 0; i < settingList.size(); i++) {
 
-        for (int i = 0; i < settingList.size(); i++) {
+                recommendService.createRecommend(recommendList.get(i)
+                        , description.get(settingList.get(i))
+                        , foodList.get(settingList.get(i)));
 
-            recommendService.createRecommend(recommendList.get(i)
-                    , description.get(settingList.get(i))
-                    , foodList.get(settingList.get(i)));
-
+            }
         }
     }
 
