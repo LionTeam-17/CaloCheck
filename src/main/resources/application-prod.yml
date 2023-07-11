@@ -5,7 +5,6 @@ spring:
     username: root
     password:
   profiles:
-    active: prod
     include: secret, recommend, tag
   security:
     csrf:
@@ -50,3 +49,5 @@ spring:
         default_batch_fetch_size: 1000
   test:
     exclude: '**/*Tests.class'
+
+spring.profiles.include: prod
