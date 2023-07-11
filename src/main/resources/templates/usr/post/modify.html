@@ -69,7 +69,7 @@
                                 <div class="flex flex-grow max-w-3xl w-full justify-center mt-2 mr-2">
                                     <input class="border flex flex-grow max-w-3xl w-full border-black border-opacity-10 h-10 p-4"
                                            id="id-input" name="iModifySubject"
-                                           th:placeholder="${@postService.findById(postId).get().subject}"
+                                           th:value="${post.getSubject()}"
                                            type="text"/>
                                 </div>
                                 <!-- 내용 -->
@@ -81,7 +81,7 @@
                             <textarea
                                     class="border flex flex-grow max-w-3xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
                                     cols="45" name="iModifyContent"
-                                    th:placeholder="${@postService.findById(postId).get().content}"
+                                    th:text="${post.getContent()}"
                                     rows="15"></textarea>
                                 </div>
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
@@ -111,12 +111,9 @@
                                 <div>
                                     <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
                                         <option disabled selected>어떤 음식에 대한 사진인가요?</option>
-                                        <!-- TODO 오늘 내가 등록한 식단으로 옵션을 구성하도록(Member -> DailyFoodInfoList) -->
-                                        <option>아침 - 사과</option>
-                                        <option>아침 - 바나나</option>
-                                        <option>점심 - 조미김</option>
-                                        <option>저녁 - 김치찌개</option>
-                                        <option>저녁 - 닭가슴살</option>
+                                        <div th:if="todayFoodNameList" th:each="foodName : ${todayFoodNameList}">
+                                            <option th:text="${foodName}"></option>
+                                        </div>
                                     </select>
                                 </div>
 
