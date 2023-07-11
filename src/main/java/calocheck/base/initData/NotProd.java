@@ -9,9 +9,7 @@ import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
 import calocheck.boundedContext.postLike.service.PostLikeService;
-import calocheck.boundedContext.recommend.service.RecommendService;
 import calocheck.boundedContext.tracking.entity.Tracking;
-
 import calocheck.boundedContext.tracking.service.TrackingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -53,8 +51,8 @@ public class NotProd {
 
             Post[] posts = IntStream
                     .rangeClosed(1, POST_SIZE)
-                    .filter(i -> postService.findById((long)i).orElse(null) == null)
-                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), members[i % MEMBER_SIZE])
+                    .filter(i -> postService.findById((long) i).orElse(null) == null)
+                    .mapToObj(i -> postService.savePost("%d번 글입니다.".formatted(i), "%d번 내용입니다.".formatted(i), "A", members[i % MEMBER_SIZE])
                             .getData())
                     .toArray(Post[]::new);
 
