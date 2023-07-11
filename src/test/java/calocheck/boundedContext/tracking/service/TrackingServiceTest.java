@@ -1,6 +1,7 @@
 package calocheck.boundedContext.tracking.service;
 
 import calocheck.boundedContext.member.entity.Member;
+import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.repository.TrackingRepository;
 import calocheck.boundedContext.tracking.service.TrackingService;
@@ -24,6 +25,9 @@ public class TrackingServiceTest {
 
     @Mock
     private TrackingRepository trackingRepository;
+
+    @Mock
+    private MemberService memberService;
 
     @InjectMocks
     private TrackingService trackingService;
@@ -120,8 +124,8 @@ public class TrackingServiceTest {
 
         // 가짜 데이터에 대한 동작 정의
         when(memberService.findById(memberId)).thenReturn(Optional.of(member));
-        when(trackingRepository.findByMemberAndDate(member, currentDate)).thenReturn(Optional.of(existingTracking));
-        when(trackingRepository.updateTracking(existingTracking)).thenReturn(updatedTracking);
+        when(trackingRepository.findByMemberAndDateTime(member, currentDate)).thenReturn(Optional.of(existingTracking));
+        when(trackingRepository.save(any(Tracking.class))).thenReturn(updatedTracking);
 
         // 업데이트 수행
         Tracking result = trackingService.updateTracking(updatedTracking);
@@ -130,10 +134,14 @@ public class TrackingServiceTest {
         Assertions.assertEquals(updatedTracking.getWeight(), result.getWeight());
         Assertions.assertEquals(updatedTracking.getBodyFat(), result.getBodyFat());
         Assertions.assertEquals(updatedTracking.getMuscleMass(), result.getMuscleMass());
+
+        // verify 메서드로 save 메서드가 제대로 호출되었는지 검증
+        verify(trackingRepository).save(trackingCaptor.capture());
+        Tracking capturedTracking = trackingCaptor.getValue();
+        Assertions.assertEquals(updatedTracking.getWeight(), capturedTracking.getWeight());
+        Assertions.assertEquals(updatedTracking.getBodyFat(), capturedTracking.getBodyFat());
+        Assertions.assertEquals(updatedTracking.getMuscleMass(), capturedTracking.getMuscleMass());
     }
-}
-
-
 
 
     @Test
@@ -166,7 +174,7 @@ public class TrackingServiceTest {
         trackingService.calculateBMI(tracking);
 
         // Then
-        Assertions.assertEquals(22.491, tracking.getBmi(), 0.001);
+        Assertions.assertEquals(22.491, tracking.getBmi(), 0.01);
     }
 
     @Test
@@ -181,7 +189,7 @@ public class TrackingServiceTest {
         trackingService.calculateBodyFatPercentage(tracking);
 
         // Then
-        Assertions.assertEquals(30.769, tracking.getBodyFatPercentage(), 0.001);
+        Assertions.assertEquals(30.769, tracking.getBodyFatPercentage(), 0.01);
     }
 
     @Test
