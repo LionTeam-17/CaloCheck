@@ -212,14 +212,66 @@ public class PostController {
                              String iModifySubject,
                              String iModifyContent,
                              String iModifyPostType,
-                             @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
+                             @RequestParam(required = false) MultipartFile iModifyImg,
+                             String selectedFood) throws IOException {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
+
+        //이미지 파일이 들어온 경우에만 경로 대입, 이미지 검사 가능
+        String imageUrl = null;
+
+        if (isImgRsData.getResultCode().equals("S-6")) {
+
+            //S3 Bucket 에 이미지 업로드 및 경로 재대입, 이미지 검사
+            imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.POST_IMAGE);
+            RsData<ImageData> detectedLabelRsData = imageDataService.detectLabelsRemote(imageUrl);
+            RsData<ImageData> safeSearchRsData = imageDataService.detectSafeSearchRemote(imageUrl);
+
+            //세이프 서치를 통과하지 못한 경우에는 음식 등록 외에 글 작성도 불가
+            if (safeSearchRsData != null && safeSearchRsData.isFail()) {
+                return rq.historyBack(safeSearchRsData);
+            }
+
+            //음식을 선택 했지만, 음식 이미지가 아닌 경우
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFood != null) {
+                return rq.historyBack(detectedLabelRsData);
+            }
+
+            //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
+            if (detectedLabelRsData != null && safeSearchRsData != null
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null) {
+
+                Long foodId = foodInfoService.findByFoodName(selectedFood).getId();
+
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
+
+                if (oFoodImage.isEmpty()) {
+                    imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.FOOD_IMAGE);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+
+                    if (imageRsData.isFail()) {
+                        return rq.historyBack(imageRsData);
+                    }
+                }
+            }
+
+        } else if (isImgRsData.isFail()) {
+            return rq.historyBack(isImgRsData);
+        }
 
         RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, iModifyPostType, rq.getMember());
 
         if (modifyPostRsData.isFail()) {
             return rq.historyBack(modifyPostRsData);
+        }
+
+        if (imageUrl != null) {
+
+            RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, modifyPostRsData.getData().getId());
+
+            if (imageRsData.isFail()) {
+                return rq.historyBack(imageRsData);
+            }
         }
 
         return rq.redirectWithMsg("/post/" + postId, modifyPostRsData);
