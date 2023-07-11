@@ -27,4 +27,8 @@ public class ImageData {
 
     private Long targetId;
 
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
+
 }
