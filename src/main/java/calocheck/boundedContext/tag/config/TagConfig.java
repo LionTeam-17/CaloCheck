@@ -20,18 +20,18 @@ public class TagConfig {
     @Bean
     public void createTag(){
 
-        List<String> settingList = tagConfigProp.getSettingList();
-        List<String> nameList = tagConfigProp.getNameList();
-        Map<String, Double> criteriaMap = tagConfigProp.getCriteria();
-        Map<String, String> colorCodeMap = tagConfigProp.getColorCode();
+        if(tagService.findAllTag().isEmpty()){
+            List<String> settingList = tagConfigProp.getSettingList();
+            List<String> nameList = tagConfigProp.getNameList();
+            Map<String, Double> criteriaMap = tagConfigProp.getCriteria();
+            Map<String, String> colorCodeMap = tagConfigProp.getColorCode();
 
-        for(int i=0; i<settingList.size(); i++){
+            for(int i=0; i<settingList.size(); i++){
 
-            String settings = settingList.get(i);
+                String settings = settingList.get(i);
 
-            tagService.createTag(nameList.get(i), colorCodeMap.get(settings),  criteriaMap.get(settings));
+                tagService.createTag(nameList.get(i), colorCodeMap.get(settings),  criteriaMap.get(settings));
+            }
         }
     }
-
-
 }
