@@ -9,6 +9,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,10 +48,13 @@ public class TrackingControllerTest {
     @DisplayName("트래킹 생성")
     @WithMockUser(username = "user1") // 미리 등록된 사용자명으로 변경하세요
     public void t002() throws Exception {
+        // 오늘 날짜를 yyyy-MM-dd 형식으로 변환
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         // WHEN
         var resultActions = mvc
                 .perform(post("/tracking/bodyTracking")
                         .with(csrf())
+                        .param("date", today)
                         .param("age", "25") // 실제로 사용되는 파라미터 이름과 값으로 변경해주세요
                         .param("height", "170")
                         .param("weight", "65")
@@ -63,4 +69,30 @@ public class TrackingControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/tracking/bodyTracking"));
     }
+
+    @Test
+    @DisplayName("신체 정보 갱신")
+    @WithMockUser(username = "user1") // 미리 등록된 사용자명으로 변경하세요
+    public void t003() throws Exception {
+        // 오늘 날짜를 yyyy-MM-dd 형식으로 변환
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        // WHEN: 오늘 날짜의 신체 정보를 생성/갱신하는 요청을 보냄
+        var resultActions = mvc
+                .perform(post("/tracking/bodyTracking")
+                        .with(csrf())
+                        .param("date", today)
+                        .param("weight", "70")
+                        .param("bodyFat", "20")
+                        .param("muscleMass", "50"))
+                .andDo(print());
+
+        // THEN: 결과 확인 - 생성 혹은 갱신이 잘 이루어졌는지
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tracking/bodyTracking"))
+                .andExpect(handler().handlerType(TrackingController.class))
+                .andExpect(handler().methodName("createTracking"));
+    }
 }
+
