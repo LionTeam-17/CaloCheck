@@ -180,4 +180,8 @@ public class MemberService {
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
     }
+
+    public void save(Member member){
+        memberRepository.save(member);
+    }
 }

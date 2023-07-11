@@ -134,4 +134,8 @@ public class FoodInfoService {
     public void saveAll(List<FoodInfo> foodInfos) {
         foodInfoBulkRepository.saveAll(foodInfos);
     }
+
+    public FoodInfo save(FoodInfo foodInfo){
+        return foodInfoRepository.save(foodInfo);
+    }
 }
