@@ -135,6 +135,7 @@ public class FoodInfoService {
         foodInfoBulkRepository.saveAll(foodInfos);
     }
 
+    @Transactional
     public FoodInfo save(FoodInfo foodInfo){
         return foodInfoRepository.save(foodInfo);
     }

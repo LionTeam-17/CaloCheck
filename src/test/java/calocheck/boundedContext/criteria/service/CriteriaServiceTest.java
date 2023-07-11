@@ -143,33 +143,33 @@ class CriteriaServiceTest {
         assertThat(BMRForTestMan).isEqualTo(testManBMR);
         assertThat(BMRForTestWoman).isEqualTo(testWomanBMR);
     }
-//
-//    @Test
-//    @DisplayName("오늘 먹은 음식의 영양소를 계산할 수 있다.")
-//    void t003(){
-//
-//        //testMan이 단백질 20, 지방 15의 음식을 2개 섭취
-//        dailyMenuService.create(testMan, foodInfoService.save(testFood1), 2L);
-//
-//        //testWoman이 단백질 20, 지방 15의 음식을 2개 섭취하고, 칼슘 0.1, 나트륨 0.2의 음식을 3개 섭취함
-//        dailyMenuService.create(testWoman, foodInfoService.save(testFood1), 1L);
-//        dailyMenuService.create(testWoman, foodInfoService.save(testFood2), 3L);
-//
-//        List<DailyMenu> testManMenuList = dailyMenuService.findMembersTodayMenuList(testMan);
-//        List<DailyMenu> testWomanMenuList = dailyMenuService.findMembersTodayMenuList(testWoman);
-//
-//        Map<String, Double> testManCalcMap = criteriaService.calcTodayNutrition(testManMenuList).getData();
-//        Map<String, Double> testWomanCalcMap = criteriaService.calcTodayNutrition(testWomanMenuList).getData();
-//
-//        assertThat(testManCalcMap.get("단백질")).isEqualTo(40);
-//        assertThat(testManCalcMap.get("지방")).isEqualTo(30);
-//
-//        assertThat(testWomanCalcMap.get("단백질")).isEqualTo(20);
-//        assertThat(testWomanCalcMap.get("지방")).isEqualTo(15);
-//        assertThat(testWomanCalcMap.get("칼슘")).isEqualTo(0.3);
-//        assertThat(testWomanCalcMap.get("나트륨")).isEqualTo(0.6);
-//
-//    }
+
+    @Test
+    @DisplayName("오늘 먹은 음식의 영양소를 계산할 수 있다.")
+    void t003(){
+
+        //testMan이 단백질 20, 지방 15의 음식을 2개 섭취
+        dailyMenuService.create(testMan, foodInfoService.save(testFood1), 2L);
+
+        //testWoman이 단백질 20, 지방 15의 음식을 2개 섭취하고, 칼슘 0.1, 나트륨 0.2의 음식을 3개 섭취함
+        dailyMenuService.create(testWoman, foodInfoService.save(testFood1), 1L);
+        dailyMenuService.create(testWoman, foodInfoService.save(testFood2), 3L);
+
+        List<DailyMenu> testManMenuList = dailyMenuService.findMembersTodayMenuList(testMan);
+        List<DailyMenu> testWomanMenuList = dailyMenuService.findMembersTodayMenuList(testWoman);
+
+        Map<String, Double> testManCalcMap = criteriaService.calcTodayNutrition(testManMenuList).getData();
+        Map<String, Double> testWomanCalcMap = criteriaService.calcTodayNutrition(testWomanMenuList).getData();
+
+        assertThat(testManCalcMap.get("단백질")).isEqualTo(40);
+        assertThat(testManCalcMap.get("지방")).isEqualTo(30);
+
+        assertThat(testWomanCalcMap.get("단백질")).isEqualTo(20);
+        assertThat(testWomanCalcMap.get("지방")).isEqualTo(15);
+        assertThat(testWomanCalcMap.get("칼슘")).isEqualTo(0.3);
+        assertThat(testWomanCalcMap.get("나트륨")).isEqualTo(0.6);
+
+    }
 
 
 }
