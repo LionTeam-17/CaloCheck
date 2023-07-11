@@ -11,6 +11,7 @@ import com.google.cloud.vision.v1.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,8 +34,9 @@ public class ImageConfig {
         return settings;
     }
 
+    @Primary
     @Bean
-    public AmazonS3 amazonS3Client() {
+    public AmazonS3 amazonS3Client1() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(s3ConfigProperties.getAccessKey(), s3ConfigProperties.getSecretKey());
         return (AmazonS3) AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
