@@ -58,17 +58,17 @@ public class CriteriaDataExtractor {
 
                 String gender = row.getCell(indexMap.get("성별")).getStringCellValue();
                 int age = (int)row.getCell(indexMap.get("연령")).getNumericCellValue();
+                double carbohydrate = row.getCell(indexMap.get("탄수화물")).getNumericCellValue();
                 double fiber = row.getCell(indexMap.get("식이섬유")).getNumericCellValue();
+                double fat = row.getCell(indexMap.get("지방")).getNumericCellValue();
                 double protein = row.getCell(indexMap.get("단백질")).getNumericCellValue();
                 double calcium = row.getCell(indexMap.get("칼슘")).getNumericCellValue();
                 double sodium = row.getCell(indexMap.get("나트륨")).getNumericCellValue();
                 double potassium = row.getCell(indexMap.get("칼륨")).getNumericCellValue();
                 double magnesium = row.getCell(indexMap.get("마그네슘")).getNumericCellValue();
-                double carbohydrate = row.getCell(indexMap.get("탄수화물")).getNumericCellValue();
-                double fat = row.getCell(indexMap.get("지방")).getNumericCellValue();
 
-                Criteria criteria = criteriaService.create(gender, age, fiber, protein,
-                        calcium, sodium, potassium, magnesium, carbohydrate, fat);
+                Criteria criteria = criteriaService.create(gender, age, carbohydrate, fiber,
+                        fat, protein, calcium, sodium, potassium, magnesium);
 
             }
 

@@ -28,6 +28,14 @@
                 return;
             }
 
+            const $checkediModifyPostTypeRadioButton = $(form).find("[name=iModifyPostType]:checked");
+
+            if ($checkediModifyPostTypeRadioButton.length === 0) {
+                toastWarning('게시할 게시판을 선택해주세요');
+                $(form).find("[name=iModifyPostType]:first").focus();
+                return;
+            }
+
             form.submit();
         }
 
@@ -38,13 +46,13 @@
         }
     </script>
 
-    <div class="flex flex-col max-w-5xl w-full justify-center">
-        <section class="mb-5 max-w-5xl w-full">
+    <div class="flex flex-col max-w-3xl w-full justify-center">
+        <section class="mb-5 max-w-3xl w-full">
             <form class="flex flex-col gap-6" enctype="multipart/form-data" method="POST"
                   onsubmit="ModifyPost__submit(this); return false;"
                   th:action>
-                <div class="flex flex-grow max-w-5xl w-full justify-center">
-                    <div class="flex flex-col max-w-5xl w-full justify-center mt-20">
+                <div class="flex flex-grow max-w-3xl w-full justify-center">
+                    <div class="flex flex-col max-w-3xl w-full justify-center mt-20">
                         <div class="flex justify-center">
                             <div class="text-center font-bold text-4xl text-black">
                                 게시물 수정
@@ -52,14 +60,14 @@
                         </div>
                         <div class="mt-10 flex justify-center">
                             <!-- 제목 입력 부분-->
-                            <div class="flex flex-grow max-w-5xl w-full flex-col mx-2">
+                            <div class="flex flex-grow max-w-3xl w-full flex-col mx-2">
                                 <!-- 제목 -->
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
                                     제목
                                 </div>
                                 <!-- 제목 입력 -->
-                                <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
-                                    <input class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 h-10 p-4"
+                                <div class="flex flex-grow max-w-3xl w-full justify-center mt-2 mr-2">
+                                    <input class="border flex flex-grow max-w-3xl w-full border-black border-opacity-10 h-10 p-4"
                                            id="id-input" name="iModifySubject"
                                            th:placeholder="${@postService.findById(postId).get().subject}"
                                            type="text"/>
@@ -69,12 +77,32 @@
                                     내용
                                 </div>
                                 <!-- 내용 입력 -->
-                                <div class="flex flex-grow max-w-5xl w-full justify-center mt-2 mr-2">
+                                <div class="flex flex-grow max-w-3xl w-full justify-center mt-2 mr-2">
                             <textarea
-                                    class="border flex flex-grow max-w-5xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
+                                    class="border flex flex-grow max-w-3xl w-full border-black border-opacity-10 resize-none p-4 focus:outline-none"
                                     cols="45" name="iModifyContent"
                                     th:placeholder="${@postService.findById(postId).get().content}"
                                     rows="15"></textarea>
+                                </div>
+                                <div class="mt-6 text-gray-500 font-semi-bold mr-2">
+                                    카테고리 선택
+                                </div>
+                                <div class="flex justify-start gap-4 mt-3">
+                                    <label class="flex gap-2 items-center cursor-pointer">
+                                        <input class="radio peer" name="iModifyPostType" type="radio" value="A">
+                                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
+                                <i class="fa-solid fa-person-rays"></i>
+                                자유게시판
+                            </span>
+                                    </label>
+
+                                    <label class="flex gap-2 items-center cursor-pointer">
+                                        <input class="radio peer" name="iModifyPostType" type="radio" value="B">
+                                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
+                                <i class="fa-regular fa-face-smile"></i>
+                                식단등록게시판
+                            </span>
+                                    </label>
                                 </div>
                                 <div class="mt-6 text-gray-500 font-semi-bold mr-2">
                                     식단 선택
@@ -92,7 +120,7 @@
                                     </select>
                                 </div>
 
-                                <div class="flex flex-grow flex-col max-w-5xl w-full mt-2 mr-2">
+                                <div class="flex flex-grow flex-col max-w-3xl w-full mt-2 mr-2">
                                     <div class="flex">
                                         <input class="file-input file-input-bordered file-input mt-5 justify-center"
                                                id="iModifyImg" name="iModifyImg"
@@ -100,10 +128,11 @@
                                     </div>
                                 </div>
                                 <!-- 등록, 취소버튼 -->
-                                <div class="flex max-w-5xl w-full justify-end">
-                                    <div class="flex max-w-5xl w-full justify-end">
+                                <div class="flex max-w-3xl w-full justify-end">
+                                    <div class="flex max-w-3xl w-full justify-end">
                                         <div class="flex mt-6">
                                             <button class="btn btn-sm w-20 mr-2 bg-gray-500 hover:bg-gray-700 text-white font-bold rounded-full"
+                                                    style="border: white"
                                                     onclick="cancelForm()">
                                                 <a th:href="@{|/post/${postId}}">취소</a>
                                             </button>
@@ -111,7 +140,8 @@
                                     </div>
                                     <div class="submit-button flex justify-end">
                                         <div class="flex mt-6 mr-2">
-                                            <button class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full">
+                                            <button class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                                                    style="border: white">
                                                 <span class="text-center">수정</span>
                                             </button>
                                         </div>

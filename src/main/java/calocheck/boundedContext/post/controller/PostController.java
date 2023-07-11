@@ -5,7 +5,6 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
-import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -41,21 +39,38 @@ public class PostController {
     public String showPostList(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(value = "kw", defaultValue = "") String kw,
                                @RequestParam(value = "code", defaultValue = "0") String code,
+                               @RequestParam(value = "postType", defaultValue = "A") String postType,
                                Model model) {
 
         Page<Post> paging;
-        if (!kw.equals("")) {
-            if (code.equals("0")) {
-                paging = postService.findBySubjectLikeOrMemberNicknameLike
-                        ("%" + kw + "%", "%" + kw + "%", page);
+        if (postType.equals("A")) {
+            if (!kw.equals("")) {
+                if (code.equals("0")) {
+                    paging = postService.findByPostTypeAndSubjectLikeOrMemberNicknameLike
+                            ("A", "%" + kw + "%", "%" + kw + "%", page);
+                } else {
+                    paging = postService.findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                            ("A", "%" + kw + "%", "%" + kw + "%", page);
+                }
             } else {
-                paging = postService.findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
-                        ("%" + kw + "%", "%" + kw + "%", page);
+                if (code.equals("0")) paging = postService.findByPostType("A", page);
+                else paging = postService.findByPostTypeOrderByPopularityDesc("A", page);
             }
         } else {
-            if (code.equals("0")) paging = postService.findAll(page);
-            else paging = postService.findByOrderByPopularityDesc(page);
+            if (!kw.equals("")) {
+                if (code.equals("0")) {
+                    paging = postService.findByPostTypeAndSubjectLikeOrMemberNicknameLike
+                            ("B", "%" + kw + "%", "%" + kw + "%", page);
+                } else {
+                    paging = postService.findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc
+                            ("B", "%" + kw + "%", "%" + kw + "%", page);
+                }
+            } else {
+                if (code.equals("0")) paging = postService.findByPostType("B", page);
+                else paging = postService.findByPostTypeOrderByPopularityDesc("B", page);
+            }
         }
+        model.addAttribute("postType", postType);
         model.addAttribute("paging", paging);
         model.addAttribute("code", code);
         model.addAttribute("kw", kw);
@@ -92,7 +107,7 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/createForm")
-    public String savePost(String iSubject, String iContent,
+    public String savePost(String iSubject, String iContent, String iPostType,
                            @RequestParam(required = false) MultipartFile img,
                            String selectedFood) throws IOException {
 
@@ -138,7 +153,7 @@ public class PostController {
                     imageUrl = imageDataService.imageUpload(img, ImageTarget.FOOD_IMAGE);
                     RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
 
-                    if(imageRsData.isFail()){
+                    if (imageRsData.isFail()) {
                         return rq.historyBack(imageRsData);
                     }
                 }
@@ -149,17 +164,17 @@ public class PostController {
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<Post> postRsData = postService.savePost(iSubject, iContent, rq.getMember());
+        RsData<Post> postRsData = postService.savePost(iSubject, iContent, iPostType, rq.getMember());
 
         if (postRsData.isFail()) {
             return rq.historyBack(postRsData);
         }
 
-        if(imageUrl != null){
+        if (imageUrl != null) {
 
             RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, postRsData.getData().getId());
 
-            if(imageRsData.isFail()){
+            if (imageRsData.isFail()) {
                 return rq.historyBack(imageRsData);
             }
         }
@@ -190,6 +205,7 @@ public class PostController {
     public String modifyPost(@PathVariable Long postId,
                              String iModifySubject,
                              String iModifyContent,
+                             String iModifyPostType,
                              @RequestParam(required = false) MultipartFile iModifyImg) throws IOException {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
@@ -213,7 +229,7 @@ public class PostController {
             return rq.historyBack(isImgRsData);
         }
 
-        RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, rq.getMember());
+        RsData<Post> modifyPostRsData = postService.modifyPost(postId, iModifySubject, iModifyContent, iModifyPostType, rq.getMember());
 
         if (modifyPostRsData.isFail()) {
             return rq.historyBack(modifyPostRsData);

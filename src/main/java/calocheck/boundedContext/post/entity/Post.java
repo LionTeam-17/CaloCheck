@@ -32,6 +32,7 @@ public class Post extends BaseEntity {
     private Member member;
     @Builder.Default
     private Long popularity = 0L;
+    private String postType;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ToString.Exclude
