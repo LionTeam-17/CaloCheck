@@ -16,17 +16,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAll();
 
     Page<Post> findAll(Pageable pageable);
+
+    List<Post> findByPostType(String postType);
+
+    Page<Post> findByPostType(String postType, Pageable pageable);
+
     Page<Post> findByMemberId(Long id, Pageable pageable);
 
-    List<Post> findByOrderByPopularityDesc();
+    List<Post> findByPostTypeOrderByPopularityDesc(String postType);
 
-    Page<Post> findByOrderByPopularityDesc(Pageable pageable);
+    Page<Post> findByPostTypeOrderByPopularityDesc(String postType, Pageable pageable);
 
-    List<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw);
+    List<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLike(String postType, String subjectKw, String nicknameKw);
 
-    Page<Post> findBySubjectLikeOrMemberNicknameLike(String subjectKw, String nicknameKw, Pageable pageable);
+    Page<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLike(String postType, String subjectKw, String nicknameKw, Pageable pageable);
 
-    List<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw);
+    List<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String postType, String subjectKw, String nicknameKw);
 
-    Page<Post> findBySubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String subjectKw, String nicknameKw, Pageable pageable);
+    Page<Post> findByPostTypeAndSubjectLikeOrMemberNicknameLikeOrderByPopularityDesc(String postType, String subjectKw, String nicknameKw, Pageable pageable);
 }
