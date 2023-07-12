@@ -67,7 +67,7 @@
 
 ### 바디 트래킹
 
-| ![](https://velog.velcdn.com/images/waimi3169/post/c432bf47-3c67-4a89-8c9b-cb98becb6dc0/image.png) |  
+| ![](https://media.discordapp.net/attachments/1119978409964085349/1128610797954809957/image.png?width=533&height=597) |  
 |:--------------------------------------------------------------------------------------------------:|
 |                                               트래킹 화면                                               |     
 
