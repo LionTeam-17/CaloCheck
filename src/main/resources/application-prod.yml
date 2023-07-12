@@ -6,7 +6,7 @@ spring:
     password: calocheck17
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true

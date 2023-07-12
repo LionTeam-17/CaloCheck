@@ -31,7 +31,7 @@ public class RecommendController {
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        return "/usr/recommend/recommendList";
+        return "usr/recommend/recommendList";
     }
 
     @PostMapping("/list")
