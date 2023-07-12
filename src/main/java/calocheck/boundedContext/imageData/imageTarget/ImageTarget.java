@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ImageTarget {
 
-    POST_IMAGE("포스트 이미지"), FOOD_IMAGE("음식 이미지"), RECOMMEND_IMAGE("추천 이미지");
-    private final String imageTarget;
+    POST_IMAGE("포스트 이미지"),
+    FOOD_IMAGE("음식 이미지"),
+    RECOMMEND_IMAGE("추천 이미지");
 
+    private final String imageTarget;
 }

@@ -219,7 +219,7 @@ public class PostController {
                              String iModifySubject,
                              String iModifyContent,
                              String iModifyPostType,
-                             String imageDelete,
+                             boolean imageDelete,
                              @RequestParam(required = false) MultipartFile iModifyImg,
                              @RequestParam(required = false) String foodCode) throws IOException {
 
@@ -273,7 +273,7 @@ public class PostController {
             return rq.historyBack(modifyPostRsData);
         }
 
-        if (imageDelete != null) {
+        if (imageDelete) {
             RsData<ImageData> imageRsData = imageDataService.modifyImageData(ImageTarget.POST_IMAGE, imageUrl, modifyPostRsData.getData().getId());
 
             if (imageRsData.isFail()) {

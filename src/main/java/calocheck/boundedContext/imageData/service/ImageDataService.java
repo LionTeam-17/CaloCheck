@@ -77,14 +77,9 @@ public class ImageDataService {
 
             imageDataRepository.save(imageData);
         } else {
-
             ImageData imageData = byImageTargetAndTargetId.get();
 
-            imageData = imageData.toBuilder()
-                    .targetId(null)
-                    .build();
-
-            imageDataRepository.save(imageData);
+            imageDataRepository.delete(imageData);
         }
 
         return RsData.of("S-1", "수정 성공");
@@ -236,10 +231,6 @@ public class ImageDataService {
 
     public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId) {
         return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
-    }
-
-    public Optional<ImageData> findByTargetId(Long targetId) {
-        return imageDataRepository.findByTargetId(targetId);
     }
 
     public List<String> getRecommendImageList(List<String> recommendList) {

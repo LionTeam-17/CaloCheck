@@ -10,6 +10,4 @@ public interface ImageDataRepository extends JpaRepository<ImageData, Long> {
 
     Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId);
 
-    Optional<ImageData> findByTargetId(Long targetId);
-
 }
