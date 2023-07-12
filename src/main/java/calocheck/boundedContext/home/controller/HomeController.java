@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
+
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-    
+
     @GetMapping("/")
-    public String showMain() {
+    public String showMain() throws IOException {
 
         return "usr/home/main";
     }

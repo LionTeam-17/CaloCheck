@@ -32,7 +32,6 @@ public class S3Service {
                     .build();
 
             S3Object s3Object = s3Client.getObject(s3Config.getBucket(), objectKey);
-
             return s3Object.getObjectContent();
         } catch (S3Exception e) {
             throw new IOException("S3 파일 읽기 에러");
