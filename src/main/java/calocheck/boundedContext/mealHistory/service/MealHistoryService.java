@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,5 +79,11 @@ public class MealHistoryService {
         LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
         return mealHistoryRepository.findByMemberAndMealTypeAndCreateDateBetween(member, mealType, startDateTime, endDateTime);
+    }
+
+    public List<MealHistory> findByMemberAndCurrentMonth(Member member) {
+        LocalDateTime startDateTime = YearMonth.now().atDay(1).atStartOfDay();
+        LocalDateTime endDateTime = YearMonth.now().atEndOfMonth().atTime(23,59,59);
+        return mealHistoryRepository.findByMemberAndCreateDateBetween(member, startDateTime, endDateTime);
     }
 }
