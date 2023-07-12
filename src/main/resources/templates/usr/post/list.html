@@ -109,6 +109,11 @@
                         <!-- 역순 정렬 로직 종료 -->
                         <a class="font-bold text-sm flex justify-start" style="width: 30%"
                            th:href="|/post/${post.id}|">
+                            <span class="mr-1 mt-1"
+                                  th:if="${@imageDataService.findByTargetId(post.id).isPresent() && post.id == @imageDataService.findByTargetId(post.id).get().targetId}">
+                                <i class="fa-sharp fa-solid fa-image"></i></span>
+                            <span class="mr-1 mt-1" th:if="${@imageDataService.findByTargetId(post.id).isEmpty()}">
+                            <i class="fa-sharp fa-regular fa-image" style="color: #85938c;"></i></span>
                             <span style="word-break: break-all" th:text="${post.subject}"></span>
                             <span>&nbsp;</span>
                             <span class="text-[8px]" style="color:gray"

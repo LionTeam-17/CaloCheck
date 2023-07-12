@@ -200,6 +200,10 @@ public class PostController {
         Optional<Post> oPost = postService.findById(postId);
         List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
 
+        Optional<ImageData> oImageData = imageDataService.findByImageTargetAndTargetId(ImageTarget.POST_IMAGE, postId);
+
+        oImageData.ifPresent(imageData -> model.addAttribute("imageData", imageData));
+
         oPost.ifPresent(post -> model.addAttribute("post", post));
         model.addAttribute("todayFoodNameList", todayFoodNameList);
 
@@ -212,6 +216,7 @@ public class PostController {
                              String iModifySubject,
                              String iModifyContent,
                              String iModifyPostType,
+                             String imageDelete,
                              @RequestParam(required = false) MultipartFile iModifyImg,
                              String selectedFood) throws IOException {
 
@@ -265,6 +270,14 @@ public class PostController {
             return rq.historyBack(modifyPostRsData);
         }
 
+        if (imageDelete != null) {
+            RsData<ImageData> imageRsData = imageDataService.modifyImageData(ImageTarget.POST_IMAGE, imageUrl, modifyPostRsData.getData().getId());
+
+            if (imageRsData.isFail()) {
+                return rq.historyBack(imageRsData);
+            }
+        }
+
         if (imageUrl != null) {
 
             RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.POST_IMAGE, imageUrl, modifyPostRsData.getData().getId());
@@ -273,7 +286,6 @@ public class PostController {
                 return rq.historyBack(imageRsData);
             }
         }
-
         return rq.redirectWithMsg("/post/" + postId, modifyPostRsData);
     }
 }

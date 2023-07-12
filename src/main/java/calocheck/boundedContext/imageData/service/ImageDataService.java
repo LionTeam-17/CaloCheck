@@ -80,8 +80,8 @@ public class ImageDataService {
 
             ImageData imageData = byImageTargetAndTargetId.get();
 
-            imageData = ImageData.builder()
-                    .imageUrl(imageUrl)
+            imageData = imageData.toBuilder()
+                    .targetId(null)
                     .build();
 
             imageDataRepository.save(imageData);
@@ -236,6 +236,10 @@ public class ImageDataService {
 
     public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId) {
         return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
+    }
+
+    public Optional<ImageData> findByTargetId(Long targetId) {
+        return imageDataRepository.findByTargetId(targetId);
     }
 
     public List<String> getRecommendImageList(List<String> recommendList) {
