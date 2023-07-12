@@ -2,6 +2,8 @@ package calocheck.boundedContext.home.controller;
 
 import calocheck.base.util.s3.service.S3Service;
 import calocheck.boundedContext.imageData.config.GCPConfigProperties;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.vision.v1.ImageAnnotatorSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +24,17 @@ public class HomeController {
     public String showMain() throws IOException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(s3Service.getFileFromS3(gcpConfigProperties.getFilePath())));
+
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(s3Service.getFileFromS3(gcpConfigProperties.getFilePath()));
+        ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
+
         String line;
         while ((line = reader.readLine()) != null) {
             System.out.println(line);
         }
+
+        System.out.println("googleCredentials = " + googleCredentials.getQuotaProjectId());
+        System.out.println("settings = " + settings.getEndpoint());
 
 
         return "usr/home/main";
