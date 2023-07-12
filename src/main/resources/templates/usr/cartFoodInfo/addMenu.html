@@ -19,16 +19,49 @@
     <div class="flex-1 flex flex-col items-center">
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center flex-col">
-                <div class="flex justify-center">
-                    <h1 class="font-bold text-black text-lg mb-4">
-                        식사 후 영양정보
-                    </h1>
-                </div>
-                <div class="flex justify-center mb-4 text-sm">
-                    챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
+                <div class="mx-14 mb-5 flex flex-col justify-center bg-gray-200">
+                    <div class="flex justify-center">
+                        <div class="font-bold text-black text-xl m-4">
+                            식사 후 영양정보
+                        </div>
+                    </div>
+                    <div class="flex justify-center m-2 text-md">
+                        챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
+                    </div>
+                    <div class="m-3 p-2 bg-gray-300 flex justify-center text-md">
+                        <div class="flex m-3">
+                            <svg xmlns="http:// www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                            </svg>
+                            <div class="text-md">
+                                권장량 만족
+                            </div>
+                        </div>
+
+                        <div class="flex m-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                            </svg>
+                            <div class="text-md">
+                                섭취 과다
+                            </div>
+                        </div>
+                        <div class="flex m-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                            </svg>
+                            <div class="text-md">
+                                섭취 부족
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex mx-3 flex-row justify-between" th:each="calcNutrient : ${calcNutrients}">
+
+                <div class="flex mx-3 flex-row justify-around" th:each="calcNutrient : ${calcNutrients}">
                     <div>
                         <i class="fa-solid fa-circle" style="color:#b2c615"
                            th:if="${calcNutrient.getName().equals('단백질')}"></i>
@@ -52,39 +85,109 @@
                         <div class="flex" th:if="${calcNutrient.getName().equals('단백질') ||
                                       calcNutrient.getName().equals('탄수화물') ||
                                       calcNutrient.getName().equals('지방')}">
-                            <i th:if="${-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10}"
-                               class="text-lg fa-solid fa-square-check text-green-600"></i>
-                            <i th:if="${!(-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10)}"
-                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
-                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 1)}"></div>
+                            <div th:if="${-10 <= calcNutrient.getValue() && calcNutrient.getValue() <= 10}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                    <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${calcNutrient.getValue() < -10}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${10 < calcNutrient.getValue()}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                    <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="m-1" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 1)}"></div>
                         </div>
                         <div class="flex" th:if="${calcNutrient.getName().equals('칼슘')}">
-                            <i th:if="${-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2}"
-                               class="text-lg fa-solid fa-square-check text-green-600"></i>
-                            <i th:if="${!(-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2)}"
-                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
-                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
+                            <div th:if="${-0.2 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.2}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                    <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${calcNutrient.getValue() < -0.2}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${0.2 < calcNutrient.getValue()}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                    <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="m-1" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
                         <div class="flex" th:if="${calcNutrient.getName().equals('나트륨')}">
-                            <i th:if="${-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3}"
-                               class="text-lg fa-solid fa-square-check text-green-600"></i>
-                            <i th:if="${!(-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3)}"
-                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
-                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
+                            <div th:if="${-0.3 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.3}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                    <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${calcNutrient.getValue() < -0.3}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${0.3 < calcNutrient.getValue()}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                    <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="m-1" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
                         <div class="flex" th:if="${calcNutrient.getName().equals('칼륨')}">
-                            <i th:if="${-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5}"
-                               class="text-lg fa-solid fa-square-check text-green-600"></i>
-                            <i th:if="${!(-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5)}"
-                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
-                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
+                            <div th:if="${-0.5 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.5}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                    <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${calcNutrient.getValue() < -0.5}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${0.5 < calcNutrient.getValue()}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                    <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="m-1" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 2)}"></div>
                         </div>
                         <div class="flex" th:if="${calcNutrient.getName().equals('마그네슘')}">
-                            <i th:if="${-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08}"
-                               class="text-lg fa-solid fa-square-check text-green-600"></i>
-                            <i th:if="${!(-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08)}"
-                               class="text-lg fa-solid fa-triangle-exclamation text-red-700"></i>
-                            <div class="m-2" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 3)}"></div>
+                            <div th:if="${-0.08 <= calcNutrient.getValue() && calcNutrient.getValue() <= 0.08}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(8, 192, 8, 1);transform: ;msFilter:;">
+                                    <path d="M19 3H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-7.933 13.481-3.774-3.774 1.414-1.414 2.226 2.226 4.299-5.159 1.537 1.28-5.702 6.841z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${calcNutrient.getValue() < -0.08}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
+                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 15-5-5h4V7h2v5h4l-5 5z"></path>
+                                </svg>
+                            </div>
+                            <div th:if="${0.08 < calcNutrient.getValue()}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     style="fill: rgba(30, 30, 246, 1);transform: ;msFilter:;">
+                                    <path d="M12 22c5.514 0 10-4.486 10-10S17.514 2 12 2 2 6.486 2 12s4.486 10 10 10zm0-15 5 5h-4v5h-2v-5H7l5-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="m-1" th:text="${#numbers.formatDecimal(calcNutrient.value, 1, 3)}"></div>
                         </div>
 
                     </div>
@@ -128,7 +231,8 @@
                             <input type="radio" name="menuScore" value=2 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=3 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
-                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400" checked/>
+                            <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400"
+                                   checked/>
                         </div>
                     </div>
                 </div>
@@ -161,7 +265,8 @@
                     <button type="submit"
                             id="addMenuBtn"
                             class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
-                        식단 추가하기</button>
+                        식단 추가하기
+                    </button>
                 </div>
             </form>
 
@@ -180,7 +285,8 @@
                 </div>
             </div>
             <div class="divider my-1"></div>
-            <div id="cartInfos" class="border-2 p-3 flex flex-col w-full overflow-y-scroll h-1/4" th:if="${!cartList.isEmpty()}">
+            <div id="cartInfos" class="border-2 p-3 flex flex-col w-full overflow-y-scroll h-1/4"
+                 th:if="${!cartList.isEmpty()}">
                 <div class="flex flex-col"
                      th:id="${cartFoodInfo.foodInfo.id}"
                      th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
@@ -198,13 +304,13 @@
             </div>
             <div class="m-3 flex">
                 <div class="text-sm font-bold m-1">현재 날짜</div>
-                <div class="text-sm font-bold m-1 bg-gray-100" th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"></div>
+                <div class="text-sm font-bold m-1 bg-gray-100"
+                     th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"></div>
             </div>
 
             <div class="m-3 flex">
                 <div class="text-sm font-bold m-1">위의 정보로 오늘 식단이 기록됩니다. 추가하시겠습니까?</div>
             </div>
-
 
 
             <div class="m-3 flex place-content-end">

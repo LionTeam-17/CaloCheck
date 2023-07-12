@@ -41,6 +41,10 @@
                    href="javascript:history.back()">
                     돌아가기
                 </a>
+                <a class="m-2 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-3 rounded-lg"
+                   th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
+                    식단리스트
+                </a>
             </div>
 
             <div class="m-3 flex justify-center">
@@ -68,6 +72,11 @@
                             <div class="text-xs font-bold m-1">총 내용량</div>
                             <div class="text-xs text-black m-1"
                                  th:text="${foodInfo.totalSize} + '(' + ${foodInfo.unit} + ')'"></div>
+                        </div>
+                        <div class="flex m-2">
+                            <div class="text-xs font-bold m-1">에너지(kcal)</div>
+                            <div class="text-xs text-black m-1"
+                                 th:text="${foodInfo.kcal}"></div>
                         </div>
                     </div>
                     <!-- FoodInfo 정보 출력 끝-->
@@ -100,12 +109,6 @@
                     <!-- nutrientInfo 정보 출력 끝-->
                 </div>
                 <div class="divider my-2" style="height: 1px"></div>
-            </div>
-            <div class="flex justify-center">
-                <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-lg"
-                   th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
-                    식단리스트
-                </a>
             </div>
 
             <div id="customModal"
