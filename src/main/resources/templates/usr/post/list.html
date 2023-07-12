@@ -100,14 +100,14 @@
                 <div class="flex flex-col" th:each="post, loop: ${paging}">
                     <div class="flex flex-grow justify-between">
                         <!-- 역순 정렬 로직 시작 -->
-                        <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
+                        <span class="font-bold text-sm px-2 flex justify-center" style="width: 5%"
                               th:if="${kw.equals('')}"
                               th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
-                        <span class="font-bold text-xs px-2 flex justify-center" style="width: 5%"
+                        <span class="font-bold text-sm px-2 flex justify-center" style="width: 5%"
                               th:if="${!kw.equals('')}"
                               th:text="${post.id}"></span>
                         <!-- 역순 정렬 로직 종료 -->
-                        <a class="font-bold text-xs flex justify-start" style="width: 30%"
+                        <a class="font-bold text-sm flex justify-start" style="width: 30%"
                            th:href="|/post/${post.id}|">
                             <span style="word-break: break-all" th:text="${post.subject}"></span>
                             <span>&nbsp;</span>
@@ -115,15 +115,15 @@
                                   th:if="${post.commentList.size() != 0}"
                                   th:text="'[' + ${post.commentList.size()} + ']'"></span>
                         </a>
-                        <span class="font-bold text-xs flex justify-center" style="width: 15%"
+                        <span class="font-bold text-sm flex justify-center" style="width: 15%"
                               th:text="${post.member.nickname}"></span>
-                        <span class="font-bold text-xs flex justify-center" style="width: 18%"
+                        <span class="font-bold text-sm flex justify-center" style="width: 18%"
                               th:if="${post.isToday == true}"
                               th:text="${#temporals.format(post.createDate, 'HH:mm')}"></span>
-                        <span class="font-bold text-xs flex justify-center" style="width: 18%"
+                        <span class="font-bold text-sm flex justify-center" style="width: 18%"
                               th:if="${post.isToday == false}"
                               th:text="${#temporals.format(post.createDate, 'yy-MM-dd')}"></span>
-                        <span class="font-bold text-xs flex justify-center" style="width: 6%"
+                        <span class="font-bold text-sm flex justify-center" style="width: 6%"
                               th:text="${post.popularity}"></span>
                     </div>
                     <div class="divider my-2" style="height: 1px"></div>
@@ -136,7 +136,7 @@
                 <ul class="pagination justify-content-center flex justify-center flex-grow">
                     <li class="page-item"
                         th:if="${paging.hasPrevious() == true }">
-                        <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
@@ -144,16 +144,16 @@
                     <li class="text-xs page-item mt-1"
                         th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
                         th:if="${page >= paging.number - 1 and page <= paging.number+3}">
-                        <a class="page-link m-1 btn-outline text-black text-xs bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
+                        <a class="page-link m-1 btn-outline text-black text-sm bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page != paging.number+1}" th:text="${page}"></a>
-                        <a class="page-link m-1 btn-outline text-black text-xs bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
+                        <a class="page-link m-1 btn-outline text-black text-sm bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${page -1}|}"
                            th:if="${page == paging.number+1}" th:text="${page}"></a>
                     </li>
                     <li class="page-item"
                         th:if="${paging.hasNext() == true }">
-                        <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number+1}|}">
                             <span>다음</span>
                         </a>
