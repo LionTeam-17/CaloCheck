@@ -141,7 +141,7 @@ public class MemberService {
         }
 
         RsData<Member> joinResult = join(providerTypeCode, username, "", gender, email, nickname,
-                0, 0.0, 0.0, 0.0, 0.0); // 최초 로그인 시 회원 가입
+                20, 0.0, 0.0, 0.0, 0.0); // 최초 로그인 시 회원 가입
 
         if (joinResult.isSuccess()) {
             Member member = joinResult.getData();
