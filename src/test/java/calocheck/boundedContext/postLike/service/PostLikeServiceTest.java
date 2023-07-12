@@ -1,8 +1,10 @@
-package calocheck.boundedContext.post.service;
+package calocheck.boundedContext.postLike.service;
 
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
+import calocheck.boundedContext.post.service.PostService;
+import calocheck.boundedContext.postLike.entity.PostLike;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -18,49 +20,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @Transactional
-class PostServiceTest {
+class PostLikeServiceTest {
     @Autowired
     private PostService postService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private PostLikeService postLikeService;
 
     @Test
-    @DisplayName("포스트 작성")
+    @DisplayName("게시물 추천 생성")
     void t001() {
         Member member = memberService.findById(1L).get();
 
         Post post = postService.savePost("테스트 게시물입니다.", "테스트 내용입니다.", "A", member).getData();
 
-        assertThat(post.getSubject()).isEqualTo("테스트 게시물입니다.");
-        assertThat(post.getContent()).isEqualTo("테스트 내용입니다.");
-        assertThat(post.getPostType()).isEqualTo("A");
-        assertThat(post.getMember().getId()).isEqualTo(member.getId());
+        PostLike postLike = postLikeService.savePostLike(post.getId(), member).getData();
+
+        assertThat(postLike.getPost()).isEqualTo(post);
+        assertThat(postLike.getMember()).isEqualTo(member);
+        assertThat(postLike.getPositive()).isEqualTo(true);
     }
 
     @Test
-    @DisplayName("포스트 수정")
+    @DisplayName("게시물 추천 삭제")
     void t002() {
         Member member = memberService.findById(2L).get();
 
         Post post = postService.savePost("테스트 게시물입니다.", "테스트 내용입니다.", "A", member).getData();
 
-        postService.modifyPost(post.getId(), "게시물 수정 테스트입니다.", "게시물 수정 테스트 내용입니다.", "B", member);
+        PostLike postLike = postLikeService.savePostLike(post.getId(), member).getData();
 
-        assertThat(post.getSubject()).isEqualTo("게시물 수정 테스트입니다.");
-        assertThat(post.getContent()).isEqualTo("게시물 수정 테스트 내용입니다.");
-        assertThat(post.getPostType()).isEqualTo("B");
-        assertThat(post.getMember().getId()).isEqualTo(member.getId());
-    }
+        postLikeService.deletePostLike(post.getId(), member);
 
-    @Test
-    @DisplayName("포스트 삭제")
-    void t003() {
-        Member member = memberService.findById(3L).get();
-
-        Post post = postService.savePost("테스트 게시물입니다.", "테스트 내용입니다.", "A", member).getData();
-
-        postService.deletePost(post.getId(), member.getId());
-
-        assertThat(postService.findById(post.getId()).isPresent()).isFalse();
+        assertThat(postLikeService.findById(postLike.getId()).isPresent()).isFalse();
     }
 }
