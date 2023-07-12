@@ -68,18 +68,18 @@ public class DailyMenuService {
         dailyMenuRepository.save(dailyMenu);
     }
 
-    public List<String> getTodayFoodNameList(Member member) {
+    public List<FoodInfo> getTodayFoodList(Member member) {
 
         List<DailyMenu> todayDailyMenuList = findMembersTodayMenuList(member);
 
-        List<String> todayFoodNameList = new ArrayList<>();
+        List<FoodInfo> todayFoodList = new ArrayList<>();
 
         for (DailyMenu dailyMenu : todayDailyMenuList) {
 
-            todayFoodNameList.add(dailyMenu.getFoodInfo().getFoodName());
+            todayFoodList.add(dailyMenu.getFoodInfo());
 
         }
-        return todayFoodNameList;
+        return todayFoodList;
     }
 
     public List<DailyMenu> findMembersTodayMenuList(Member member){
