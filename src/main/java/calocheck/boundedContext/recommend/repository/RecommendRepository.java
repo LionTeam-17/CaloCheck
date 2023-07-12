@@ -1,6 +1,5 @@
 package calocheck.boundedContext.recommend.repository;
 
-import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import org.springframework.data.jpa.repository.JpaRepository;
 
