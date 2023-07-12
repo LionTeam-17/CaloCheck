@@ -26,7 +26,8 @@
                     </div>
                     <div class="user-detail-item">
                         <span class="detail-title">성별 :</span>
-                        <span class="detail-value" th:text="(${member.gender} == 'M') ? '남' : '여'"></span>
+                        <span th:if="${member.gender == 'M'}" class="detail-value">남 <i class="fa-solid fa-mars"></i></span>
+                        <span th:if="${member.gender == 'F'}" class="detail-value">여 <i class="fa-solid fa-venus"></i></span>
                     </div>
                     <div class="user-detail-item">
                         <span class="detail-title">나이 :</span>
@@ -40,12 +41,14 @@
             </div>
             <div>
                 <div class="tab_button flex">
-                    <button class="tablink m-3 mt-1 mr-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="WeightTab" data-tab="Weight" onclick="openData('Weight')"> 체중 </button>
-                    <button class="tablink m-3 mt-1 mr-1 ml-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
-                    <button class="tablink m-3 mt-1 ml-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full" id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">골격근량</button>
-                    <div class="ml-auto">
-                        <button id="openTrackingModal" class="mr-1 mt-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full">기록보기</button>
-                        <button id="openRecordModal" class="ml-1 mt-1 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full">기록하기</button>
+                    <div class="tabs">
+                        <button class="tablink tab tab-lifted tab-active" id="WeightTab" data-tab="Weight" onclick="openData('Weight')"> 체중 </button>
+                        <button class="tablink tab tab-lifted " id="BodyFatTab" data-tab="Body Fat" onclick="openData('Body Fat')">체지방량</button>
+                        <button class="tablink tab tab-lifted " id="MuscleMassTab" data-tab="Muscle Mass" onclick="openData('Muscle Mass')">골격근량</button>
+                    </div>
+                    <div class="join join-vertical ml-auto">
+                        <button id="openTrackingModal" class="btn btn-sm join-item">기록보기</button>
+                        <button id="openRecordModal" class="btn btn-sm join-item">기록하기</button>
                     </div>
                 </div>
                 <div>
@@ -122,7 +125,7 @@
                                                     <input type="number" id="bodyFat" th:field="*{bodyFat}">
                                                 </div>
                                                 <div class="form-container flex flex-row justify-start">
-                                                    <label for="muscleMass">근육량: </label>
+                                                    <label for="muscleMass">골격근량: </label>
                                                     <input type="number" id="muscleMass" th:field="*{muscleMass}">
                                                 </div>
                                             </form>
@@ -171,35 +174,6 @@
                 </div>
             </div>
 
-
-            <!--            <div id="bodyInfo" class="flex justify-center mt-4">-->
-<!--                <div class="max-h-[400px] overflow-y-auto">-->
-<!--                    <table class="table-auto w-full bg-white border">-->
-<!--                        <thead>-->
-<!--                        <tr class = "table_head">-->
-<!--                            <th class="px-4 py-2 border-b">날짜</th>-->
-<!--                            <th class="px-4 py-2 border-b">체중</th>-->
-<!--                            <th class="px-4 py-2 border-b">체지방량</th>-->
-<!--                            <th class="px-4 py-2 border-b">골격근량</th>-->
-<!--                            <th class="px-4 py-2 border-b">bmi</th>-->
-<!--                            <th class="px-4 py-2 border-b">체지방률</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                        <tr th:each="tracking, iterStat : ${trackingDataReverse}" class="border-b text-black" th:if="${iterStat.index < 5}">-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.dateTime}"></td>-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.weight} + 'kg'"></td>-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.bodyFat} + 'kg'"></td>-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.muscleMass} + 'kg'"></td>-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.bmi}"></td>-->
-<!--                            <td class="px-4 py-2" th:text="${tracking.bodyFatPercentage} + '%'"></td>-->
-<!--                        </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-<!--                </div>-->
-<!--            </div>-->
-
-
             <script th:inline="javascript">
                 $(document).ready(function() {
                     $("#openTrackingModal").click(function() {
@@ -242,9 +216,9 @@
                     tablinks = document.getElementsByClassName("tablink");
                     for (i = 0; i < tablinks.length; i++) {
                         if (tablinks[i].getAttribute('data-tab') !== type) {
-                            tablinks[i].classList.remove("active");
+                            tablinks[i].classList.remove("tab-active");
                         } else {
-                            tablinks[i].classList.add("active");
+                            tablinks[i].classList.add("tab-active");
                         }
                     }
                 }

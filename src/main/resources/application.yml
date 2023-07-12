@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/calocheck__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
+    url: jdbc:mariadb://dev-rds-instance.ckjf4dnmuwog.ap-northeast-2.rds.amazonaws.com/calocheck__dev?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci
+    username: user
+    password: calocheck17
   jpa:
     hibernate:
       ddl-auto: update
