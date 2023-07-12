@@ -98,7 +98,7 @@
                   method="POST"
                   enctype="multipart/form-data"
                   th:action="@{/cartFoodInfo/addMenu}">
-                <div>
+                <div class="flex justify-around">
                     <div class="flex flex-col">
                         <div class="flex justify-center">
                             <h1 class="font-bold text-black text-lg mb-4">
@@ -116,10 +116,6 @@
                             <input type="radio" name="mealType" data-title="기타" value="etc" class="btn btn-secondary"/>
                         </div>
                     </div>
-                </div>
-
-                <div class="divider"></div>
-                <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
                             <h1 class="font-bold text-black text-lg mb-4">
@@ -134,7 +130,6 @@
                             <input type="radio" name="menuScore" value=4 class="mask mask-star-2 bg-orange-400"/>
                             <input type="radio" name="menuScore" value=5 class="mask mask-star-2 bg-orange-400" checked/>
                         </div>
-
                     </div>
                 </div>
 
@@ -160,7 +155,7 @@
                 <!--                <input type="hidden" name="nutrientTotal" th:value="${nutrientTotal}"/>-->
 
                 <div class="flex justify-center mt-5">
-                    <a href="/cartFoodInfo/total"
+                    <a href="/cartFoodInfo/list"
                        class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                         이전</a>
                     <button type="submit"

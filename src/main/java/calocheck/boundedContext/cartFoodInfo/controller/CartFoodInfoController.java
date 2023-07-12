@@ -40,7 +40,11 @@ public class CartFoodInfoController {
         Member member = rq.getMember();
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
+        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
 
+        model.addAttribute("kcalTotal", kcalTotal);
+        model.addAttribute("nutrientTotal", nutrientTotal);
         model.addAttribute("cartList", cartList);
 
         return "usr/cartFoodInfo/list";
@@ -132,26 +136,6 @@ public class CartFoodInfoController {
         RsData<CartFoodInfo> updateRes = cartFoodInfoService.updateCart(member, foodInfo, quantity);
 
         return new CartDTO("success", updateRes.getMsg());
-    }
-
-
-    @GetMapping("/total")
-    @PreAuthorize("isAuthenticated()")
-    public String showCartTotal(Model model) {
-        Member member = rq.getMember();
-        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
-
-        if (cartList == null) {
-            return rq.historyBack("잘못된 접근입니다");
-        }
-
-        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
-        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
-
-        model.addAttribute("kcalTotal", kcalTotal);
-        model.addAttribute("nutrientTotal", nutrientTotal);
-
-        return "usr/cartFoodInfo/total";
     }
 
     @GetMapping("/addMenu")
