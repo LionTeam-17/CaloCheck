@@ -48,10 +48,9 @@ public class TagService {
 
         List<Tag> tagList = findAllTag();
 
-        //TODO nutrient name 확인해야함 (contains OR equals)
         List<Tag> returnTagList = nutrientList.stream()
                 .flatMap(nutrient -> tagList.stream()
-                        .filter(tag -> nutrient.getName().contains(tag.getTagName()))
+                        .filter(tag -> nutrient.getName().equals(tag.getTagName()))
                         .filter(tag -> nutrient.getValue() >= tag.getTagCriteria()))
                 .collect(Collectors.toList());
 
