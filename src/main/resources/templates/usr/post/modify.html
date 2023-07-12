@@ -115,10 +115,10 @@
                                 </div>
 
                                 <div>
-                                    <select class="select select-bordered w-full max-w-xs mt-3" name="selectedFood">
+                                    <select class="select select-bordered w-full max-w-xs mt-3" name="foodCode">
                                         <option disabled selected>어떤 음식에 대한 사진인가요?</option>
                                         <div th:if="todayFoodNameList" th:each="food : ${todayFoodNameList}">
-                                            <option th:value="${food.id}" th:text="${food.foodName}"></option>
+                                            <option th:value="${food.foodCode}" th:text="${food.foodName}"></option>
                                         </div>
                                     </select>
                                 </div>
