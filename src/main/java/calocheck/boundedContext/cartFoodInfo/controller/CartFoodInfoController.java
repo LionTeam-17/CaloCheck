@@ -86,6 +86,13 @@ public class CartFoodInfoController {
             return new CartDTO("fail", res.getMsg());
         }
 
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
+        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
+
+//        model.addAttribute("kcalTotal", kcalTotal);
+//        model.addAttribute("nutrientTotal", nutrientTotal);
+
         return new CartDTO("success", res.getMsg(), foodId);
     }
 

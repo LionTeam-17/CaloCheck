@@ -6,20 +6,16 @@ import lombok.Data;
 public class CartDTO {
     private String result;
     private String msg;
-    private Long foodId;
-
-    public CartDTO(String result) {
-        this.result = result;
-    }
+    private Long deletedId;
 
     public CartDTO(String result, String msg) {
         this.result = result;
         this.msg = msg;
     }
 
-    public CartDTO(String result, String msg, Long foodId) {
+    public CartDTO(String result, String msg, Long deletedId) {
         this.result = result;
         this.msg = msg;
-        this.foodId = foodId;
+        this.deletedId = deletedId;
     }
 }

@@ -161,21 +161,18 @@
                 }]
         };
 
-        let label;
-        let value;
-        let back;
-        let hover;
         let loopIndex;
-        let iconTag;
+        let label, value;
+        let back, hover, iconTag;
 
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrientTotal}"]*/
         loopIndex = /*[[${loop.index}]]*/null;
-        iconTag = document.getElementById(loopIndex);
         label = /*[[${nutrient.name}]]*/null;
         value = /*[[${nutrient.value}]]*/null;
         back = background[loopIndex];
         hover = background[loopIndex];
+        iconTag = document.getElementById(loopIndex);
 
         if (value != 0) {
             nutrientTotalData.labels.push(label);
@@ -196,7 +193,7 @@
         const ctx = document.getElementById("nutrientChart").getContext("2d");
 
         // 원형 그래프 생성
-        new Chart(ctx, {
+        var myChart = new Chart(ctx, {
             type: "doughnut",
             data: nutrientTotalData,
             options: options
