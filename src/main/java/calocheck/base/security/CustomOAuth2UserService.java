@@ -78,7 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (nickname.length() > 20) nickname = nickname.substring(0, 20);
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, gender, email, nickname, 0, 0.0,0.0, 0.0, 0.0).getData();
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, gender, email, nickname, 20, 0.0,0.0, 0.0, 0.0).getData();
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
