@@ -57,17 +57,21 @@
             </h2>
 
             <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="modifyInformation(this); return false;">
-                <div class="flex justify-center gap-3">
+                <div class="flex items-center justify-center gap-3">
                     <div>
                         <span>성별:</span>
                     </div>
                     <div>
                         <label>
                             <input type="radio" name="gender" value="M" th:checked="${member.gender == 'M'}">
+                            <i class="fa-solid fa-person"></i>
                             남성
                         </label>
+                    </div>
+                    <div>
                         <label>
                             <input type="radio" name="gender" value="W" th:checked="${member.gender == 'W'}">
+                            <i class="fa-solid fa-person-dress"></i>
                             여성
                         </label>
                     </div>
