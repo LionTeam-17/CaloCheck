@@ -1,8 +1,8 @@
 package calocheck.boundedContext.imageData.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.base.util.s3.config.S3Config;
 import calocheck.boundedContext.imageData.config.OptimizerConfigProperties;
-import calocheck.boundedContext.imageData.config.S3ConfigProperties;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import calocheck.boundedContext.imageData.repository.ImageDataRepository;
@@ -28,7 +28,7 @@ import java.util.*;
 @Service
 public class ImageDataService {
 
-    private final S3ConfigProperties s3ConfigProperties;
+    private final S3Config s3ConfigProperties;
     private final ImageAnnotatorSettings visionAPISettings;
     private final OptimizerConfigProperties optimizerConfigProperties;
     private final AmazonS3 amazonS3;
