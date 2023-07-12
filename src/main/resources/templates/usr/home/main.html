@@ -9,10 +9,92 @@
 <body>
 <th:block layout:fragment="Content">
     <main class="flex-1 flex justify-center">
-        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
-            <span>메인입니다.</span>
+        <div class="m-10 max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div class="mx-3 flex text-lg text-black">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path></svg>
+                <div>Menu</div>
+            </div>
+            <div class="m-3 grid grid-cols-3 gap-4">
+                <div class="m-3 flex justify-center text-center">
+                    <a href="/foodInfo/search"
+                       class="text-gray-600 hover:text-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="60" height="60" viewBox="0 0 24 24"
+                             style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                            <path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path>
+                        </svg>
+                        <div class="text-sm">
+                            Search
+                        </div>
+                    </a>
+                </div>
+                <div class="m-3 flex justify-center text-center">
+                    <a href="/post/list?postType=A"
+                       class="text-gray-600 hover:text-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="60" height="60" viewBox="0 0 24 24"
+                             style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                            <path d="M16.604 11.048a5.67 5.67 0 0 0 .751-3.44c-.179-1.784-1.175-3.361-2.803-4.44l-1.105 1.666c1.119.742 1.8 1.799 1.918 2.974a3.693 3.693 0 0 1-1.072 2.986l-1.192 1.192 1.618.475C18.951 13.701 19 17.957 19 18h2c0-1.789-.956-5.285-4.396-6.952z"></path>
+                            <path d="M9.5 12c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.103 0 2 .897 2 2s-.897 2-2 2-2-.897-2-2 .897-2 2-2zm1.5 7H8c-3.309 0-6 2.691-6 6v1h2v-1c0-2.206 1.794-4 4-4h3c2.206 0 4 1.794 4 4v1h2v-1c0-3.309-2.691-6-6-6z"></path>
+                        </svg>
+                        <div class="text-sm">
+                            Community
+                        </div>
+                    </a>
+                </div>
+                <div class="m-3 flex justify-center text-center">
+                    <a href="/recommend/list"
+                       class="text-gray-600 hover:text-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="m21.781 13.875-2-2.5A1 1 0 0 0 19 11h-6V9h6c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2H5a1 1 0 0 0-.781.375l-2 2.5a1.001 1.001 0 0 0 0 1.25l2 2.5A1 1 0 0 0 5 9h6v2H5c-1.103 0-2 .897-2 2v3c0 1.103.897 2 2 2h6v4h2v-4h6a1 1 0 0 0 .781-.375l2-2.5a1.001 1.001 0 0 0 0-1.25zM4.281 5.5 5.48 4H19l.002 3H5.48L4.281 5.5zM18.52 16H5v-3h13.52l1.2 1.5-1.2 1.5z"></path></svg>
+                        <div class="text-sm">
+                            Recommend
+                        </div>
+                    </a>
+                </div>
+                <div class="m-3 flex justify-center text-center">
+                    <a href="/cartFoodInfo/list"
+                       class="text-gray-600 hover:text-gray-800"
+                       sec:authorize="isAuthenticated()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;"><path d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"></path><circle cx="10.5" cy="19.5" r="1.5"></circle><circle cx="17.5" cy="19.5" r="1.5"></circle></svg>
+                        <div class="text-sm">
+                            Cart
+                        </div>
+                    </a>
+                </div>
+                <div class="m-3 flex justify-center text-center">
+                    <a href="/tracking/bodyTracking"
+                       class="text-gray-600 hover:text-gray-800"
+                       sec:authorize="isAuthenticated()">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="60" height="60" viewBox="0 0 24 24"
+                             style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                            <path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path>
+                            <path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path>
+                        </svg>
+                        <div class="text-sm">
+                            Tracking
+                        </div>
+                    </a>
+                </div>
+                <div class="m-3 flex justify-center text-center">
+                    <a th:href="@{|/mealHistory/${@rq.member.id}|}"
+                       class="text-gray-600 hover:text-gray-800"
+                       sec:authorize="isAuthenticated()">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="60" height="60" viewBox="0 0 24 24"
+                             style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                            <path d="M3 3v17a1 1 0 0 0 1 1h17v-2H5V3H3z"></path>
+                            <path d="M15.293 14.707a.999.999 0 0 0 1.414 0l5-5-1.414-1.414L16 12.586l-2.293-2.293a.999.999 0 0 0-1.414 0l-5 5 1.414 1.414L13 12.414l2.293 2.293z"></path>
+                        </svg>
+                        <div class="text-sm">
+                            DailyMenu
+                        </div>
+                    </a>
+                </div>
 
+            </div>
         </div>
     </main>
-</th:block>>
+</th:block>
+>
 </body>

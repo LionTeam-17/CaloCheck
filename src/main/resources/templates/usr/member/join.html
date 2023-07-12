@@ -97,6 +97,25 @@
         </h2>
 
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="joinFormSubmit(this); return false;">
+            <div class="flex items-center justify-center gap-3">
+                <div>
+                    <span>성별:</span>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="gender" value="M">
+                        <i class="fa-solid fa-person"></i>
+                        남성
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="gender" value="W">
+                        <i class="fa-solid fa-person-dress"></i>
+                        여성
+                    </label>
+                </div>
+            </div>
             <div>
                 <input type="text" name="username" maxlength="20" size="40" placeholder="아이디" class="input input-bordered">
             </div>
@@ -105,22 +124,6 @@
             </div>
             <div>
                 <input type="text" name="email" maxlength="30" size="40" placeholder="이메일" class="input input-bordered">
-            </div>
-
-            <div class="flex justify-center gap-3">
-                <div>
-                    <span>성별:</span>
-                </div>
-                <div>
-                    <label>
-                        <input type="radio" name="gender" value="M">
-                        남성
-                    </label>
-                    <label>
-                        <input type="radio" name="gender" value="W">
-                        여성
-                    </label>
-                </div>
             </div>
 
             <div class="flex justify-between">
@@ -140,10 +143,10 @@
                         <input type="text" name="age" size="15" placeholder="나이(선택)" class="input input-bordered">
                     </div>
                     <div>
-                        <input type="text" name="muscleMass" size="15" placeholder="골격근량(선택)" class="input input-bordered">
+                        <input type="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
                     </div>
                     <div>
-                        <input type="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
+                        <input type="text" name="muscleMass" size="15" placeholder="골격근량(선택)" class="input input-bordered">
                     </div>
                 </div>
             </div>
@@ -160,12 +163,47 @@
             <input type="checkbox" id="my_modal_6" class="modal-toggle"/>
             <div class="modal">
                 <div class="modal-box">
-                    <h3 class="font-bold text-lg">이미지 수집 동의 안내</h3>
-                    <p class="py-4">유해하지 않은 음식 이미지에 한해 저희 사이트의 대표 음식 이미지가 될 수 있습니다.</p>
-                    <p class="py-4">여러분이 제공해주시는 이미지가 저희 사이트에 큰 힘이 됩니다.</p>
-                    <p class="py-4">뭐 약간... 이런 느낌</p>
-                    <p class="py-4 text-red">단, 저작권에 위배되거나 유해한 사진을 업로드 하시는 경우 이용에 제약이 있을 수
-                        있습니다.</p>
+                    <h3 class="flex justify-center font-bold text-lg">이미지 수집 동의 안내</h3>
+                    <br>
+                    <p>
+                        저희는 이미지 수집을 위한 동의를 받고 있으며, 이를 통해 개인 정보 보호와 관련된 법적 요구 사항을 준수하고 있습니다. 아래는 이미지 수집 동의 안내문입니다.
+                    </p>
+                    <br>
+                    <h2>1. 수집 목적:</h2>
+                    <p>
+                        이미지 수집은 칼로체크에서 음식 이미지 정보 제공을 위해 사용됩니다.
+                    </p>
+
+                    <h2>2. 수집 범위:</h2>
+                    <p>
+                        수집되는 이미지는 음식 사진들을 수집하고 있습니다.
+                    </p>
+
+                    <h2>3. 수집 방법:</h2>
+                    <p>
+                        이미지는 파일 업로드(웹/모바일)로 가능합니다.
+                    </p>
+
+                    <h2>4. 보관 및 보안:</h2>
+                    <p>
+                        수집된 이미지는 오직 저희 칼로체크 내에서만 사용될 예정이며, 보관될 것을 알려드립니다.
+                    </p>
+
+                    <h2>5. 이미지 사용:</h2>
+                    <p>
+                        수집된 이미지는 칼로체크 내 음식 정보들에 제공되는데 사용되며, 그 외에 경우에도 사용될 수 있음을 알려드립니다.
+                    </p>
+
+                    <h2>6. 개인 정보 보호:</h2>
+                    <p>
+                        저희는 수집된 이미지에 대한 개인 정보 보호를 중요시하며, 관련 법적 요구 사항을 준수합니다. 자세한 내용은 개인 정보 보호 정책을 참조해 주세요.
+                    </p>
+                    <br>
+                    <p>더 자세한 정보 및 동의 절차에 대해서는 개인 정보 보호 정책을 참고하시기 바랍니다. 문의 사항이 있으시면 언제든지 문의해주시길 바랍니다.</p>
+                    <br>
+                    <p>감사합니다.</p>
+                    <br>
+                    <p class="flex justify-center font-bold text-lg">CaloCheck</p>
                     <div class="modal-action">
                         <label for="my_modal_6" class="btn">닫기</label>
                     </div>

@@ -1,8 +1,8 @@
 package calocheck.boundedContext.imageData.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.base.util.s3.config.S3Config;
 import calocheck.boundedContext.imageData.config.OptimizerConfigProperties;
-import calocheck.boundedContext.imageData.config.S3ConfigProperties;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import calocheck.boundedContext.imageData.repository.ImageDataRepository;
@@ -28,19 +28,27 @@ import java.util.*;
 @Service
 public class ImageDataService {
 
-    private final S3ConfigProperties s3ConfigProperties;
+    private final S3Config s3ConfigProperties;
     private final ImageAnnotatorSettings visionAPISettings;
     private final OptimizerConfigProperties optimizerConfigProperties;
     private final AmazonS3 amazonS3;
     private final ImageDataRepository imageDataRepository;
 
     @Transactional
-    public RsData<ImageData> createImageData(ImageTarget imageTarget, String imageUrl, Long targetId){
+    public RsData<ImageData> createImageData(ImageTarget imageTarget, String imageUrl, Long targetId) {
 
         Optional<ImageData> byImageTargetAndTargetId = findByImageTargetAndTargetId(imageTarget, targetId);
 
-        if(byImageTargetAndTargetId.isPresent()){
-            return RsData.of("F-1", "이미지 등록에 실패하였습니다.");
+        if(byImageTargetAndTargetId.isPresent() && imageTarget.equals(ImageTarget.POST_IMAGE)){
+
+            ImageData imageData = byImageTargetAndTargetId.get();
+
+            imageData.updateImageUrl(imageUrl);
+
+            return RsData.of("S-2", "이미지가 수정되었습니다.", imageData);
+
+        } else if (byImageTargetAndTargetId.isPresent()) {
+            return RsData.of("F-1", "이미 이미지가 존재합니다");
         }
 
         ImageData newImageData = ImageData.builder()
@@ -53,6 +61,35 @@ public class ImageDataService {
 
         return RsData.of("S-1", "이미지 등록에 성공하였습니다.", newImageData);
     }
+
+    @Transactional
+    public RsData<ImageData> modifyImageData(ImageTarget imageTarget, String imageUrl, Long targetId){
+
+        Optional<ImageData> byImageTargetAndTargetId = findByImageTargetAndTargetId(imageTarget, targetId);
+
+        if(byImageTargetAndTargetId.isEmpty()){
+
+            ImageData imageData = ImageData.builder()
+                    .imageTarget(imageTarget)
+                    .imageUrl(imageUrl)
+                    .targetId(targetId)
+                    .build();
+
+            imageDataRepository.save(imageData);
+        }else{
+
+            ImageData imageData = byImageTargetAndTargetId.get();
+
+            imageData = ImageData.builder()
+                    .imageUrl(imageUrl)
+                    .build();
+
+            imageDataRepository.save(imageData);
+        }
+
+        return RsData.of("S-1", "수정 성공");
+    }
+
 
     public String imageUpload(MultipartFile file, ImageTarget imageTarget) throws IOException {
 
@@ -197,7 +234,7 @@ public class ImageDataService {
         return RsData.of("S-1", "유해성 검사를 통과한 이미지 입니다.");
     }
 
-    public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId){
+    public Optional<ImageData> findByImageTargetAndTargetId(ImageTarget imageTarget, Long targetId) {
         return imageDataRepository.findByImageTargetAndTargetId(imageTarget, targetId);
     }
 
@@ -219,7 +256,7 @@ public class ImageDataService {
         return imgList;
     }
 
-    public String imageProcessing(ImageData imageData){
+    public String imageProcessing(ImageData imageData) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -227,9 +264,9 @@ public class ImageDataService {
 
         sb.append(s3ConfigProperties.getCdnUrl()).append(imageUrl[1]);
 
-        if(imageData.getImageTarget().equals(ImageTarget.FOOD_IMAGE)){
+        if (imageData.getImageTarget().equals(ImageTarget.FOOD_IMAGE)) {
             sb.append(optimizerConfigProperties.getFoodProcessing());
-        } else if(imageData.getImageTarget().equals(ImageTarget.POST_IMAGE)){
+        } else if (imageData.getImageTarget().equals(ImageTarget.POST_IMAGE)) {
             sb.append(optimizerConfigProperties.getPostProcessing());
         }
 
