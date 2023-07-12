@@ -16,26 +16,25 @@
 <body>
 <main layout:fragment="Content">
     <div class="flex-1 flex flex-col items-center">
-        <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
+        <div class="max-w-3xl h-full w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center">
                 <h1 class="font-bold text-black mb-4">
                     장바구니 음식 목록
                 </h1>
             </div>
             <div class="flex flex-col justify-center">
-                <div class="p-3 flex flex-grow justify-between">
+                <div class="m-2 p-3 bg-gray-300 flex flex-grow justify-between">
                     <span class="font-bold text-sm flex justify-center" style="width:36%">식품명</span>
                     <span class="font-bold text-sm flex justify-center" style="width:36%">제조사/유통사</span>
-                    <span class="font-bold text-sm flex justify-center" style="width:8%">수량</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:10%">수량</span>
                 </div>
             </div>
-            <div class="divider m-2"></div>
             <div id="cartInfosEmpty" class="flex flex-wrap justify-center w-full"
                  th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
                 장바구니 항목이 없습니다.
             </div>
             <div id="cartInfos"
-                 class="flex flex-col w-full justify-center"
+                 class="m-2 flex flex-col w-full justify-center p-2 flex flex-col w-full overflow-y-auto h-3/4 scrollbar-thumb-blue scrollbar-track-gray"
                  th:if="${!cartList.isEmpty()}">
                 <div class="flex flex-col justify-center"
                      th:id="${cartFoodInfo.foodInfo.id}"
@@ -43,19 +42,18 @@
                      th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)">
                     <div class="flex flex-grow justify-between">
                         <span class="font-bold text-sm text-black flex justify-center hidden"
-                              style="width:6%"
                               th:text="${cartFoodInfo.foodInfo.id}"></span>
-                        <span class="font-bold text-sm text-start text-black flex"
+                        <span class="ml-2 font-bold text-sm text-start text-black flex"
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.foodName}"></span>
                         <span class="font-bold text-sm text-black flex justify-center"
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.manufacturer}"></span>
-                        <span class="font-bold flex text-sm justify-center"
-                              style="width:8%"
+                        <span class="mr-2 font-bold flex text-sm justify-center"
+                              style="width:10%"
                               th:text="${cartFoodInfo.quantity}"></span>
                     </div>
-                    <div class="divider my-2" style="height: 1px"></div>
+                    <div class="divider mt-1"></div>
                 </div>
             </div>
 

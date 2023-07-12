@@ -20,15 +20,15 @@
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center flex-col">
                 <div class="flex justify-center">
-                    <h1 class="font-bold text-black text-sm mb-4">
+                    <h1 class="font-bold text-black text-lg mb-4">
                         식사 후 영양정보
                     </h1>
                 </div>
-                <div class="flex justify-center mb-4 text-xs">
+                <div class="flex justify-center mb-4 text-sm">
                     챙겨먹는 것도 중요하지만 과하지 않은 것도 중요해요.
                 </div>
 
-                <div class="flex m-2 mx-3 flex-row justify-between" th:each="calcNutrient : ${calcNutrients}">
+                <div class="flex mx-3 flex-row justify-between" th:each="calcNutrient : ${calcNutrients}">
                     <div>
                         <i class="fa-solid fa-circle" style="color:#b2c615"
                            th:if="${calcNutrient.getName().equals('단백질')}"></i>
@@ -45,7 +45,7 @@
                         <i class="fa-solid fa-circle" style="color:#121af2"
                            th:if="${calcNutrient.getName().equals('마그네슘')}"></i>
 
-                        <span id="nutrientData" class="text-xs font-bold inline-block m-2 w-48"
+                        <span id="nutrientData" class="text-sm font-bold inline-block m-2 w-48"
                               th:text="${calcNutrient.getName()} + '(g)'"></span>
                     </div>
                     <div class="flex text-sm">
@@ -89,9 +89,6 @@
 
                     </div>
                 </div>
-                <div class="flex justify-center mt-2 text-xm">
-                    (나의 권장량 - 오늘 먹은 양 - 지금 먹게되는 양)
-                </div>
 
             </div>
 
@@ -104,7 +101,7 @@
                 <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
-                            <h1 class="font-bold text-black text-sm mb-4">
+                            <h1 class="font-bold text-black text-lg mb-4">
                                 분류
                             </h1>
                         </div>
@@ -125,7 +122,7 @@
                 <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
-                            <h1 class="font-bold text-black text-sm mb-4">
+                            <h1 class="font-bold text-black text-lg mb-4">
                                 식단 점수
                             </h1>
                         </div>
@@ -145,7 +142,7 @@
                 <div>
                     <div class="flex flex-col">
                         <div class="flex justify-center">
-                            <h1 class="font-bold text-black text-sm mb-4">
+                            <h1 class="font-bold text-black text-lg mb-4">
                                 메모
                             </h1>
                         </div>
@@ -164,11 +161,11 @@
 
                 <div class="flex justify-center mt-5">
                     <a href="/cartFoodInfo/total"
-                       class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                       class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         이전</a>
                     <button type="submit"
                             id="addMenuBtn"
-                            class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                            class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
                         식단 추가하기</button>
                 </div>
             </form>
@@ -178,13 +175,13 @@
 
 
     <div id="customModal"
-         class="w-full fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+         class="w-full fixed inset-0 flex text-sm items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="w-2/3 bg-white px-10 py-10 mx-15 my-20">
             <div class="text-center font-bold text-black text-lg bg-gray-200 py-3">식품 리스트</div>
             <div class="flex flex-col justify-center">
                 <div class="p-3 flex flex-grow justify-between">
-                    <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:8%">수량</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:36%">식품명</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:8%">수량</span>
                 </div>
             </div>
             <div class="divider my-1"></div>
@@ -194,10 +191,10 @@
                      th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)"
                      th:each="cartFoodInfo, loop: ${cartList}">
                     <div class="flex flex-grow justify-between">
-                        <span class="font-bold text-xs text-start text-black flex"
+                        <span class="font-bold text-sm text-start text-black flex"
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.foodName}"></span>
-                        <span class="font-bold flex text-xs justify-center"
+                        <span class="font-bold flex text-sm justify-center"
                               style="width:8%"
                               th:text="${cartFoodInfo.quantity}"></span>
                     </div>
@@ -217,10 +214,10 @@
 
             <div class="m-3 flex place-content-end">
                 <button id="submitBtn"
-                        class="m-2 bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded">
+                        class="m-2 bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded">
                     추가
                 </button>
-                <button class="m-2 bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-2 bg-gray-500 hover:bg-gray-700 text-white text-sm font-bold py-2 px-4 rounded"
                         onclick="closeCustomModal()">
                     취소
                 </button>
