@@ -1,7 +1,6 @@
 package calocheck.boundedContext.recommend.controller;
 
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
-import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.service.ImageDataService;
 import calocheck.boundedContext.recommend.entity.Recommend;
 import calocheck.boundedContext.recommend.service.RecommendService;
@@ -32,7 +31,7 @@ public class RecommendController {
     @GetMapping("/list")
     public String getRecommendList(Model model) {
 
-        return "/usr/recommend/recommendList";
+        return "usr/recommend/recommendList";
     }
 
     @PostMapping("/list")
