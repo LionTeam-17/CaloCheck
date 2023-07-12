@@ -49,7 +49,7 @@ public class NotProd {
 
                 Member[] members = IntStream
                         .rangeClosed(1, MEMBER_SIZE)
-                        .filter(i -> memberService.findById((long)i).orElse(null) == null)
+                        .filter(i -> memberService.findById((long) i).orElse(null) == null)
                         .mapToObj(i -> memberService.join("user%d".formatted(i), "1234", "M", null,
                                         "닉네임%d".formatted(i), 25, 178.4, 65.0, 30.0, 20.0)
                                 .getData())
@@ -62,70 +62,66 @@ public class NotProd {
                                 .getData())
                         .toArray(Post[]::new);
 
-            int COMMENT_SIZE = 5;
+                int COMMENT_SIZE = 5;
 
-            Comment[] comments = IntStream
-                    .rangeClosed(1, COMMENT_SIZE)
-                    .filter(i -> commentService.findById((long) i).orElse(null) == null)
-                    .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), postService.findById(1L).get(), memberService.findById((long) i).get())
-                            .getData())
-                    .toArray(Comment[]::new);
+                Comment[] comments = IntStream
+                        .rangeClosed(1, COMMENT_SIZE)
+                        .filter(i -> commentService.findById((long) i).orElse(null) == null)
+                        .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), postService.findById(1L).get(), memberService.findById((long) i).get())
+                                .getData())
+                        .toArray(Comment[]::new);
 
-            int POST_LIKE_SIZE = 4;
+                int POST_LIKE_SIZE = 4;
 
-            PostLike[] postLikes100 = IntStream
-                    .rangeClosed(1, POST_LIKE_SIZE)
-                    .filter(i -> postLikeService.findById((long) i).orElse(null) == null)
-                    .mapToObj(i -> postLikeService.savePostLike(1L, memberService.findById((long) i).get())
-                            .getData())
-                    .toArray(PostLike[]::new);
+                PostLike[] postLikes100 = IntStream
+                        .rangeClosed(1, POST_LIKE_SIZE)
+                        .filter(i -> postLikeService.findById((long) i).orElse(null) == null)
+                        .mapToObj(i -> postLikeService.savePostLike(1L, memberService.findById((long) i).get())
+                                .getData())
+                        .toArray(PostLike[]::new);
 
-            PostLike[] postLikes99 = IntStream
-                    .rangeClosed(1, POST_LIKE_SIZE - 1)
-                    .filter(i -> postLikeService.findById((long) i + 4).orElse(null) == null)
-                    .mapToObj(i -> postLikeService.savePostLike(2L, memberService.findById((long) i).get())
-                            .getData())
-                    .toArray(PostLike[]::new);
-            PostLike[] postLikes98 = IntStream
-                    .rangeClosed(1, POST_LIKE_SIZE - 2)
-                    .filter(i -> postLikeService.findById((long) i + 7).orElse(null) == null)
-                    .mapToObj(i -> postLikeService.savePostLike(3L, memberService.findById((long) i).get())
-                            .getData())
-                    .toArray(PostLike[]::new);
-
-            //Tracking 샘플 데이터
-            LocalDate startDate = LocalDate.now().minusDays(90);
-            Random random = new Random();
+                PostLike[] postLikes99 = IntStream
+                        .rangeClosed(1, POST_LIKE_SIZE - 1)
+                        .filter(i -> postLikeService.findById((long) i + 4).orElse(null) == null)
+                        .mapToObj(i -> postLikeService.savePostLike(2L, memberService.findById((long) i).get())
+                                .getData())
+                        .toArray(PostLike[]::new);
+                PostLike[] postLikes98 = IntStream
+                        .rangeClosed(1, POST_LIKE_SIZE - 2)
+                        .filter(i -> postLikeService.findById((long) i + 7).orElse(null) == null)
+                        .mapToObj(i -> postLikeService.savePostLike(3L, memberService.findById((long) i).get())
+                                .getData())
+                        .toArray(PostLike[]::new);
 
                 //Tracking 샘플 데이터
-                Member member1 = memberService.findById(1L).orElse(null);
-                Member member2 = memberService.findById(1L).orElse(null);
+                LocalDate startDate = LocalDate.now().minusDays(30);
+                Random random = new Random();
 
-                generateTracking(trackingService, member1);
-                generateTracking(trackingService, member2);
+                for (Member member : members) {
+                    if (!member.getId().equals(1) && !member.getId().equals(2)) {
+                        continue;
+                    }
+
+                    int age = member.getAge();
+                    double height = member.getHeight();
+                    double weight = 60 + random.nextDouble() * 5;
+                    double bodyFat = 20 + random.nextDouble() * 5;
+                    double muscleMass = 30 + random.nextDouble() * 5;
+                    LocalDate date = startDate;
+
+                    while (!date.isAfter(LocalDate.now())) {
+                        weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
+                        bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
+                        muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
+                        Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
+                        trackingService.calculateBMI(tracking);
+                        trackingService.calculateBodyFatPercentage(tracking);
+                        date = date.plusDays(random.nextInt(4) + 1);
+                    }
+                }
             }
         };
     }
-
-    public void generateTracking(TrackingService trackingService, Member member) {
-        LocalDate startDate = LocalDate.now().minusDays(30);
-        Random random = new Random();
-
-        int age = member.getAge();
-        double height = member.getHeight();
-        double weight = 60 + random.nextDouble() * 5;
-        double bodyFat = 20 + random.nextDouble() * 5;
-        double muscleMass = 30 + random.nextDouble() * 5;
-        LocalDate date = startDate;
-
-        while (!date.isAfter(LocalDate.now())) {
-            weight = Math.round((weight + (random.nextDouble() * 6) - 3) * 10) / 10.0;
-            bodyFat = Math.round((bodyFat + (random.nextDouble() * 0.2) - 0.1) * 10) / 10.0;
-            muscleMass = Math.round((muscleMass + (random.nextDouble() * 0.3) - 0.15) * 10) / 10.0;
-            Tracking tracking = trackingService.createTracking(member, date, age, height, weight, bodyFat, muscleMass, null, null);
-            trackingService.calculateBMI(tracking);
-            trackingService.calculateBodyFatPercentage(tracking);
-            date = date.plusDays(random.nextInt(4) + 1);
-        }
-    }
 }
+
+
