@@ -192,8 +192,6 @@ public class CartFoodInfoController {
             return rq.historyBack("식단 점수가 올바르지 않습니다.");
         }
 
-        MealHistory mealHistory = null;
-
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<DailyMenu> dailyMenuList = dailyMenuService.create(member, cartList);
         MealHistory oMealHistory = mealHistoryService.findByMemberAndMealTypeAndCreateDateBetween(member, mealType);
