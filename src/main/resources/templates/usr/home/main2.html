@@ -1,0 +1,33 @@
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}">
+
+
+<head>
+    <title>메인</title>
+</head>
+
+<body>
+<th:block layout:fragment="Content">
+    <main class="flex-1 flex justify-center">
+        <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
+            <div class="flex flex-col items-center">
+                <span id="MainFont" class="text-6xl my-5 font-bold p-2" style=" color: #346118 ">Calocheck</span>
+                <span class="text-2xl font-bold">당신의 건강을 관리해보세요!!</span>
+            </div>
+            <div class="flex justify-center">
+                <div id="mainBodyFont" class="flex flex-col bg-green-100 gap-4 p-10 my-10 rounded-lg text-lg">
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  내가 먹고 싶은 음식들의 정보를 검색해보세요!</span>
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  트래킹을 이용하여 내 건강변화를 확인해보세요!</span>
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  내가 먹은 식단들을 날짜별로 확인해보세요!</span>
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  혼자가 어렵다면 다른 사람들과 의견공유 해보시는건 어떤가요?</span>
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  내가 먹을 또는 먹은 음식들의 칼로리를 계산해보세요!</span>
+                    <span class="font-bold"><i class="fa-solid fa-cube"></i>  원하시는 영양소를 가진 음식들을 추천해줍니다.</span>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <a th:href="@{/member/join}" sec:authorize="isAnonymous()" class="btn"> 지금 바로 회원가입</a>
+            </div>
+        </div>
+    </main>
+</th:block>>
+</body>

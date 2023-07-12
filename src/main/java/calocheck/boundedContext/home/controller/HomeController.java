@@ -13,4 +13,10 @@ public class HomeController {
 
         return "usr/home/main";
     }
+
+    @GetMapping("/main2")
+    public String showMain2() {
+
+        return "usr/home/main2";
+    }
 }
