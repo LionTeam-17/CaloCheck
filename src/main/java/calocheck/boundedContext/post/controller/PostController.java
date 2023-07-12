@@ -5,6 +5,7 @@ import calocheck.base.rsData.RsData;
 import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.dailyMenu.service.DailyMenuService;
+import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
@@ -98,7 +99,7 @@ public class PostController {
     @GetMapping("/createForm")
     public String savePost(Model model) {
 
-        List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
+        List<FoodInfo> todayFoodNameList = dailyMenuService.getTodayFoodList(rq.getMember());
 
         model.addAttribute("todayFoodNameList", todayFoodNameList);
 
@@ -109,7 +110,9 @@ public class PostController {
     @PostMapping("/createForm")
     public String savePost(String iSubject, String iContent, String iPostType,
                            @RequestParam(required = false) MultipartFile img,
-                           String selectedFood) throws IOException {
+                           long selectedFoodId) throws IOException {
+
+        System.out.println("selectedFoodId = " + selectedFoodId);
 
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
@@ -137,21 +140,19 @@ public class PostController {
             }
 
             //음식을 선택 했지만, 음식 이미지가 아닌 경우
-            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFood != null) {
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFoodId != 0) {
                 return rq.historyBack(detectedLabelRsData);
             }
 
             //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
             if (detectedLabelRsData != null && safeSearchRsData != null
-                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null) {
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFoodId != 0) {
 
-                Long foodId = foodInfoService.findByFoodName(selectedFood).getId();
-
-                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, selectedFoodId);
 
                 if (oFoodImage.isEmpty()) {
                     imageUrl = imageDataService.imageUpload(img, ImageTarget.FOOD_IMAGE);
-                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, selectedFoodId);
 
                     if (imageRsData.isFail()) {
                         return rq.historyBack(imageRsData);
@@ -198,7 +199,7 @@ public class PostController {
     public String modifyPost(@PathVariable Long postId, Model model) {
 
         Optional<Post> oPost = postService.findById(postId);
-        List<String> todayFoodNameList = dailyMenuService.getTodayFoodNameList(rq.getMember());
+        List<FoodInfo> todayFoodNameList = dailyMenuService.getTodayFoodList(rq.getMember());
 
         oPost.ifPresent(post -> model.addAttribute("post", post));
         model.addAttribute("todayFoodNameList", todayFoodNameList);
@@ -213,7 +214,7 @@ public class PostController {
                              String iModifyContent,
                              String iModifyPostType,
                              @RequestParam(required = false) MultipartFile iModifyImg,
-                             String selectedFood) throws IOException {
+                             long selectedFoodId) throws IOException {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
 
@@ -233,21 +234,19 @@ public class PostController {
             }
 
             //음식을 선택 했지만, 음식 이미지가 아닌 경우
-            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFood != null) {
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFoodId != 0) {
                 return rq.historyBack(detectedLabelRsData);
             }
 
             //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
             if (detectedLabelRsData != null && safeSearchRsData != null
-                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFood != null) {
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFoodId != 0) {
 
-                Long foodId = foodInfoService.findByFoodName(selectedFood).getId();
-
-                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, foodId);
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, selectedFoodId);
 
                 if (oFoodImage.isEmpty()) {
                     imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.FOOD_IMAGE);
-                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, foodId);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, selectedFoodId);
 
                     if (imageRsData.isFail()) {
                         return rq.historyBack(imageRsData);
