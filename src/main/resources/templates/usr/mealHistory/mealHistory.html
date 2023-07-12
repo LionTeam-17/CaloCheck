@@ -200,7 +200,7 @@
 
             function showMealInfo(data) {
                 let mealInfo = document.getElementById('meal-info');
-                mealInfo.classList.add('flex', 'flex-center', 'mx-3', 'flex-wrap');
+                mealInfo.classList.add('flex', 'overflow-x-auto', 'flex-center', 'mx-3');
                 mealInfo.innerHTML = ''; // 기존의 정보를 삭제
 
                 data.forEach(mealHistoryDto => {
