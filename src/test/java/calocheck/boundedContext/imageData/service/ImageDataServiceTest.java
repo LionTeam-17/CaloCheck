@@ -1,9 +1,9 @@
 package calocheck.boundedContext.imageData.service;
 
 import calocheck.base.rsData.RsData;
+import calocheck.base.util.s3.config.S3Config;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.imageData.config.OptimizerConfigProperties;
-import calocheck.boundedContext.imageData.config.S3Config;
 import calocheck.boundedContext.imageData.entity.ImageData;
 import calocheck.boundedContext.imageData.imageTarget.ImageTarget;
 import calocheck.boundedContext.member.entity.Member;
@@ -39,13 +39,13 @@ class ImageDataServiceTest {
     @Autowired
     private ImageDataService imageDataService;
     @Autowired
-    private S3Config s3ConfigProp;
-    @Autowired
     private PostService postService;
     @Autowired
     private MemberService memberService;
     @Autowired
     private OptimizerConfigProperties optimizerConfigProp;
+    @Autowired
+    private S3Config s3Config;
 
     private MultipartFile nullFile;
     private MultipartFile imgFile;
@@ -66,7 +66,7 @@ class ImageDataServiceTest {
                 .foodName("testFood")
                 .build();
 
-        testPost = postService.savePost("테스트 포스트 제목", "테스트 포스트 내용", user1).getData();
+        testPost = postService.savePost("테스트 포스트 제목", "테스트 포스트 내용", "A", user1).getData();
 
         nullFile = new MockMultipartFile(
                 "empty.txt",
@@ -122,10 +122,10 @@ class ImageDataServiceTest {
         String foodImgUrl = imageDataService.imageUpload(imgFile, ImageTarget.FOOD_IMAGE);
         String postImgUrl = imageDataService.imageUpload(imgFile, ImageTarget.POST_IMAGE);
 
-        assertThat(foodImgUrl.contains(s3ConfigProp.getBucket())).isTrue();
-        assertThat(foodImgUrl.contains(s3ConfigProp.getEndPoint())).isTrue();
-        assertThat(postImgUrl.contains(s3ConfigProp.getBucket())).isTrue();
-        assertThat(postImgUrl.contains(s3ConfigProp.getEndPoint())).isTrue();
+        assertThat(foodImgUrl.contains(s3Config.getBucket())).isTrue();
+        assertThat(foodImgUrl.contains(s3Config.getEndPoint())).isTrue();
+        assertThat(postImgUrl.contains(s3Config.getBucket())).isTrue();
+        assertThat(postImgUrl.contains(s3Config.getEndPoint())).isTrue();
 
         assertThat(foodImgUrl.contains("foodImage")).isTrue();
         assertThat(foodImgUrl.contains("post")).isFalse();
