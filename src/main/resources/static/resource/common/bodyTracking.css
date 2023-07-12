@@ -1,10 +1,10 @@
 .user-info {
     width: 700px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 5px;
     padding: 10px;
-    box-shadow: 0px 2px 15px rgba(0,0,0,0.1);
-    background-color: #fafafa;
+    /*box-shadow: 0px 2px 15px rgba(0,0,0,0.1);*/
+    background-color: white;
     margin-bottom: 10px;
 }
 
@@ -35,16 +35,17 @@
 .user-detail-item:last-child .detail-value {
     margin-right: 0;
 }
+
 #openRecordModal, #openTrackingModal {
-    /*background-color: #112D4E;*/
-    /*color: white;*/
-    /*border-radius: 10px;*/
-    /*padding: 10px 13px;*/
-    /*font-size: 15px;*/
+    background-color: rgb(59 130 246);
+    color: white;
+    border-radius: 10px;
+    border-color: rgb(59 130 246);
+    font-size: 14px;
 }
 
 #confirmRecord {
-    background-color: #112D4E;
+    background-color: rgb(59 130 246);
 }
 
 #openRecordModal:hover, #confirmRecord:hover,#openTrackingModal:hover {
@@ -88,7 +89,7 @@
 
 .form-container button[type="submit"] {
     padding: 8px 16px;
-    background-color: #112D4E;
+    background-color: rgb(59 130 246);
     color: white;
     border: none;
     border-radius: 5px;
@@ -115,7 +116,7 @@
     width: 100% !important;
     max-width: 800px;
     height: auto !important;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .info-container {
