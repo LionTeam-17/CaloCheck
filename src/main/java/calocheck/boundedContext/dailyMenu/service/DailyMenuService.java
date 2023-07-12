@@ -5,7 +5,6 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.repository.DailyMenuRepository;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
-import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,7 @@ public class DailyMenuService {
 
     public List<String> getTodayFoodNameList(Member member) {
 
-        List<DailyMenu> todayDailyMenuList = findMembersTodayMenuList(member);
+        List<DailyMenu> todayDailyMenuList = findByMembersTodayMenuList(member);
 
         List<String> todayFoodNameList = new ArrayList<>();
 
@@ -82,8 +81,7 @@ public class DailyMenuService {
         return todayFoodNameList;
     }
 
-    public List<DailyMenu> findMembersTodayMenuList(Member member){
-
+    public List<DailyMenu> findByMembersTodayMenuList(Member member){
         LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
 

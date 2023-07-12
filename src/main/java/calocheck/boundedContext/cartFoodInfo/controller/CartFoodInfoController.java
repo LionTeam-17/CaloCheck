@@ -15,7 +15,6 @@ import calocheck.boundedContext.foodInfo.entity.FoodInfo;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.nutrient.dto.NutrientDTO;
-import calocheck.boundedContext.nutrient.entity.Nutrient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -167,7 +166,7 @@ public class CartFoodInfoController {
         }
 
         Criteria myCriteria = criteriaService.findByGenderAndAge(member);           //나의 권장량
-        List<DailyMenu> todayMenuList = dailyMenuService.findMembersTodayMenuList(member); //오늘 먹은 내용들
+        List<DailyMenu> todayMenuList = dailyMenuService.findByMembersTodayMenuList(member); //오늘 먹은 내용들
         List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);    //카트 내용의 영양소 총합
 
         //이걸 먹게되면 영양소가 어떻게 되는가?
@@ -193,10 +192,19 @@ public class CartFoodInfoController {
             return rq.historyBack("식단 점수가 올바르지 않습니다.");
         }
 
+        MealHistory mealHistory = null;
+
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<DailyMenu> dailyMenuList = dailyMenuService.create(member, cartList);
+        MealHistory oMealHistory = mealHistoryService.findByMemberAndMealTypeAndCreateDateBetween(member, mealType);
 
-        MealHistory mealHistory = mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
+        if (oMealHistory != null) {
+            List<DailyMenu> oDailyMenuList = oMealHistory.getDailyMenuList();
+            dailyMenuList.addAll(oDailyMenuList);
+            mealHistoryService.update(oMealHistory, member, dailyMenuList, mealType, menuMemo, menuScore);
+        } else {
+            mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
+        }
 
         //장바구니 삭제
         cartFoodInfoService.deleteAll(cartList);
