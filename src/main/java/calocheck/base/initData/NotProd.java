@@ -27,7 +27,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 @Configuration
-@Profile({"dev", "test"})
+@Profile({"dev", "prod", "test"})
 public class NotProd {
     @Bean
     public ApplicationRunner initData(
