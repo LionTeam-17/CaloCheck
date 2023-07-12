@@ -25,17 +25,10 @@ public class HomeController {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(s3Service.getFileFromS3(gcpConfigProperties.getFilePath())));
 
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(s3Service.getFileFromS3(gcpConfigProperties.getFilePath()));
-        ImageAnnotatorSettings settings = ImageAnnotatorSettings.newBuilder().setCredentialsProvider(() -> googleCredentials).build();
-
         String line;
         while ((line = reader.readLine()) != null) {
             System.out.println(line);
         }
-
-        System.out.println("googleCredentials = " + googleCredentials.getQuotaProjectId());
-        System.out.println("settings = " + settings.getEndpoint());
-
 
         return "usr/home/main";
     }
