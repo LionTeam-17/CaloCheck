@@ -2,12 +2,14 @@ package calocheck.base.initData;
 
 import calocheck.base.util.excel.service.ExcelService;
 import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
+import calocheck.boundedContext.comment.entity.Comment;
 import calocheck.boundedContext.comment.service.CommentService;
 import calocheck.boundedContext.foodInfo.service.FoodInfoService;
 import calocheck.boundedContext.member.entity.Member;
 import calocheck.boundedContext.member.service.MemberService;
 import calocheck.boundedContext.post.entity.Post;
 import calocheck.boundedContext.post.service.PostService;
+import calocheck.boundedContext.postLike.entity.PostLike;
 import calocheck.boundedContext.postLike.service.PostLikeService;
 import calocheck.boundedContext.tracking.entity.Tracking;
 import calocheck.boundedContext.tracking.service.TrackingService;
@@ -60,32 +62,41 @@ public class NotProd {
                                 .getData())
                         .toArray(Post[]::new);
 
-//            int COMMENT_SIZE = 5;
-//
-//            Comment[] comments = IntStream
-//                    .rangeClosed(1, COMMENT_SIZE)
-//                    .filter(i -> commentService.findById((long)i).orElse(null) == null)
-//                    .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), posts[0], members[i])
-//                            .getData())
-//                    .toArray(Comment[]::new);
-//
-//            PostLike[] postLikes100 = IntStream
-//                    .rangeClosed(0, 4)
-//                    .mapToObj(i -> postLikeService.savePostLike(posts[1].getId(), members[i])
-//                            .getData())
-//                    .toArray(PostLike[]::new);
-//
-//            PostLike[] postLikes99 = IntStream
-//                    .rangeClosed(0, 3)
-//                    .mapToObj(i -> postLikeService.savePostLike(posts[2].getId(), members[i])
-//                            .getData())
-//                    .toArray(PostLike[]::new);
-//            PostLike[] postLikes98 = IntStream
-//                    .rangeClosed(0, 2)
-//                    .mapToObj(i -> postLikeService.savePostLike(posts[3].getId(), members[i])
-//                            .getData())
-//                    .toArray(PostLike[]::new);
-//
+            int COMMENT_SIZE = 5;
+
+            Comment[] comments = IntStream
+                    .rangeClosed(1, COMMENT_SIZE)
+                    .filter(i -> commentService.findById((long) i).orElse(null) == null)
+                    .mapToObj(i -> commentService.saveComment("%d번 댓글입니다.".formatted(i), postService.findById(1L).get(), memberService.findById((long) i).get())
+                            .getData())
+                    .toArray(Comment[]::new);
+
+            int POST_LIKE_SIZE = 4;
+
+            PostLike[] postLikes100 = IntStream
+                    .rangeClosed(1, POST_LIKE_SIZE)
+                    .filter(i -> postLikeService.findById((long) i).orElse(null) == null)
+                    .mapToObj(i -> postLikeService.savePostLike(1L, memberService.findById((long) i).get())
+                            .getData())
+                    .toArray(PostLike[]::new);
+
+            PostLike[] postLikes99 = IntStream
+                    .rangeClosed(1, POST_LIKE_SIZE - 1)
+                    .filter(i -> postLikeService.findById((long) i + 4).orElse(null) == null)
+                    .mapToObj(i -> postLikeService.savePostLike(2L, memberService.findById((long) i).get())
+                            .getData())
+                    .toArray(PostLike[]::new);
+            PostLike[] postLikes98 = IntStream
+                    .rangeClosed(1, POST_LIKE_SIZE - 2)
+                    .filter(i -> postLikeService.findById((long) i + 7).orElse(null) == null)
+                    .mapToObj(i -> postLikeService.savePostLike(3L, memberService.findById((long) i).get())
+                            .getData())
+                    .toArray(PostLike[]::new);
+
+            //Tracking 샘플 데이터
+            LocalDate startDate = LocalDate.now().minusDays(90);
+            Random random = new Random();
+
                 //Tracking 샘플 데이터
                 Member member1 = memberService.findById(1L).orElse(null);
                 Member member2 = memberService.findById(1L).orElse(null);

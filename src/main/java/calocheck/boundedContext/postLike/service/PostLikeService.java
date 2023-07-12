@@ -22,6 +22,11 @@ public class PostLikeService {
     private final PostRepository postRepository;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional(readOnly = true)
+    public Optional<PostLike> findById(Long id) {
+        return postLikeRepository.findById(id);
+    }
+
     public RsData<PostLike> savePostLike(Long postId, Member member) {
         Optional<Post> oPost = postRepository.findById(postId);
 
