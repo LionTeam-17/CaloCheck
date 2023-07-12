@@ -200,7 +200,7 @@ public class CartFoodInfoController {
 
         if (oMealHistory != null) {
             List<DailyMenu> oDailyMenuList = oMealHistory.getDailyMenuList();
-            dailyMenuList.addAll(oDailyMenuList);
+            dailyMenuList = dailyMenuService.concatList(dailyMenuList, oDailyMenuList);
             mealHistoryService.update(oMealHistory, member, dailyMenuList, mealType, menuMemo, menuScore);
         } else {
             mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
