@@ -110,9 +110,9 @@ public class PostController {
     @PostMapping("/createForm")
     public String savePost(String iSubject, String iContent, String iPostType,
                            @RequestParam(required = false) MultipartFile img,
-                           long selectedFoodId) throws IOException {
+                           @RequestParam(required = false) String foodCode) throws IOException {
 
-        System.out.println("selectedFoodId = " + selectedFoodId);
+        System.out.println("selectedFoodId = " + foodCode);
 
         if (iSubject == null || iSubject.length() == 0) {
             return rq.historyBack("제목을 입력해주세요.");
@@ -139,20 +139,22 @@ public class PostController {
                 return rq.historyBack(safeSearchRsData);
             }
 
+            FoodInfo byFoodCode = foodInfoService.findByFoodCode(foodCode);
+
             //음식을 선택 했지만, 음식 이미지가 아닌 경우
-            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFoodId != 0) {
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && byFoodCode != null) {
                 return rq.historyBack(detectedLabelRsData);
             }
 
             //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
             if (detectedLabelRsData != null && safeSearchRsData != null
-                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFoodId != 0) {
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && byFoodCode != null) {
 
-                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, selectedFoodId);
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, byFoodCode.getId());
 
                 if (oFoodImage.isEmpty()) {
                     imageUrl = imageDataService.imageUpload(img, ImageTarget.FOOD_IMAGE);
-                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, selectedFoodId);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, byFoodCode.getId());
 
                     if (imageRsData.isFail()) {
                         return rq.historyBack(imageRsData);
@@ -214,7 +216,7 @@ public class PostController {
                              String iModifyContent,
                              String iModifyPostType,
                              @RequestParam(required = false) MultipartFile iModifyImg,
-                             long selectedFoodId) throws IOException {
+                             @RequestParam(required = false) String foodCode) throws IOException {
 
         RsData<ImageData> isImgRsData = imageDataService.isImgFile(iModifyImg.getOriginalFilename());
 
@@ -233,20 +235,22 @@ public class PostController {
                 return rq.historyBack(safeSearchRsData);
             }
 
+            FoodInfo byFoodCode = foodInfoService.findByFoodCode(foodCode);
+
             //음식을 선택 했지만, 음식 이미지가 아닌 경우
-            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && selectedFoodId != 0) {
+            if (detectedLabelRsData != null && detectedLabelRsData.isFail() && byFoodCode != null) {
                 return rq.historyBack(detectedLabelRsData);
             }
 
             //음식을 선택 했고, 음식 이미지로 등록 가능한 경우
             if (detectedLabelRsData != null && safeSearchRsData != null
-                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && selectedFoodId != 0) {
+                    && detectedLabelRsData.isSuccess() && safeSearchRsData.isSuccess() && byFoodCode != null) {
 
-                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, selectedFoodId);
+                Optional<ImageData> oFoodImage = imageDataService.findByImageTargetAndTargetId(ImageTarget.FOOD_IMAGE, byFoodCode.getId());
 
                 if (oFoodImage.isEmpty()) {
                     imageUrl = imageDataService.imageUpload(iModifyImg, ImageTarget.FOOD_IMAGE);
-                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, selectedFoodId);
+                    RsData<ImageData> imageRsData = imageDataService.createImageData(ImageTarget.FOOD_IMAGE, imageUrl, byFoodCode.getId());
 
                     if (imageRsData.isFail()) {
                         return rq.historyBack(imageRsData);
