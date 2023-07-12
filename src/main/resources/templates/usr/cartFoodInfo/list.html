@@ -1,6 +1,6 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
-    <title>장바구니</title>
+    <title>식단리스트</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
@@ -19,7 +19,7 @@
         <div class="max-w-3xl h-full w-full px-4 py-4 flex flex-col m-4 justify-center">
             <div class="flex justify-center">
                 <h1 class="font-bold text-black mb-4">
-                    장바구니 음식 목록
+                    식단리스트 음식 목록
                 </h1>
             </div>
             <div class="flex flex-col justify-center">
@@ -31,7 +31,7 @@
             </div>
             <div id="cartInfosEmpty" class="flex flex-wrap justify-center w-full"
                  th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
-                장바구니 항목이 없습니다.
+                식단리스트 항목이 없습니다.
             </div>
             <div class="flex flex-col h-[400px]">
                 <div id="cartInfos"
@@ -62,11 +62,11 @@
 
             <div class="flex justify-center mt-5">
                 <a href="/foodInfo/search"
-                   class="m-3 text-sm bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-full">
+                   class="m-3 text-sm bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-lg">
                     식품 추가</a>
                 <a id="nextBtn"
                    href="/cartFoodInfo/total"
-                   class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full"
+                   class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg"
                    th:classappend="${!cartList.isEmpty()} ? '' : 'hidden'">
                     다음</a>
             </div>

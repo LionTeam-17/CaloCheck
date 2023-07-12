@@ -22,7 +22,7 @@
                                    class="m-2 p-2 bg-gray-300 text-black rounded-lg "
                                    placeholder="검색할 음식을 입력하세요">
                             <button type="submit"
-                                    class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                                    class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                                 <span>검색</span>
                             </button>
                         </label>
@@ -65,7 +65,7 @@
                 <div th:if="${!paging.isEmpty()}" class="flex justify-center my-5">
                     <ul class="pagination justify-content-center flex">
                         <li th:if="${paging.hasPrevious()}" class="page-item">
-                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                                th:href="@{|?keyword=${keyword}&page=${paging.number - 1}|}"
                                th:data-page="${paging.number - 1}">
                                 <span>이전</span>
@@ -80,7 +80,7 @@
                                th:data-page="${page}"></a>
                         </li>
                         <li th:if="${paging.hasNext()}" class="page-item">
-                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                                th:href="@{|?keyword=${keyword}&page=${paging.number + 1}|}"
                                th:data-page="${paging.number + 1}">
                                 <span>다음</span>

@@ -33,11 +33,11 @@
                 <img th:src="${imgData}" alt="foodImg">
             </div>
             <div class="m-5 flex justify-center">
-                <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
+                <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-lg"
                    th:if="${@rq.isLogin()}" th:onclick="openCustomModal()">
-                    장바구니 등록
+                    식단리스트 등록
                 </a>
-                <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
+                <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-lg"
                    href="javascript:history.back()">
                     돌아가기
                 </a>
@@ -102,9 +102,9 @@
                 <div class="divider my-2" style="height: 1px"></div>
             </div>
             <div class="flex justify-center">
-                <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
+                <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-lg"
                    th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
-                    장바구니 목록
+                    식단리스트
                 </a>
             </div>
 

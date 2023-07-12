@@ -1,6 +1,6 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
-    <title>장바구니</title>
+    <title>식단리스트</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
@@ -161,11 +161,11 @@
 
                 <div class="flex justify-center mt-5">
                     <a href="/cartFoodInfo/total"
-                       class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                       class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                         이전</a>
                     <button type="submit"
                             id="addMenuBtn"
-                            class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                            class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                         식단 추가하기</button>
                 </div>
             </form>

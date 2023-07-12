@@ -93,7 +93,7 @@ public class CartFoodInfoController {
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
 
         if (cartList == null) {
-            return new CartDTO("fail", "장바구니가 이미 비어있습니다.");
+            return new CartDTO("fail", "식단리스트가 이미 비어있습니다.");
         }
 
         RsData<CartFoodInfo> res = cartFoodInfoService.removeAllToCart(cartList);
@@ -204,7 +204,7 @@ public class CartFoodInfoController {
             mealHistoryService.create(member, dailyMenuList, mealType, menuMemo, menuScore);
         }
 
-        //장바구니 삭제
+        //식단리스트 삭제
         cartFoodInfoService.deleteAll(cartList);
 
         //내 식단 캘린더로 이동
