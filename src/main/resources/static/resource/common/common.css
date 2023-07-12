@@ -30,3 +30,11 @@ html > body {
 #myPost > li {
     list-style-type: none;
 }
+
+#MainFont {
+    font-family: Impact, Charcoal, sans-serif;
+}
+
+#mainBodyFont {
+    font-family: "GmarketSansMedium";
+}

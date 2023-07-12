@@ -108,15 +108,14 @@
                             <span th:text="${member.weight}" style="font-weight: bold;"></span>
                             kg
                         </div>
-                        <div> 근육량 :
-                            <span th:text="${member.muscleMass}" style="font-weight: bold;"></span>
-                            kg
-                        </div>
                         <div> 체지방량 :
                             <span th:text="${member.bodyFat}" style="font-weight: bold;"></span>
                             kg
                         </div>
-
+                        <div> 골격근량 :
+                            <span th:text="${member.muscleMass}" style="font-weight: bold;"></span>
+                            kg
+                        </div>
                         <div class="flex justify-center gap-3">
                             <div>
                                 <a th:href="@{|/member/modify/${member.id}|}"
