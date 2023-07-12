@@ -25,13 +25,16 @@ public class S3Service {
     private final AmazonS3 s3Client;
 
     public InputStream getFileFromS3(String objectKey) throws IOException {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(s3Config.getBucket())
-                .key(objectKey)
-                .build();
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(s3Config.getBucket())
+                    .key(objectKey)
+                    .build();
 
-        S3Object s3Object = s3Client.getObject(s3Config.getBucket(), objectKey);
-
-        return s3Object.getObjectContent();
+            S3Object s3Object = s3Client.getObject(s3Config.getBucket(), objectKey);
+            return s3Object.getObjectContent();
+        } catch (S3Exception e) {
+            throw new IOException("S3 파일 읽기 에러");
+        }
     }
 }

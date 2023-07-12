@@ -26,10 +26,18 @@ public class NotificationService {
     }
 
     public RsData<Notification> createPostLikeNotification(PostLike postLike, Post post, Member member, String type) {
+        if (postLike.getMember().getId().equals(post.getMember().getId())) {
+            return RsData.of("F-1", "본인 알림은 생성되지 않습니다.");
+        }
+
         return make(postLike, null, post, member, "POSTLIKE");
     }
 
     public RsData<Notification> createCommentNotification(Comment comment, Post post, Member member, String type) {
+        if (comment.getMember().getId().equals(post.getMember().getId())) {
+            return RsData.of("F-1", "본인 알림은 생성되지 않습니다.");
+        }
+
         return make(null, comment, post, member, "COMMENT");
     }
 
