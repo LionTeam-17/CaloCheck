@@ -4,8 +4,8 @@
 </head>
 
 <body>
-<main class="flex-grow flex items-center justify-center" layout:fragment="Content">
-    <div class="max-w-3xl w-full px-4">
+<main class="flex-grow flex mt-10 justify-center" layout:fragment="Content">
+    <div class="max-w-3xl py-5 w-full px-4">
         <h1 class="mb-4">
             <i class="fa-regular fa-bell"></i>
             알림
@@ -25,7 +25,7 @@
                                 댓글알림
                             </div>
                             <div>
-                                <span class="badge badge-primary"
+                                <span class="badge bg-blue-500" style="border: white"
                                       th:text="${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}"></span>
                             </div>
                         </div>
@@ -35,13 +35,13 @@
                                 내용
                             </div>
                             <div class="flex">
-                                <div class="badge badge-primary">
+                                <div class="badge bg-blue-500" style="border: white">
                                     <span th:text="${notification.post.subject}"></span>
                                 </div>
                                 <span>&nbsp;글에&nbsp;</span>
                             </div>
                             <div class="flex">
-                                <div class="badge badge-primary">
+                                <div class="badge bg-blue-500" style="border: white">
                                     <span th:text="${notification.comment.member.nickname}"></span>
                                 </div>
                                 <span>&nbsp;님이 댓글을 남겼습니다.</span>
@@ -62,7 +62,7 @@
                                 추천알림
                             </div>
                             <div>
-                                <span class="badge badge-primary"
+                                <span class="badge bg-blue-500" style="border: white"
                                       th:text="${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}"></span>
                             </div>
                         </div>
@@ -72,13 +72,13 @@
                                 내용
                             </div>
                             <div class="flex">
-                                <div class="badge badge-primary">
+                                <div class="badge bg-blue-500" style="border: white">
                                     <span th:text="${notification.post.subject}"></span>
                                 </div>
                                 <span>&nbsp;글에&nbsp;</span>
                             </div>
                             <div class="flex">
-                                <div class="badge badge-primary">
+                                <div class="badge bg-blue-500" style="border: white">
                                     <span th:text="${notification.postLike.member.nickname}"></span>
                                 </div>
                                 <span>&nbsp;님이 추천했습니다.</span>
