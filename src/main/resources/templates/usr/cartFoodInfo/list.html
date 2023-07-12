@@ -24,10 +24,9 @@
             </div>
             <div class="flex flex-col justify-center">
                 <div class="p-3 flex flex-grow justify-between">
-                    <span class="font-bold text-xs flex justify-center" style="width:6%">번호</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:36%">식품명</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
-                    <span class="font-bold text-xs flex justify-center" style="width:8%">수량</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:36%">식품명</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:36%">제조사/유통사</span>
+                    <span class="font-bold text-sm flex justify-center" style="width:8%">수량</span>
                 </div>
             </div>
             <div class="divider m-2"></div>
@@ -43,16 +42,16 @@
                      th:each="cartFoodInfo, loop: ${cartList}"
                      th:onclick="updateFoodInfoConfirm(/*[[${cartFoodInfo.foodInfo.id}]]*/, this)">
                     <div class="flex flex-grow justify-between">
-                        <span class="font-bold text-xs text-black flex justify-center"
+                        <span class="font-bold text-sm text-black flex justify-center hidden"
                               style="width:6%"
                               th:text="${cartFoodInfo.foodInfo.id}"></span>
-                        <span class="font-bold text-xs text-start text-black flex"
+                        <span class="font-bold text-sm text-start text-black flex"
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.foodName}"></span>
-                        <span class="font-bold text-xs text-black flex justify-center"
+                        <span class="font-bold text-sm text-black flex justify-center"
                               style="width:36%"
                               th:text="${cartFoodInfo.foodInfo.manufacturer}"></span>
-                        <span class="font-bold flex text-xs justify-center"
+                        <span class="font-bold flex text-sm justify-center"
                               style="width:8%"
                               th:text="${cartFoodInfo.quantity}"></span>
                     </div>
@@ -62,11 +61,11 @@
 
             <div class="flex justify-center mt-5">
                 <a href="/foodInfo/search"
-                   class="m-3 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-full">
+                   class="m-3 text-sm bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-6 rounded-full">
                     식품 추가</a>
                 <a id="nextBtn"
                    href="/cartFoodInfo/total"
-                   class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full"
+                   class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full"
                    th:classappend="${!cartList.isEmpty()} ? '' : 'hidden'">
                     다음</a>
             </div>
@@ -75,32 +74,32 @@
     </div>
 
     <div id="customModal"
-         class="w-full fixed inset-0 flex text-xs items-center justify-center bg-black bg-opacity-50 hidden">
+         class="w-full fixed inset-0 flex text-sm items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="w-2/3 bg-white px-10 py-10 mx-15 my-20">
             <div id="foodNameLabel" class="text-center font-bold text-black text-lg"></div>
             <div class="flex">
-                <div class="text-xs font-bold m-2">제조사/유통사</div>
-                <div id="manufacturerLabel" class="text-xs text-black m-2"></div>
+                <div class="text-sm font-bold m-2">제조사/유통사</div>
+                <div id="manufacturerLabel" class="text-sm text-black m-2"></div>
             </div>
             <div class="flex">
-                <div class="text-xs font-bold m-2">수량</div>
-                <div id="quantityLabel" class="text-xs text-black m-2"></div>
-                <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                <div class="text-sm font-bold m-2">수량</div>
+                <div id="quantityLabel" class="text-sm text-black m-2"></div>
+                <button class="bg-gray-400 hover:bg-gray-300 text-white text-sm font-bold py-1 px-2 rounded m-2"
                         onclick="quantityUp()">+
                 </button>
-                <button class="bg-gray-400 hover:bg-gray-300 text-white text-xs font-bold py-1 px-2 rounded m-2"
+                <button class="bg-gray-400 hover:bg-gray-300 text-white text-sm font-bold py-1 px-2 rounded m-2"
                         onclick="quantityDown()">-
                 </button>
             </div>
 
             <div class="m-3 flex place-content-end">
-                <button class="m-1 bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-2 px-4 rounded"
                         onclick="executeDeleteLogic()">삭제
                 </button>
-                <button class="m-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold py-2 px-4 rounded"
                         onclick="executeUpdateLogic()">수정
                 </button>
-                <button class="m-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-bold py-2 px-4 rounded"
+                <button class="m-1 bg-gray-500 hover:bg-gray-600 text-white text-sm font-bold py-2 px-4 rounded"
                         onclick="closeCustomModal()">취소
                 </button>
             </div>
