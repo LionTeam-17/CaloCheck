@@ -1,9 +1,7 @@
 package calocheck.boundedContext.tag.config;
 
 import calocheck.boundedContext.tag.service.TagService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
