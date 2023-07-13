@@ -10,7 +10,7 @@
         <div class="max-w-3xl w-full px-4 py-4 flex flex-col">
             <div>
                 <div class="flex justify-center dropdown dropdown-hover mt-10">
-                    <div tabindex="0" class="m-1 btn btn-primary">필요한 정보를 선택해 보세요!</div>
+                    <div tabindex="0" class="m-1 btn bg-blue-500">필요한 정보를 선택해 보세요!</div>
                     <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-42">
                         <li>
                             <label>
@@ -110,7 +110,7 @@
                     <h3 class="text-black-400 font-bold bolder-none my-2 mb-0.5">주로 많이 먹는 음식</h3>
                 </div>
 
-                <div class="py-3 w-full h-auto rounded-lg items-center" style="background-color:#DBE2EF">
+                <div class="py-3 w-full h-auto rounded-lg items-center" >
                     <div id="foodListDiv" class="flex justify-center">
                         <h1 class="text-black ml-5 my-5">영양별 추천 음식이 나열됩니다</h1>
                     </div>
@@ -155,23 +155,20 @@
 
                             foodListDiv.innerHTML = `
                         <div class="mt-5 mb-5">
-                            <ul class="font-black mt-3">
+                            <ul class="font-black mt-3 grid grid-cols-3 gap-4">
                                 ${response.nutritionFoodList.map((food, index) => `
-                                <div class="flex flex-col">
-
-                                <div class="card w-56 bg-base-100 shadow-xl flex justify-center">
-                                    <figure class="px-10 pt-10">
-                                        <img src="${recommendPhotoData[index]}" alt="food_sample">
-                                    </figure>
-                                    <div class="card-body items-center text-center">
-                                        <a href="/foodInfo/search?keyword=${food}" class="text-black mt-1">${food}</a>
-                                        <h1 class="text-black">연관 검색 식품</h1>
-                                        <div id="top5ByFoodNameLists_${index}" class="text-sm"></div>
+                                <li>
+                                    <div class="card w-56 h-full bg-base-100 shadow-xl flex flex-col justify-center">
+                                        <figure class="px-10 pt-10">
+                                            <img src="${recommendPhotoData[index]}" alt="food_sample">
+                                        </figure>
+                                        <div class="card-body items-center text-center">
+                                            <a href="/foodInfo/search?keyword=${food}" class="text-black mt-1">${food}</a>
+                                            <h1 class="text-black">연관 검색 식품</h1>
+                                            <div id="top5ByFoodNameLists_${index}" class="text-sm"></div>
+                                        </div>
                                     </div>
-                                </div>
-
-
-                                <div class="divider"></div>
+                                </li>
                                 `).join('')}
                             </ul>
                         </div>
@@ -187,6 +184,7 @@
                                         const listItem = document.createElement("li");
 
                                         listItem.textContent = item;
+
                                         top5List.appendChild(listItem);
                                     });
 
