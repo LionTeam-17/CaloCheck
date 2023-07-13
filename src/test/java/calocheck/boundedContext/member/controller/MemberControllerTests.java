@@ -61,7 +61,7 @@ public class MemberControllerTests {
                         """.stripIndent().trim())));
     }
 
-    /*@Test
+    @Test
     @DisplayName("회원가입")
     void t002() throws Exception {
         // WHEN
@@ -70,14 +70,14 @@ public class MemberControllerTests {
                         .with(csrf()) // CSRF 키 생성
                         .param("username", "user10")
                         .param("password", "1234")
-                        .param("gender", "male")
+                        .param("gender", "M")
                         .param("email","aaa1@naver.com")
                         .param("nickname","도적")
                         .param("age","27")
-                        .param("height","170")
-                        .param("weight","65")
-                        .param("muscleMass","13")
-                        .param("bodyFat","12")
+                        .param("height","170.0")
+                        .param("weight","65.0")
+                        .param("muscleMass","13.0")
+                        .param("bodyFat","12.0")
                 )
                 .andDo(print());
 
@@ -86,7 +86,7 @@ public class MemberControllerTests {
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(status().is3xxRedirection());
-    } */
+    }
 
     @Test
     @DisplayName("회원가입시에 올바른 데이터를 넘기지 않으면 400")
