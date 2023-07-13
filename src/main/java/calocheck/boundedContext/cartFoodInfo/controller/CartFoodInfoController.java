@@ -88,12 +88,9 @@ public class CartFoodInfoController {
 
         List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
         List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
-        Double kcalTotal = cartFoodInfoService.calculateTotalKcal(cartList);
+        Double totalKcal = cartFoodInfoService.calculateTotalKcal(cartList);
 
-//        model.addAttribute("kcalTotal", kcalTotal);
-//        model.addAttribute("nutrientTotal", nutrientTotal);
-
-        return new CartDTO("success", res.getMsg(), foodId);
+        return new CartDTO("success", res.getMsg(), foodId, totalKcal, nutrientTotal);
     }
 
     @PostMapping("/removeAll")
@@ -142,7 +139,11 @@ public class CartFoodInfoController {
 
         RsData<CartFoodInfo> updateRes = cartFoodInfoService.updateCart(member, foodInfo, quantity);
 
-        return new CartDTO("success", updateRes.getMsg());
+        List<CartFoodInfo> cartList = cartFoodInfoService.findAllByMember(member);
+        List<NutrientDTO> nutrientTotal = cartFoodInfoService.calcTotalNutrient(cartList);
+        Double totalKcal = cartFoodInfoService.calculateTotalKcal(cartList);
+
+        return new CartDTO("success", updateRes.getMsg(), totalKcal, nutrientTotal);
     }
 
     @GetMapping("/addMenu")
