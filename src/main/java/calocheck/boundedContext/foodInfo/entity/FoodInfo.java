@@ -36,6 +36,9 @@ public class FoodInfo extends BaseEntity {
     public void addNutrient(Nutrient nutrient) {
         nutrientList.add(nutrient);
     }
+    public boolean compare(FoodInfo foodInfo) {
+        return this.foodCode.equals(foodInfo.getFoodCode());
+    }
 }
 
 // 5 식품명

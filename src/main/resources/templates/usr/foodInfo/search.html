@@ -22,7 +22,7 @@
                                    class="m-2 p-2 bg-gray-300 text-black rounded-lg "
                                    placeholder="검색할 음식을 입력하세요">
                             <button type="submit"
-                                    class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                                    class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                                 <span>검색</span>
                             </button>
                         </label>
@@ -32,18 +32,16 @@
             <div class="w-full">
                 <div class="my-1 flex text-black">
                     <i class="mx-2 fa-solid fa-list"></i>
-                    <div class="my-1 font-bold text-sm">
+                    <div class="font-bold text-sm">
                         음식 목록
                     </div>
                 </div>
-                <div class="flex flex-col justify-center">
-                    <div class="m-2 flex flex-grow justify-between w-full">
-                        <span class="text-black font-bold text-xs flex justify-center" style="width:8%">번호</span>
-                        <span class="text-black font-bold text-xs flex justify-center" style="width:36%">식품명</span>
-                        <span class="text-black font-bold text-xs flex justify-center" style="width:36%">제조사/유통사</span>
+                <div class="flex flex-col">
+                    <div class="m-2 bg-gray-300 p-3 flex flex-grow justify-between w-full">
+                        <span class="text-black font-bold text-sm flex justify-center" style="width:36%">식품명</span>
+                        <span class="text-black font-bold text-sm flex justify-center" style="width:36%">제조사/유통사</span>
                     </div>
                 </div>
-                <div class="my-1 border border-gray-200 border-2"></div>
                 <div class="my-5 flex flex-wrap justify-center w-full" th:if="${foodList.isEmpty()}">
                     검색 결과가 없습니다.
                 </div>
@@ -51,13 +49,10 @@
                     <div class="flex flex-col justify-center" th:each="foodInfo, loop: ${paging}">
                         <a class="m-2 flex flex-grow justify-between"
                              th:href="|/foodInfo/details/${foodInfo.id}|">
-                            <span class="font-bold text-xs text-black flex justify-center"
-                                  style="width:8%"
-                                  th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></span>
-                            <span class="font-bold text-xs text-start text-black flex whitespace-normal break-words"
+                            <span class="mx-4 font-bold text-sm text-start text-black flex whitespace-normal break-words"
                                   style="width:36%"
                                   th:text="${foodInfo.foodName}"></span>
-                            <span class="font-bold text-xs text-black flex justify-center whitespace-normal break-words"
+                            <span class="font-bold text-sm text-black flex justify-center whitespace-normal break-words"
                                   style="width:36%"
                                   th:text="${foodInfo.manufacturer}"></span>
                         </a>
@@ -70,7 +65,7 @@
                 <div th:if="${!paging.isEmpty()}" class="flex justify-center my-5">
                     <ul class="pagination justify-content-center flex">
                         <li th:if="${paging.hasPrevious()}" class="page-item">
-                            <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                                th:href="@{|?keyword=${keyword}&page=${paging.number - 1}|}"
                                th:data-page="${paging.number - 1}">
                                 <span>이전</span>
@@ -80,12 +75,12 @@
                             th:if="${page >= paging.number - 2 and page <= paging.number + 2}">
                             <a th:disabled="${page == paging.number}"
                                th:text="${page + 1}"
-                               class="page-link m-1 btn-outline text-black text-xs bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
+                               class="page-link m-1 btn-outline text-black text-sm bg-gray-100 hover:bg-gray-200 font-bold py-2 px-4 rounded"
                                th:href="@{|?keyword=${keyword}&page=${page}}"
                                th:data-page="${page}"></a>
                         </li>
                         <li th:if="${paging.hasNext()}" class="page-item">
-                            <a class="m-1 text-xs bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                            <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                                th:href="@{|?keyword=${keyword}&page=${paging.number + 1}|}"
                                th:data-page="${paging.number + 1}">
                                 <span>다음</span>

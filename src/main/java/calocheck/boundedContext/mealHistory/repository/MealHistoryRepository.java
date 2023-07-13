@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface MealHistoryRepository extends JpaRepository<MealHistory, Long> {
     Optional<MealHistory> findByMember (Member member);
     List<MealHistory> findByMemberAndCreateDateBetween(Member member, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    MealHistory findByMemberAndMealTypeAndCreateDateBetween(Member member, String mealType, LocalDateTime startDateTime, LocalDateTime endDateTime);
 }

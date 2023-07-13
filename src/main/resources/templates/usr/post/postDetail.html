@@ -29,11 +29,11 @@
                           th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
                 </div>
                 <div>
-                    <a class="btn btn-sm w-[40px] bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                    <a class="btn btn-sm w-[40px] bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                        style="border: white"
                        th:href="@{|/post/${postId}/modify|}"
                        th:if="${@rq.login && post.member.id == @rq.member.id}">수정</a>
-                    <button class="btn btn-sm mx-1 w-[40px] bg-red-500 hover:bg-red-400 text-white font-bold rounded-full"
+                    <button class="btn btn-sm mx-1 w-[40px] bg-red-500 hover:bg-red-400 text-white font-bold rounded-lg"
                             style="border: white"
                             onclick="$(this).next().submit();"
                             th:attr="data-post-id=${postId}"
@@ -45,7 +45,7 @@
                           th:action="@{|/post/${postId}/delete|}">
                         <input name="_method" type="hidden" value="PATCH">
                     </form>
-                    <a class="btn btn-sm w-[40px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-full"
+                    <a class="btn btn-sm w-[40px] bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-lg"
                        style="border: white"
                        href="/post/list">목록</a>
                 </div>
@@ -61,7 +61,7 @@
              th:text="${post.content}"></div>
 
         <div class="flex justify-center">
-            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                   style="border: white"
                   method="POST" th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.login && @postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
@@ -69,7 +69,7 @@
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
-            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                   method="POST" style="border: white"
                   th:action="@{|/post/${postId}/postLike|}"
                   th:if="${@rq.logout}">
@@ -77,7 +77,7 @@
                     <i class="fa-regular fa-thumbs-up" style="color: yellow"></i>&nbsp;추천
                 </button>
             </form>
-            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+            <form class="btn btn-sm w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                   style="border: white"
                   method="POST" th:action="@{|/post/${postId}/postLike/delete|}"
                   th:if="${@rq.login && !@postLikeRepository.findByPostAndMember(post, @rq.member.id).isEmpty()}">
@@ -133,7 +133,7 @@
                             <!-- 등록 버튼 -->
                             <div class="submit-button flex">
                                 <div class="flex">
-                                    <button class="btn btn-sm ml-2 w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                                    <button class="btn btn-sm ml-2 w-20 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                                             style="border: white">
                                         <span class="text-center">등록</span>
                                     </button>

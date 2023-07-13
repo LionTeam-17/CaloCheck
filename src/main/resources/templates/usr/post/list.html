@@ -74,7 +74,7 @@
                     <a class="ml-2 mt-1 text-sm" th:href="@{|?postType=${postType}&code=1&kw=${kw}|}"
                        th:if="${!code.equals('1')}">추천순</a>
                 </div>
-                <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full"
+                <div class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg"
                      style="border: white">
                     <a href="/post/createForm">
                         <i class="fa-solid fa-pencil"></i>
@@ -109,6 +109,13 @@
                         <!-- 역순 정렬 로직 종료 -->
                         <a class="font-bold text-sm flex justify-start" style="width: 30%"
                            th:href="|/post/${post.id}|">
+                            <span class="mr-1 mt-1"
+                                  th:if="${@imageDataService.findByImageTargetAndTargetId('POST_IMAGE', post.id).isPresent()
+                                  && post.id == @imageDataService.findByImageTargetAndTargetId('POST_IMAGE', post.id).get().targetId}">
+                                <i class="fa-sharp fa-solid fa-image"></i></span>
+                            <span class="mr-1 mt-1"
+                                  th:if="${@imageDataService.findByImageTargetAndTargetId('POST_IMAGE', post.id).isEmpty()}">
+                            <i class="fa-sharp fa-regular fa-image" style="color: #85938c;"></i></span>
                             <span style="word-break: break-all" th:text="${post.subject}"></span>
                             <span>&nbsp;</span>
                             <span class="text-[8px]" style="color:gray"
@@ -136,7 +143,7 @@
                 <ul class="pagination justify-content-center flex justify-center flex-grow">
                     <li class="page-item"
                         th:if="${paging.hasPrevious() == true }">
-                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number - 1}|}">
                             <span>이전</span>
                         </a>
@@ -153,7 +160,7 @@
                     </li>
                     <li class="page-item"
                         th:if="${paging.hasNext() == true }">
-                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-full"
+                        <a class="m-1 text-sm bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg"
                            th:href="@{|?postType=${postType}&code=${code}&kw=${kw}&page=${paging.number+1}|}">
                             <span>다음</span>
                         </a>

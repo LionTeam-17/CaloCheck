@@ -1,39 +1,16 @@
-/*.tablink{*/
-/*    background-color: #112D4E;*/
-/*    color: white;*/
-/*    float: left;*/
-/*    border: none;*/
-/*    outline: none;*/
-/*    cursor: pointer;*/
-/*    padding: 10px 13px;*/
-/*    transition: 0.3s;*/
-/*    font-size: 15px;*/
-/*    margin-right: 5px;*/
-/*    border-radius: 10px;*/
-/*}*/
-
-/*.tablink:hover {*/
-/*    background-color: #3F72AF;*/
-/*}*/
-
-/*.tablink.active {*/
-/*    background-color: #3F72AF;*/
-/*    color: white;*/
-/*}*/
-
 .user-info {
     width: 700px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 5px;
     padding: 10px;
-    box-shadow: 0px 2px 15px rgba(0,0,0,0.1);
-    background-color: #fafafa;
+    /*box-shadow: 0px 2px 15px rgba(0,0,0,0.1);*/
+    background-color: white;
     margin-bottom: 10px;
 }
 
 .user-details {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .user-detail-item {
@@ -45,12 +22,12 @@
 .detail-title {
     font-weight: bold;
     color: #666;
-    font-size: 18px;
+    font-size: 14px;
     margin-right: 10px;
 }
 
 .detail-value {
-    font-size: 18px;
+    font-size: 14px;
     margin-right: 40px;
 }
 
@@ -58,16 +35,17 @@
 .user-detail-item:last-child .detail-value {
     margin-right: 0;
 }
+
 #openRecordModal, #openTrackingModal {
-    /*background-color: #112D4E;*/
-    /*color: white;*/
-    /*border-radius: 10px;*/
-    /*padding: 10px 13px;*/
-    /*font-size: 15px;*/
+    background-color: rgb(59 130 246);
+    color: white;
+    border-radius: 10px;
+    border-color: rgb(59 130 246);
+    font-size: 14px;
 }
 
 #confirmRecord {
-    background-color: #112D4E;
+    background-color: rgb(59 130 246);
 }
 
 #openRecordModal:hover, #confirmRecord:hover,#openTrackingModal:hover {
@@ -111,7 +89,7 @@
 
 .form-container button[type="submit"] {
     padding: 8px 16px;
-    background-color: #112D4E;
+    background-color: rgb(59 130 246);
     color: white;
     border: none;
     border-radius: 5px;
@@ -138,7 +116,7 @@
     width: 100% !important;
     max-width: 800px;
     height: auto !important;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .info-container {
@@ -151,6 +129,7 @@
     text-align: center;
     width: fit-content;
     margin: 0 auto;
+    font-size: 14px;
 }
 
 .info-label {
@@ -164,6 +143,7 @@
     flex-direction: column;
     align-items: stretch;
     gap: 1em;
+    font-size: 14px;
 }
 
 .card {
@@ -176,7 +156,7 @@
     background-color: #dbe2ef;
     color: black;
     padding: 0.5em;
-    font-size: 1.25em;
+    font-size: 16px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -188,6 +168,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: white;
+    font-size: 14px;
 }
 
 
@@ -204,5 +185,42 @@
     .displayModal .inline-block {
         width: 80%;
         max-width: 80%;
+    }
+    .card-container {
+        align-items: flex-start;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .card-body {
+        flex-direction: column;
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    #openRecordModal,
+    #openTrackingModal {
+        width: 80%;
+        font-size: 10px;
+        padding: 1px 3px;
+    }
+
+    .tablink {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+
+    .join-vertical {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .join-item {
+        margin-right: 5px;
+        margin-bottom: 5px;
+        white-space: nowrap;
     }
 }

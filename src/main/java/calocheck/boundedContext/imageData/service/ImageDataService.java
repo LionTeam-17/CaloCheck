@@ -77,14 +77,9 @@ public class ImageDataService {
 
             imageDataRepository.save(imageData);
         } else {
-
             ImageData imageData = byImageTargetAndTargetId.get();
 
-            imageData = ImageData.builder()
-                    .imageUrl(imageUrl)
-                    .build();
-
-            imageDataRepository.save(imageData);
+            imageDataRepository.delete(imageData);
         }
 
         return RsData.of("S-1", "수정 성공");

@@ -30,41 +30,41 @@ public class CartFoodInfoService {
             long updatedQuantity = cartFoodInfo.getQuantity() + quantity;
             update(cartFoodInfo, member, foodInfo, updatedQuantity);
 
-            return RsData.of("S-2", "이미 장바구니에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
+            return RsData.of("S-2", "이미 식단리스트에 있는 항목을 수정하였습니다. (%s, %d개)".formatted(foodInfo.getFoodName(), updatedQuantity));
         }
 
         create(member, foodInfo, quantity);
 
-        return RsData.of("S-1", "장바구니 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
+        return RsData.of("S-1", "식단리스트 추가 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
     public RsData<CartFoodInfo> removeToCart(Member member, FoodInfo foodInfo) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo == null) {
-            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
+            return RsData.of("F-1", "[%s] 식품은 식단리스트에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
         delete(cartFoodInfo);
 
-        return RsData.of("S-1", "[%s] 장바구니에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
+        return RsData.of("S-1", "[%s] 식단리스트에서 삭제되었습니다.".formatted(foodInfo.getFoodName()));
     }
 
     public RsData<CartFoodInfo> removeAllToCart(List<CartFoodInfo> cartList) {
         deleteAll(cartList);
-        return RsData.of("S-1", "%d개의 항목이 장바구니에서 삭제되었습니다.".formatted(cartList.size()));
+        return RsData.of("S-1", "%d개의 항목이 식단리스트에서 삭제되었습니다.".formatted(cartList.size()));
     }
 
     public RsData<CartFoodInfo> updateCart(Member member, FoodInfo foodInfo, Long quantity) {
         CartFoodInfo cartFoodInfo = cartFoodInfoRepository.findByMemberIdAndFoodInfoId(member.getId(), foodInfo.getId());
 
         if (cartFoodInfo == null) {
-            return RsData.of("F-1", "[%s] 식품은 장바구니에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
+            return RsData.of("F-1", "[%s] 식품은 식단리스트에 존재하지 않습니다.".formatted(foodInfo.getFoodName()));
         }
 
         update(cartFoodInfo, member, foodInfo, quantity);
 
-        return RsData.of("S-1", "장바구니 수정 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
+        return RsData.of("S-1", "식단리스트 수정 완료(%s, %d개)".formatted(foodInfo.getFoodName(), quantity));
     }
 
     public CartFoodInfo create(Member member, FoodInfo foodInfo, Long quantity) {

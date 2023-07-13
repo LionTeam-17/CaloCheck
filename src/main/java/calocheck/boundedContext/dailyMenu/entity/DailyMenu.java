@@ -26,4 +26,8 @@ public class DailyMenu extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private FoodInfo foodInfo;
     private long quantity;
+
+    public void addQuantity(DailyMenu dailyMenu) {
+        this.quantity += dailyMenu.getQuantity();
+    }
 }

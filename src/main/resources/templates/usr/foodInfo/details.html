@@ -33,13 +33,17 @@
                 <img th:src="${imgData}" alt="foodImg">
             </div>
             <div class="m-5 flex justify-center">
-                <a class="m-2 text-xs bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-3 rounded-full"
+                <a class="m-2 text-xs bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-3 rounded-lg"
                    th:if="${@rq.isLogin()}" th:onclick="openCustomModal()">
-                    장바구니 등록
+                    식단 등록
                 </a>
-                <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-full"
+                <a class="m-2 text-xs bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-3 rounded-lg"
                    href="javascript:history.back()">
                     돌아가기
+                </a>
+                <a class="m-2 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-3 rounded-lg"
+                   th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
+                    식단리스트
                 </a>
             </div>
 
@@ -69,6 +73,11 @@
                             <div class="text-xs text-black m-1"
                                  th:text="${foodInfo.totalSize} + '(' + ${foodInfo.unit} + ')'"></div>
                         </div>
+                        <div class="flex m-2">
+                            <div class="text-xs font-bold m-1">에너지(kcal)</div>
+                            <div class="text-xs text-black m-1"
+                                 th:text="${foodInfo.kcal}"></div>
+                        </div>
                     </div>
                     <!-- FoodInfo 정보 출력 끝-->
                     <div class="divider my-2"></div>
@@ -89,7 +98,7 @@
                     <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrients}"
                          class="flex justify-between">
                         <div class="flex">
-                            <i class="fa-solid fa-list"></i>
+                            <i th:id="${loop.index}" class="m-1 fa-solid fa-circle"></i>
                             <div class="text-xs font-bold m-2"
                                  th:text="${nutrient.name} + '(g)'"></div>
                         </div>
@@ -100,12 +109,6 @@
                     <!-- nutrientInfo 정보 출력 끝-->
                 </div>
                 <div class="divider my-2" style="height: 1px"></div>
-            </div>
-            <div class="flex justify-center">
-                <a class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-4 px-4 rounded-full"
-                   th:if="${@rq.isLogin()}" th:href="@{/cartFoodInfo/list}">
-                    장바구니 목록
-                </a>
             </div>
 
             <div id="customModal"
@@ -190,10 +193,12 @@
         let back;
         let hover;
         let loopIndex;
+        let iconTag;
 
         // 원형 그래프를 그릴 데이터
         /*[# th:each="nutrient, loop : ${nutrients}"]*/
         loopIndex = /*[[${loop.index}]]*/null;
+        iconTag = document.getElementById(loopIndex);
         label = /*[[${nutrient.name}]]*/null;
         value = /*[[${nutrient.value}]]*/null;
 
@@ -205,6 +210,7 @@
             nutrientData.datasets[0].data.push(value);
             nutrientData.datasets[0].backgroundColor.push(back);
             nutrientData.datasets[0].hoverBackgroundColor.push(hover);
+            iconTag.style.color = back;
         }
         /*[/]*/
 

@@ -33,7 +33,7 @@
 //    private CartFoodInfoService cartFoodInfoService;
 //
 //    @Test
-//    @DisplayName("장바구니 리스트 페이지 요청")
+//    @DisplayName("식단리스트 리스트 페이지 요청")
 //    @WithMockUser("user1")
 //    void showCartListPage() throws Exception {
 //        // WHEN
@@ -47,12 +47,12 @@
 //                .andExpect(handler().methodName("showCartList"))
 //                .andExpect(status().is2xxSuccessful())
 //                .andExpect(content().string(containsString("""
-//                        장바구니 음식 목록
+//                        식단리스트 음식 목록
 //                        """.stripIndent().trim())));
 //    }
 //
 //    @Test
-//    @DisplayName("장바구니 추가 요청")
+//    @DisplayName("식단리스트 추가 요청")
 //    @WithMockUser("user2")
 //    void addCartFoodInfoRequest() throws Exception {
 //        // WHEN
@@ -70,7 +70,7 @@
 //    }
 //
 //    @Test
-//    @DisplayName("장바구니 삭제 요청")
+//    @DisplayName("식단리스트 삭제 요청")
 //    @WithMockUser("user2")
 //    void removeCartFoodInfoRequest() throws Exception {
 //        // WHEN
@@ -88,7 +88,7 @@
 //    }
 //
 //    @Test
-//    @DisplayName("장바구니 수량 수정 요청")
+//    @DisplayName("식단리스트 수량 수정 요청")
 //    @WithMockUser("user2")
 //    void updateCartFoodInfoRequest() throws Exception {
 //        // WHEN
@@ -116,7 +116,7 @@
 //    }
 //
 //    @Test
-//    @DisplayName("장바구니 항목 총 합계 페이지")
+//    @DisplayName("식단리스트 항목 총 합계 페이지")
 //    @WithMockUser("user2")
 //    void showCartTotalPage() throws Exception {
 //        // WHEN
