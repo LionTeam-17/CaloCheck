@@ -48,7 +48,7 @@
             <div id="meal-info" class="meal-container"></div>
         </div>
         <input type="hidden" id="memberId" th:value="${member.id}"/>
-        <script>
+        <script th:inline="javascript">
             // ================================
             // START YOUR APP HERE
             // ================================
@@ -93,7 +93,7 @@
              * @param {number} date
              * @param {number} dayIn
              */
-            function loadDate (date, dayIn) {
+            function loadDate(date, dayIn) {
                 document.querySelector('.cal-date').textContent = date;
                 document.querySelector('.cal-day').textContent = init.dayList[dayIn];
             }
@@ -101,7 +101,9 @@
             /**
              * @param {date} fullDate
              */
-            function loadYYMM (fullDate) {
+            function loadYYMM(fullDate) {
+                let presentDays = /*[[${presentDays}]]*/ null;
+
                 let yy = fullDate.getFullYear();
                 let mm = fullDate.getMonth();
                 let firstDay = init.getFirstDay(yy, mm);
@@ -129,8 +131,13 @@
                         } else {
                             let fullDate = yy + '.' + init.addZero(mm + 1) + '.' + init.addZero(countDay + 1);
                             trtd += '<td class="day';
-                            trtd += (markToday && markToday === countDay + 1) ? ' today" ' : '"';
+                            trtd += (markToday && markToday === countDay + 1) ? ' today' : '';
+                            for (let k = 0; k < presentDays.length; k++) {
+                                let temp = presentDays[k];
+                                trtd += (temp === countDay + 1) ? ' before:absolute before:left-2 before:top-2 before:w-2 before:h-2 before:bg-red-500 before:rounded-full"' : '';
+                            }
                             trtd += ` data-date="${countDay + 1}" data-fdate="${fullDate}">`;
+                            //
                         }
                         trtd += (startCount) ? ++countDay : '';
                         if (countDay === lastDay.getDate()) {
@@ -146,7 +153,7 @@
             /**
              * @param {string} val
              */
-            function createNewList (val) {
+            function createNewList(val) {
                 let id = new Date().getTime() + '';
                 let yy = init.activeDate.getFullYear();
                 let mm = init.activeDate.getMonth() + 1;
@@ -166,6 +173,8 @@
 
             loadYYMM(init.today);
             loadDate(init.today.getDate(), init.today.getDay());
+            let initMealInfo = /*[[${mealHistories}]]*/ null;
+            showMealInfo(initMealInfo)
 
             $btnNext.addEventListener('click', () => loadYYMM(init.nextMonth()));
             $btnPrev.addEventListener('click', () => loadYYMM(init.prevMonth()));
@@ -190,67 +199,146 @@
                         .then(response => response.json())
                         .then(data => {
                             // 식단 정보 표시
-                            let mealInfo = document.getElementById('meal-info');
-                            mealInfo.innerHTML = ''; // 기존의 정보를 삭제
-
-                            data.forEach(mealHistoryDto => {
-                                let mealSection = document.createElement('a');
-                                mealSection.classList.add('block','p-6','mb-3','bg-white', 'border', 'border-gray-200', 'rounded-lg', 'shadow');
-                                mealSection.href = '#';
-
-                                let mealType = document.createElement('h5');
-                                mealType.classList.add('mb-2', 'text-2xl', 'font-bold', 'tracking-tight', 'text-gray-900');
-
-                                let mealScore = document.createElement('p');
-                                mealScore.textContent = '별점 : ' + mealHistoryDto.mealScore;
-                                mealScore.classList.add('font-normal', 'text-gray-700', 'mb-1');
-
-                                let mealMemo = document.createElement('p');
-                                mealMemo.textContent = '메모 : ' + mealHistoryDto.mealMemo;
-                                mealMemo.classList.add('font-normal', 'text-gray-700', 'mb-1');
-
-                                let dailyMenuList = document.createElement('ul');
-                                dailyMenuList.classList.add('daily-menu-list');
-
-                                mealHistoryDto.dailyMenuList.forEach(dailyMenu => {
-                                    let foodItem = document.createElement('li');
-                                    foodItem.classList.add('food-item');
-
-                                    let foodName = document.createElement('span');
-                                    foodName.textContent = '식품명: ' + dailyMenu.foodName;
-                                    foodName.classList.add('food-name');
-
-                                    let quantity = document.createElement('span');
-                                    quantity.textContent = '수량: ' + dailyMenu.quantity;
-                                    quantity.classList.add('quantity');
-
-                                    foodItem.appendChild(foodName);
-                                    foodItem.appendChild(quantity);
-
-                                    dailyMenuList.appendChild(foodItem);
-                                });
-
-                                if (mealHistoryDto.mealType === 'breakfast') {
-                                    mealType.textContent = '아침';
-                                } else if (mealHistoryDto.mealType === 'lunch') {
-                                    mealType.textContent = '점심';
-                                } else if (mealHistoryDto.mealType === 'dinner') {
-                                    mealType.textContent = '저녁';
-                                } else if (mealHistoryDto.mealType === 'etc') {
-                                    mealType.textContent = '간식';
-                                }
-
-                                mealSection.appendChild(mealType);
-                                mealSection.appendChild(mealScore);
-                                mealSection.appendChild(mealMemo);
-                                mealSection.appendChild(dailyMenuList);
-
-                                mealInfo.appendChild(mealSection);
-                            });
+                            showMealInfo(data);
                         })
                         .catch(error => console.error('Error:', error));
                 }
             });
+
+            function showMealInfo(data) {
+                let mealInfo = document.getElementById('meal-info');
+                mealInfo.classList.add('flex', 'overflow-x-auto', 'flex-center', 'mx-3');
+                mealInfo.innerHTML = ''; // 기존의 정보를 삭제
+
+                data.forEach(mealHistoryDto => {
+                    let mealSection = document.createElement('a');
+                    mealSection.classList.add(
+                        'p-3',
+                        'm-3',
+                        'bg-gray-200',
+                        'rounded-lg',
+                        'shadow',
+                        'w-2/5',
+                    );
+                    mealSection.href = '#';
+
+                    let mealHeader = document.createElement('div');
+                    mealHeader.classList.add(
+                        'flex',
+                        'm-1'
+                    );
+
+                    let mealType = document.createElement('h5');
+                    mealType.classList.add(
+                        'm-2',
+                        'text-lg',
+                        'font-bold',
+                        'tracking-tight',
+                        'text-gray-900'
+                    );
+
+                    let mealScore = document.createElement('div');
+                    mealScore.classList.add(
+                        'm-2',
+                        'flex',
+                        'rating',
+                        'rating-md'
+                    );
+
+                    for (let i = 1; i <= 5; i++) {
+                        let temp = document.createElement('input');
+                        temp.type = 'radio';
+                        temp.value = i;
+                        temp.classList.add(
+                            'mask',
+                            'mask-star-2',
+                            'bg-orange-400'
+                        );
+
+                        if (parseInt(i) === parseInt(mealHistoryDto.mealScore)) {
+                            temp.checked = true;
+                        }
+                        temp.disabled = true;
+                        mealScore.appendChild(temp);
+                    }
+
+                    mealHeader.appendChild(mealType);
+                    mealHeader.appendChild(mealScore);
+
+                    let mealMemo = document.createElement('p');
+                    mealMemo.textContent = mealHistoryDto.mealMemo;
+                    mealMemo.classList.add(
+                        'font-normal',
+                        'text-gray-700',
+                        'mx-3',
+                        'mb-2',
+                        'break-all'
+                    );
+
+                    let dailyMenuList = document.createElement('ul');
+                    dailyMenuList.classList.add(
+                        'daily-menu-list',
+                        'p-2',
+                        'm-1',
+                    );
+
+
+                    mealHistoryDto.dailyMenuList.forEach(dailyMenu => {
+                        let foodItem = document.createElement('li');
+                        foodItem.classList.add(
+                            'inline-flex',
+                            'flex',
+                            'food-item',
+                            'text-black',
+                            'bg-gray-300',
+                            'rounded-lg',
+                            'p-2',
+                            'm-2'
+                        );
+
+                        let foodName = document.createElement('span');
+                        foodName.textContent = dailyMenu.foodName;
+                        foodName.classList.add(
+                            'food-name',
+                            'text-sm'
+                        );
+
+                        let quantity = document.createElement('span');
+                        quantity.textContent = dailyMenu.quantity;
+                        quantity.classList.add(
+                            'w-8',
+                            'h-8',
+                            'text-center',
+                            'text-sm',
+                            'rounded-lg',
+                            'bg-gray-100',
+                            'quantity',
+                            'p-2'
+                        );
+
+                        foodItem.appendChild(foodName);
+                        foodItem.appendChild(quantity);
+
+                        dailyMenuList.appendChild(foodItem);
+                    });
+
+                    if (mealHistoryDto.mealType === 'breakfast') {
+                        mealType.textContent = '아침';
+                    } else if (mealHistoryDto.mealType === 'lunch') {
+                        mealType.textContent = '점심';
+                    } else if (mealHistoryDto.mealType === 'dinner') {
+                        mealType.textContent = '저녁';
+                    } else if (mealHistoryDto.mealType === 'etc') {
+                        mealType.textContent = '간식';
+                    }
+
+                    mealSection.appendChild(mealHeader);
+                    mealSection.appendChild(mealMemo);
+                    mealSection.appendChild(dailyMenuList);
+
+                    mealInfo.appendChild(mealSection);
+                });
+            }
         </script>
     </main>
 </th:block>

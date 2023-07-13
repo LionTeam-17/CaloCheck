@@ -1,6 +1,6 @@
 <html layout:decorate="~{common/layout/defaultLayout.html}" xmlns:layout="" data-theme="corporate">
 <head>
-    <title>장바구니</title>
+    <title>식단리스트</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
@@ -61,10 +61,10 @@
 
                 <div class="flex justify-center mt-5">
                     <a href="/cartFoodInfo/list"
-                       class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                       class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                         이전</a>
                     <a href="/cartFoodInfo/addMenu"
-                       class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-full">
+                       class="m-3 text-xs bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg">
                         다음</a>
                 </div>
             </div>

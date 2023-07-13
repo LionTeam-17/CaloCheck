@@ -5,7 +5,6 @@ import calocheck.boundedContext.cartFoodInfo.service.CartFoodInfoService;
 import calocheck.boundedContext.dailyMenu.entity.DailyMenu;
 import calocheck.boundedContext.dailyMenu.repository.DailyMenuRepository;
 import calocheck.boundedContext.foodInfo.entity.FoodInfo;
-import calocheck.boundedContext.mealHistory.entity.MealHistory;
 import calocheck.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -63,14 +62,14 @@ public class DailyMenuService {
     }
 
     @Transactional
-    public void updateMealHistory(DailyMenu dailyMenu){
+    public void updateMealHistory(DailyMenu dailyMenu) {
 
         dailyMenuRepository.save(dailyMenu);
     }
 
     public List<FoodInfo> getTodayFoodList(Member member) {
 
-        List<DailyMenu> todayDailyMenuList = findMembersTodayMenuList(member);
+        List<DailyMenu> todayDailyMenuList = findByMembersTodayMenuList(member);
 
         List<FoodInfo> todayFoodList = new ArrayList<>();
 
@@ -82,8 +81,7 @@ public class DailyMenuService {
         return todayFoodList;
     }
 
-    public List<DailyMenu> findMembersTodayMenuList(Member member){
-
+    public List<DailyMenu> findByMembersTodayMenuList(Member member) {
         LocalDateTime startDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime endDateTime = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
 
@@ -91,8 +89,27 @@ public class DailyMenuService {
     }
 
     @Transactional
-    public void save(DailyMenu dailyMenu){
+    public void save(DailyMenu dailyMenu) {
         dailyMenuRepository.save(dailyMenu);
     }
 
+    public List<DailyMenu> concatList(List<DailyMenu> list1, List<DailyMenu> list2) {
+        List<DailyMenu> result = new ArrayList<>(list1);
+
+        list2.stream()
+                .forEach(dailyMenu -> {
+                    FoodInfo foodInfo = dailyMenu.getFoodInfo();
+                    DailyMenu temp = result.stream()
+                            .filter(dm -> dm.getFoodInfo().compare(foodInfo))
+                            .findFirst().orElse(null);
+
+                    if (temp == null) {
+                        result.add(dailyMenu);
+                    } else {
+                        temp.addQuantity(dailyMenu);
+                    }
+                });
+
+        return result;
+    }
 }

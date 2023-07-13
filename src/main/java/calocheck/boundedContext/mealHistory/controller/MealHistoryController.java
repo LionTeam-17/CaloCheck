@@ -10,8 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,14 +52,21 @@ public class MealHistoryController {
         }
 
         Member member = memberOpt.get();
-        List<MealHistory> mealHistoriesToday = mealHistoryService.findMembersTodayHistory(member);
+        List<MealHistory> mealHistoriesMonth = mealHistoryService.findByMemberAndCurrentMonth(member);
+        List<Integer> presentDays = mealHistoriesMonth.stream()
+                .mapToInt(mealHistory -> mealHistory.getCreateDate().getDayOfMonth())
+                .distinct()
+                .boxed()
+                .collect(Collectors.toList());
 
+        List<MealHistory> mealHistoriesToday = mealHistoryService.findMembersTodayHistory(member);
         List<MealHistoryDto> mealHistoryDtos = mealHistoriesToday.stream()
                 .map(MealHistoryDto::fromEntity)
                 .collect(Collectors.toList());
 
         model.addAttribute("member", member);
         model.addAttribute("mealHistories", mealHistoryDtos);
+        model.addAttribute("presentDays", presentDays);
 
         return "usr/mealHistory/mealHistory";
     }

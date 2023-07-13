@@ -15,7 +15,7 @@
                     <div class="flex justify-between gap-10">
                         <div class="flex gap-3">
                             <div class="avatar">
-                                <div class="w-32 rounded-full">
+                                <div class="w-32 rounded-lg">
                                     <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGHYFr%2FbtrsSwcSDQV%2FUQZxkayGyAXrPACyf0MaV1%2Fimg.jpg"/>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                             <div>
                                 <a th:href="@{|/member/modify/${member.id}|}"
                                    th:if="${@rq.login && member.id == @rq.member.id}">
-                                    <button class="mr-1 mt-1 text-xs bg-blue-500 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-full"
+                                    <button class="mr-1 mt-1 text-xs bg-blue-500 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-lg"
                                             th:attr="data-member-id=${@rq.member.id}"> 수정하기
                                     </button>
                                 </a>
@@ -128,7 +128,7 @@
                             <div>
                                 <a href="/tracking/bodyTracking"
                                    th:if="${@rq.login && member.id == @rq.member.id}">
-                                    <button class="ml-1 mt-1 text-xs bg-blue-500 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-full"
+                                    <button class="ml-1 mt-1 text-xs bg-blue-500 hover:bg-red-500 text-white font-bold py-4 px-4 rounded-lg"
                                             th:attr="data-member-id=${@rq.member.id}">기록하러 가기
                                     </button>
                                 </a>

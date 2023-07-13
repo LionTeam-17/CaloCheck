@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -259,7 +258,7 @@ public class MemberController {
 
         Criteria myCriteria = criteriaService.findByGenderAndAge(member);
 
-        List<DailyMenu> todayMenuList = dailyMenuService.findMembersTodayMenuList(member);
+        List<DailyMenu> todayMenuList = dailyMenuService.findByMembersTodayMenuList(member);
         RsData<Map<String, Double>> todayCalcRsData = criteriaService.calcTodayNutrition(todayMenuList);
 
         if(todayCalcRsData.isSuccess()){

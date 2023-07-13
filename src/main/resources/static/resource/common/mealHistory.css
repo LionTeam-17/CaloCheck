@@ -134,7 +134,6 @@ html, body {
 }
 .meal-container {
     display: flex;
-    flex-direction: column;
 }
 .meal-section {
     width: 100%;
@@ -162,7 +161,6 @@ html, body {
 
 .food-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
 }
@@ -170,6 +168,6 @@ html, body {
     margin-right: 10px;
 }
 
-.food-item .quantity {
+.food-item {
     margin-right : 10px;
 }
