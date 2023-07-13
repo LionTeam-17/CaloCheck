@@ -95,11 +95,6 @@ public class MemberController {
             return rq.historyBack(checkRsData.getMsg());
         }
 
-        // 선택사항 미입력시 기본 defalut값 => 0
-        if (joinForm.getAge() == null) {
-            joinForm.setAge(0);
-        }
-
         if (joinForm.getHeight() == null) {
             joinForm.setHeight(0.0);
         }

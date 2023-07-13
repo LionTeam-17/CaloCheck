@@ -85,6 +85,13 @@
                 return;
             }
 
+            form.age.value = form.age.value.trim();
+            if (form.age.value.length == 0) {
+                toastWarning('나이를 입력해주세요.');
+                form.age.focus();
+                return;
+            }
+
             form.submit(); // 폼 발송
         }
     </script>
@@ -140,7 +147,7 @@
                 </div>
                 <div class="flex flex-col gap-4">
                     <div>
-                        <input type="text" name="age" size="15" placeholder="나이(선택)" class="input input-bordered">
+                        <input type="text" name="age" size="15" placeholder="나이" class="input input-bordered">
                     </div>
                     <div>
                         <input type="text" name="bodyFat" size="15" placeholder="체지방량(선택)" class="input input-bordered">
