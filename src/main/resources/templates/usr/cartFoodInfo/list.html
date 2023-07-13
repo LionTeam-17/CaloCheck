@@ -32,7 +32,7 @@
                 <div class="flex justify-center">
                     <a href="/foodInfo/search"
                        class="m-3 text-sm bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg">
-                        식단 추가</a>
+                        식품 추가</a>
                     <a id="nextBtn"
                        href="/cartFoodInfo/addMenu"
                        class="m-3 text-sm bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg"
@@ -40,11 +40,7 @@
                         다음</a>
                 </div>
             </div>
-            <div id="cartInfosEmpty" class="flex flex-wrap justify-center w-full"
-                 th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
-                식단리스트 항목이 없습니다.
-            </div>
-            <div th:if="${!cartList.isEmpty()}">
+            <div id="totalNutrientInfo" th:if="${!cartList.isEmpty()}">
                 <div class="flex justify-around m-10">
                     <canvas class="m-2" id="nutrientChart"></canvas>
                     <div class="m-2">
@@ -56,19 +52,22 @@
                             <div class="flex m-2">
                                 <div class="text-xs font-bold m-1">에너지(kcal)</div>
                                 <div class="text-xs text-black m-1"
-                                     th:text="${kcalTotal}"></div>
+                                     id="kcalId"
+                                     th:text="${#numbers.formatDecimal(kcalTotal, 1, 2)}"></div>
                             </div>
                         </div>
 
-                        <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrientTotal}"
-                             class="flex justify-between">
-                            <div class="flex">
-                                <i th:id="${loop.index}" class="m-1 fa-solid fa-circle"></i>
-                                <div class="text-xs font-bold m-2"
-                                     th:text="${nutrient.name} + '(g)'"></div>
+                        <div id="nutrientContainer">
+                            <div th:if="${nutrient.value != 0}" th:each="nutrient, loop: ${nutrientTotal}"
+                                 class="flex justify-between">
+                                <div class="flex">
+                                    <i th:id="${loop.index}" class="m-1 fa-solid fa-circle"></i>
+                                    <div class="text-xs font-bold m-2"
+                                         th:text="${nutrient.name} + '(g)'"></div>
+                                </div>
+                                <div class="text-xs text-black m-2"
+                                     th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
                             </div>
-                            <div class="text-xs text-black m-2"
-                                 th:text="${#numbers.formatDecimal(nutrient.value, 1, 2)}"></div>
                         </div>
                     </div>
                 </div>
@@ -79,6 +78,11 @@
                     <span class="font-bold text-sm flex justify-center" style="width:36%">제조사/유통사</span>
                     <span class="font-bold text-sm flex justify-center" style="width:10%">수량</span>
                 </div>
+            </div>
+            <div id="cartInfosEmpty"
+                 class="mt-10 flex flex-wrap justify-center w-full text-lg"
+                 th:classappend="${!cartList.isEmpty()} ? 'hidden' : ''">
+                식단리스트 항목이 없습니다.
             </div>
             <div class="flex flex-col h-[200px]">
                 <div id="cartInfos"
@@ -263,15 +267,27 @@
                     },
                     dataType: "json",
                     success: function (response) {
-                        console.log(JSON.stringify(response));
-                        console.log(response.msg);
                         if (response.result === "success") {
                             removeElement.remove();
 
-                            if (cartInfosTag.children.length == 0) {
+                            let nutrients = response.nutrients;
+                            let kcal = response.totalKcal;
+                            if (cartInfosTag.children.length !== 0) {
+                                let container = document.getElementById('nutrientContainer'); // 출력을 위한 컨테이너 요소 선택
+                                while (container.firstChild) {
+                                    container.removeChild(container.firstChild);
+                                }
+
+                                updateTotalKcal(kcal);
+                                updateTotalNutrient(container, nutrients);
+                                updateTotalChart(nutrients);
+                            } else {
+                                document.getElementById('totalNutrientInfo').remove();
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
                                 document.getElementById("nextBtn").classList.add("hidden");
+                                myChart.destroy();
                             }
+
                             toastNotice(response.msg);
                         } else if (response.result === "fail") {
                             toastWarning(response.msg);
@@ -304,15 +320,27 @@
                     success: function (response) {
                         if (response.result === "success") {
                             if (quantity == 0) {
-                                console.log(removeFoodId);
                                 removeElement.remove();
                             } else {
                                 removeElement.children[0].children[3].innerText = quantity;
                             }
 
-                            if (cartInfosTag.children.length == 0) {
+                            let nutrients = response.nutrients;
+                            let kcal = response.totalKcal;
+                            if (cartInfosTag.children.length !== 0) {
+                                let container = document.getElementById('nutrientContainer'); // 출력을 위한 컨테이너 요소 선택
+                                while (container.firstChild) {
+                                    container.removeChild(container.firstChild);
+                                }
+
+                                updateTotalKcal(kcal);
+                                updateTotalNutrient(container, nutrients);
+                                updateTotalChart(nutrients);
+                            } else {
+                                document.getElementById('totalNutrientInfo').remove();
                                 document.getElementById("cartInfosEmpty").classList.remove("hidden");
                                 document.getElementById("nextBtn").classList.add("hidden");
+                                myChart.destroy();
                             }
 
                             toastNotice(response.msg);
@@ -326,6 +354,76 @@
                 });
             }
         }
+
+        function updateTotalKcal(kcal) {
+            let kcalTag = document.getElementById('kcalId');
+            kcalTag.innerText = kcal;
+        }
+
+        function updateTotalNutrient(container, nutrients) {
+            for (let index = 0; index < nutrients.length; index++) {
+                let nutrient = nutrients[index];
+                if (nutrient.value !== 0) {
+                    const div = document.createElement('div');
+                    div.classList.add('flex', 'justify-between');
+
+                    const innerDiv = document.createElement('div');
+                    innerDiv.classList.add('flex');
+
+                    const icon = document.createElement('i');
+                    icon.id = index;
+                    icon.classList.add('m-1', 'fa-solid', 'fa-circle');
+
+                    const nameDiv = document.createElement('div');
+                    nameDiv.classList.add('text-xs', 'font-bold', 'm-2');
+                    nameDiv.textContent = `${nutrient.name}(g)`;
+
+                    innerDiv.appendChild(icon);
+                    innerDiv.appendChild(nameDiv);
+
+                    const valueDiv = document.createElement('div');
+                    valueDiv.classList.add('text-xs', 'text-black', 'm-2');
+                    valueDiv.textContent = nutrient.value.toFixed(2);
+
+                    div.appendChild(innerDiv);
+                    div.appendChild(valueDiv);
+
+                    container.appendChild(div);
+                }
+            }
+        }
+
+        function updateTotalChart(nutrients) {
+            let temp = {
+                labels: [],
+                datasets: [
+                    {
+                        data: [],
+                        backgroundColor: [],
+                        hoverBackgroundColor: []
+                    }]
+            };
+
+            for (let i = 0; i < nutrients.length; i++) {
+                let label = nutrients[i].name;
+                let value = nutrients[i].value;
+                let back = background[i];
+                let hover = background[i];
+                let iconTag = document.getElementById(i);
+
+                if (value != 0) {
+                    temp.labels.push(label);
+                    temp.datasets[0].data.push(value);
+                    temp.datasets[0].backgroundColor.push(back);
+                    temp.datasets[0].hoverBackgroundColor.push(hover);
+                    iconTag.style.color = back;
+                }
+            }
+
+            myChart.data = temp;
+            myChart.update();
+        }
+
     </script>
 </main>
 </body>
