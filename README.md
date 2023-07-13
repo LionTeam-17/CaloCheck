@@ -158,5 +158,32 @@
 - 친구등록하면 친구의 페이지 보기 가능
 - 나의 기초대사량(BMR)과 나의 권장량, 오늘 섭취한 영양소 양 확인 가능
 ___
-- spring boot : 3.1.0
-- db : mariadb
+- BackEnd
+    - Spring Boot : 3.0.7
+    - Java 17
+    - Spring Security
+    - JPA Hibernate
+    - JUnit
+
+- FrontEnd
+    - HTML, CSS, JS
+    - Thymeleaf
+    - Tailwind
+    - jQuary
+    - Bootstrap
+    - AJAX
+
+- API, DB
+    - 식품의약품안전처 식품 영양성분 DB
+    - 보건복지부 한국인 영양소 섭취기준
+    - AWS s3
+    - AWS rds(MariaDB)
+    - Google Vision API
+
+- Infrastructure
+    - Jenkins
+    - NCP
+    - GITHUB
+    - Docker
+    - NPM
+    - Gradle
