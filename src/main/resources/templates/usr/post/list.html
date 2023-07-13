@@ -7,14 +7,18 @@
 <body>
 <main class="flex-grow flex items-center justify-center" layout:fragment="Content">
     <div class="flex flex-col max-w-3xl w-full justify-center">
-        <div class="text-left" id="menu">
+        <div class="text-center" id="menu">
             <ul>
                 <li>
-                    <div th:if="${postType.equals('A')}">자유게시판</div>
-                    <div th:if="${postType.equals('B')}">식단공유게시판</div>
+                    <div class="font-bold text-2xl" th:if="${postType.equals('A')}"><i class="fa-solid fa-pencil"></i>&nbsp;자유게시판
+                    </div>
+                    <div class="font-bold text-2xl" th:if="${postType.equals('B')}"><i class="fa-solid fa-utensils"></i>&nbsp;식단공유게시판
+                    </div>
                     <ul>
-                        <li><a th:href="@{|?postType=A|}">자유게시판</a></li>
-                        <li><a th:href="@{|?postType=B|}">식단공유게시판</a></li>
+                        <li><a class="font-bold" th:href="@{|?postType=A|}"><i class="fa-solid fa-pencil"></i>&nbsp;자유게시판</a>
+                        </li>
+                        <li><a class="font-bold" th:href="@{|?postType=B|}"><i class="fa-solid fa-utensils"></i>&nbsp;식단공유게시판</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

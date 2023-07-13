@@ -51,11 +51,8 @@ public class Ut {
 
 
     public static class time {
-        public static Boolean isToday(LocalDateTime time1, LocalDateTime time2) {
-            // 두개의 시간의 차이를 초로 환산
-            long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
-            long diffDays = diff / (60 * 60 * 24);
-
+        public static boolean isToday(LocalDateTime time1, LocalDateTime time2) {
+            long diffDays = Math.abs(ChronoUnit.DAYS.between(time1.toLocalDate(), time2.toLocalDate()));
             return diffDays < 1;
         }
 
