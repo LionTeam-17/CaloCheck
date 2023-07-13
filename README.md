@@ -14,7 +14,7 @@
 
 ### [CaloCheck 바로가기](https://www.calocheck.com/)
 ### [팀 노션](https://www.notion.so/CaloCheck-58b53ac833244efc9941811cd5848587)
-### [시연 영상] ()
+### [시연 영상] (https://file.notion.so/f/s/e8264c10-3f0e-4589-a464-d4c3a324a838/17%EC%A1%B0_%EC%8B%9C%EC%97%B0%EC%98%81%EC%83%81.mp4?id=6af2654a-cfb8-4ad8-88d3-62b35023b2d7&table=block&spaceId=f2f896dd-5099-4323-97e3-188f46599528&expirationTimestamp=1689328800000&signature=FV9J5M-hZGseIdsyNywX0Po19d-NNXkpoenoUIEdgSI&downloadName=17%EC%A1%B0+%EC%8B%9C%EC%97%B0%EC%98%81%EC%83%81.mp4)
 <br/>
 
 ## 팀원
