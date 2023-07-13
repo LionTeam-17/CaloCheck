@@ -15,7 +15,7 @@ a {
 }
 
 #menu {
-    width: 140px;
+    width: 210px;
     height: 30px;
     color: black;
     line-height: 50px;
@@ -26,18 +26,18 @@ a {
 /* menu태그 자식의 ul의 자식 li를 왼쪽정렬과 넓이 140설정 */
 #menu > ul > li {
     float: left;
-    width: 140px;
+    width: 210px;
     position: relative;
 }
 
 #menu > ul > li {
     float: left;
-    width: 140px;
+    width: 210px;
     position: relative;
 }
 
 #menu > ul > li > ul {
-    width: 140px;
+    width: 210px;
     display: none;
     position: absolute;
     font-size: 14px;
