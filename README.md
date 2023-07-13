@@ -27,7 +27,7 @@
 <br/>
 
 ## ERD 다이어그램
-![](https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fcac45338-801c-4546-88a7-862a8f377aed%2FQuickDBD-Free_Diagram.png?id=aad70438-b6eb-4def-95d2-a03a95520456&table=block&spaceId=f2f896dd-5099-4323-97e3-188f46599528&width=2000&userId=89485743-43c3-4477-81b2-4afcd2966d21&cache=v2)
+![](https://cdn.discordapp.com/attachments/1119978409964085349/1128847878912221215/calocheck__dev.png)
 <br/>
 
 ## 사용 기술
