@@ -49,7 +49,7 @@
 ### Food
 
 
-| ![](https://velog.velcdn.com/images/waimi3169/post/c432bf47-3c67-4a89-8c9b-cb98becb6dc0/image.png) | ![](https://velog.velcdn.com/images/waimi3169/post/279ed0c8-2281-47ff-97e9-a19970c05512/image.png) | 
+| ![](https://velog.velcdn.com/images/waimi3169/post/c432bf47-3c67-4a89-8c9b-cb98becb6dc0/image.png) | ![](https://velog.velcdn.com/images/waimi3169/post/b3eab779-600e-40e1-a2e8-53cd9c68597e/image.png) | 
 |:--------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|
 |                                             음식 검색 페이지                                              |                                             음식 상세 페이지                                              |   
 
@@ -91,12 +91,12 @@
 
 ---
 
-### 장바구니
+### 식단리스트
 
 
-| ![](https://velog.velcdn.com/images/waimi3169/post/007c8877-c6ce-405b-aa95-589efa666aa6/image.png) | ![](https://velog.velcdn.com/images/waimi3169/post/43f94472-4b50-42e6-8da4-7d65380f9339/image.png) | 
+| ![](https://velog.velcdn.com/images/waimi3169/post/d59806e0-54f0-4dfb-af0f-3337ea72ff59/image.png) | ![](https://velog.velcdn.com/images/waimi3169/post/f4706958-e63d-4c15-b0bd-e0671390d359/image.png) | 
 |:--------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|
-|                                            커뮤니티 게시판 페이지                                            |                                             게시글 작성 페이지                                             |
+|                                             식단 정보 페이지                                              |                                             식단 등록 페이지                                              |
 
 - 
 
@@ -104,13 +104,13 @@
 
 ### DailyMenu
 
-| ![](https://velog.velcdn.com/images/waimi3169/post/18c3b286-f4e9-4549-92e4-0e43645d0931/image.png) |  
+| ![](https://velog.velcdn.com/images/waimi3169/post/7490e421-cad2-48a3-849f-4d13e61ce925/image.png) |  
 |:--------------------------------------------------------------------------------------------------:|
 |                                            데일리메뉴 달력페이지                                             |
 
-- 내가 먹은 식단 날짜별로 확인 가능
+- 회원의 먹은 식단 날짜별로 확인 가능
 - 날짜 클릭하면 아침, 점심, 저녁 순으로 식단 표시
-- 식단별 영양정보반영
+- 회원의 등록한 식단 정보 반영
 
 ---
 
